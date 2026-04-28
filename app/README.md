@@ -149,3 +149,19 @@ pytest tests/test_generator.py
 ```bash
 docker-compose up -d
 ```
+
+## 小组成员实现功能对应文件
+
+| 功能模块 | 对应文件/文件夹 | 说明 |
+| :--- | :--- | :--- |
+| **文件解析** | `core/document_parser.py` | 实现Word和PDF文档的解析功能 |
+| **RAG向量数据库** | `core/faiss_db.py` | 实现基于FAISS的向量数据库存储和检索 |
+| **语义划分** | `core/rag_agent/` | 在RAG agent模块中实现文本语义切分功能 |
+| **JSON Schema标准** | `schema/models.py` | 定义大纲和页级内容的JSON Schema标准 |
+
+### 集成说明
+
+1. **文件解析**：直接使用 `DocumentParser` 类的 `parse()` 方法解析文档
+2. **向量数据库**：使用 `FAISSDB` 类的 `add_document()` 和 `search()` 方法进行文档管理和检索
+3. **语义划分**：在 `rag_agent` 模块中集成到文档处理流程
+4. **JSON Schema**：在 `models.py` 中定义数据模型，用于API请求和响应验证
