@@ -1,20 +1,24 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from app.schema.models import GenerateOutlineRequest, GenerateOutlineResponse, ExpandContentRequest, ExpandContentResponse
 from app.core.generator.outline_maker import OutlineMaker
 from app.core.generator.content_expander import ContentExpander
 
 router = APIRouter(prefix="/api/generator", tags=["generator"])
 
-# 创建生成器实例
-outline_maker = OutlineMaker()
-content_expander = ContentExpander()
+
+def _get_outline_maker(request: Request) -> OutlineMaker:
+    return OutlineMaker(llm_service=request.app.state.llm_service)
+
+
+def _get_content_expander(request: Request) -> ContentExpander:
+    return ContentExpander(llm_service=request.app.state.llm_service)
+
 
 @router.post("/outline", response_model=GenerateOutlineResponse)
-async def generate_outline(request: GenerateOutlineRequest):
-    """生成PPT大纲"""
+async def generate_outline(request: Request, body: GenerateOutlineRequest):
     try:
-        # 生成大纲
-        outline = outline_maker.generate_outline(request.topic, request.requirements)
+        outline_maker = _get_outline_maker(request)
+        outline = outline_maker.generate_outline(body.topic, body.requirements)
         
         return GenerateOutlineResponse(
             success=True,
@@ -29,11 +33,10 @@ async def generate_outline(request: GenerateOutlineRequest):
         )
 
 @router.post("/content", response_model=ExpandContentResponse)
-async def expand_content(request: ExpandContentRequest):
-    """补全PPT内容"""
+async def expand_content(request: Request, body: ExpandContentRequest):
     try:
-        # 补全内容
-        content = content_expander.expand_content(request.outline_node, request.context)
+        content_expander = _get_content_expander(request)
+        content = content_expander.expand_content(body.outline_node, body.context)
         
         return ExpandContentResponse(
             success=True,

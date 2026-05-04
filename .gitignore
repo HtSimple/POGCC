@@ -1,6 +1,9 @@
 # 配置文件
 config.json
 
+# 环境变量文件
+.env
+
 # 虚拟环境
 venv/
 POGCC/
@@ -13,3 +16,5 @@ POGCC/
 __pycache__/
 *.pyc
 
+# FAISS索引
+faiss_index

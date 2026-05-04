@@ -1,30 +1,13 @@
-from app.services.llm_service import LLMService
 from app.prompts.templates import OUTLINE_TEMPLATE
 
 class OutlineMaker:
-    """大纲生成器
     
-    负责根据用户需求生成PPT大纲结构
-    """
+    def __init__(self, llm_service=None):
+        self.llm_service = llm_service
     
-    def __init__(self):
-        self.llm_service = LLMService()
-    
-    def generate_outline(self, topic, requirements=None):
-        """生成PPT大纲
-        
-        Args:
-            topic (str): PPT主题
-            requirements (str, optional): 额外需求
-            
-        Returns:
-            dict: 生成的大纲结构
-        """
-        # 构建提示
+    def generate_outline(self, topic, requirements=None, max_tokens=4096):
         prompt = self._build_prompt(topic, requirements)
-        
-        # 调用LLM生成大纲
-        outline_text = self.llm_service.generate(prompt)
+        outline_text = self.llm_service.generate(prompt, max_tokens=max_tokens)
         print(f"\n生成的大纲文本: {outline_text}")
         
         # 解析生成的大纲

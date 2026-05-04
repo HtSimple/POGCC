@@ -63,3 +63,18 @@ class HealthResponse(BaseModel):
     """健康检查响应模型"""
     status: str = Field(..., description="服务状态")
     version: str = Field(..., description="服务版本")
+
+class ModelInfoResponse(BaseModel):
+    """模型信息响应模型"""
+    current_provider: str = Field(..., description="当前使用的LLM提供者")
+    available_providers: List[str] = Field(..., description="可用的LLM提供者列表")
+
+class SwitchModelRequest(BaseModel):
+    """切换模型请求模型"""
+    provider: str = Field(..., description="要切换的LLM提供者名称，如 deepseek 或 qwen")
+
+class SwitchModelResponse(BaseModel):
+    """切换模型响应模型"""
+    success: bool = Field(..., description="是否切换成功")
+    current_provider: str = Field(..., description="切换后使用的LLM提供者")
+    message: Optional[str] = Field(None, description="消息")

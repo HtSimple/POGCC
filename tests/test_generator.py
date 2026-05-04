@@ -1,14 +1,14 @@
 import pytest
 from app.core.generator.outline_maker import OutlineMaker
 from app.core.generator.content_expander import ContentExpander
+from app.services.llm_service import LLMService
 
 class TestGenerator:
-    """生成测试"""
     
     def setup_method(self):
-        """设置测试环境"""
-        self.outline_maker = OutlineMaker()
-        self.content_expander = ContentExpander()
+        self.llm_service = LLMService()
+        self.outline_maker = OutlineMaker(llm_service=self.llm_service)
+        self.content_expander = ContentExpander(llm_service=self.llm_service)
     
     def test_generate_outline(self):
         """测试大纲生成"""

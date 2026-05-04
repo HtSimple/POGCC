@@ -1,0 +1,5 @@
+{
+  "deepseek_api_key": "your_deepseek_api_key_here", //deepseek api key
+  "dashscope_api_key": "your_dashscope_api_key_here", //qwen api key
+  "llm_provider": "deepseek"  // 默认为deepseek模型
+}

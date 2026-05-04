@@ -1,31 +1,13 @@
-from app.services.llm_service import LLMService
 from app.prompts.templates import CONTENT_TEMPLATE
 
 class ContentExpander:
-    """内容补全器
     
-    负责基于大纲节点扩写详细内容
-    """
+    def __init__(self, llm_service=None):
+        self.llm_service = llm_service
     
-    def __init__(self):
-        self.llm_service = LLMService()
-    
-    def expand_content(self, outline_node, context=None):
-        """补全节点内容
-        
-        Args:
-            outline_node (dict): 大纲节点
-            context (str, optional): 上下文信息
-            
-        Returns:
-            str: 补全的内容
-        """
-        # 构建提示
+    def expand_content(self, outline_node, context=None, max_tokens=4096):
         prompt = self._build_prompt(outline_node, context)
-        
-        # 调用LLM生成内容
-        content = self.llm_service.generate(prompt)
-        
+        content = self.llm_service.generate(prompt, max_tokens=max_tokens)
         return content
     
     def _build_prompt(self, outline_node, context):

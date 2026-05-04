@@ -50,5 +50,5 @@ class QueryProcessor:
         # 例如，添加相关词汇、同义词等
         
         # 添加标识性的话，以便直观看到处理前后的区别
-        processed_query = f"{query} 这是处理查询函数加的一句话"
+        processed_query = f"{query} 用大概200字左右描述(这是处理查询函数加的一句话)"
         return processed_query

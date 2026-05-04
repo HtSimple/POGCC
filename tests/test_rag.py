@@ -3,18 +3,20 @@ import os
 from app.core.rag_agent.agent import RAGAgent
 from app.core.faiss_db import FAISSDB
 from app.core.document_parser import DocumentParser
+from app.services.llm_service import LLMService
 
 class TestRAG:
-    """RAG测试"""
     
     def setup_method(self):
-        """设置测试环境"""
         print("\n=== 设置测试环境 ===")
         self.vector_db = FAISSDB()
         self.document_parser = DocumentParser()
-        self.rag_agent = RAGAgent(document_parser=self.document_parser, vector_db=self.vector_db)
-        
-        # 解析示例文档并添加到向量数据库
+        self.llm_service = LLMService()
+        self.rag_agent = RAGAgent(
+            document_parser=self.document_parser,
+            vector_db=self.vector_db,
+            llm_service=self.llm_service
+        )
         self._load_test_documents()
     
     def _load_test_documents(self):

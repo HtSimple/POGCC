@@ -10,6 +10,7 @@ app/
 │       ├── __init__.py
 │       ├── rag.py          # RAG 路由（上传文档、查知识库）
 │       ├── generator.py    # 生成 路由（生成大纲、补全内容）
+│       ├── model.py        # 模型管理 路由（获取/切换模型）
 │       └── health.py       # 健康检查
 ├── core/               # 核心逻辑
 │   ├── __init__.py
@@ -33,10 +34,12 @@ app/
 │   └── models.py         # 数据模型
 ├── services/            # 服务层
 │   ├── __init__.py
-│   └── llm_service.py   # LLM 服务
+│   ├── llm_service.py   # LLM 服务工厂
+│   ├── deepseek_service.py  # DeepSeek 服务
+│   └── qwen_service.py  # Qwen 服务
 └── utils/               # 工具类
     ├── __init__.py
-    ├── config.py        # 配置管理
+    ├── config.py        # 配置管理（统一读取 config.json）
     └── errors.py        # 错误处理
 ```
 
@@ -59,19 +62,25 @@ app/
 - **文档存储**：存储文档向量
 - **相似性搜索**：基于向量相似度检索相关文档
 
-### 5. API接口
+### 5. LLM 模型管理
+- **双模型支持**：支持 DeepSeek 和 Qwen 两种大语言模型
+- **运行时切换**：通过 API 动态切换模型，无需重启服务
+- **前端集成**：前端可通过按钮一键切换模型
+
+### 6. API接口
 - **RAG接口**：`/api/rag/query`、`/api/rag/upload`
 - **生成接口**：`/api/generator/outline`、`/api/generator/content`
+- **模型管理接口**：`/api/model/info`、`/api/model/switch`
 - **健康检查**：`/health`
 
 ## 技术栈
 
 - **Web框架**：FastAPI
 - **向量数据库**：FAISS
-- **语言模型**：DeepSeek（通过API调用）
+- **语言模型**：DeepSeek / Qwen（通过API调用，支持运行时切换）
 - **文档解析**：python-docx、PyPDF2
 - **数据验证**：Pydantic
-- **配置管理**：python-dotenv
+- **配置管理**：config.json
 - **状态管理**：LangGraph
 
 ## 环境配置
@@ -82,13 +91,31 @@ app/
 pip install -r requirements.txt
 ```
 
-### 2. 配置环境变量
+### 2. 配置 config.json
 
-复制 `.env.example` 为 `.env` 并填写相关配置：
+复制 `config.json.example` 为 `config.json` 并填写 API Key：
 
 ```bash
-cp .env.example .env
+cp config.json.example config.json
 ```
+
+`config.json` 内容说明：
+
+```json
+{
+  "deepseek_api_key": "你的DeepSeek API Key",
+  "dashscope_api_key": "你的阿里云百炼 API Key",
+  "llm_provider": "deepseek"
+}
+```
+
+| 字段 | 说明 | 可选值 |
+| :--- | :--- | :--- |
+| `deepseek_api_key` | DeepSeek API 密钥 | 同济大学 LLM 平台 Key |
+| `dashscope_api_key` | 阿里云百炼 API 密钥 | 阿里云 DashScope Key |
+| `llm_provider` | 默认使用的模型 | `deepseek` 或 `qwen` |
+
+> ⚠️ `config.json` 已在 `.gitignore` 中，不会被提交到代码仓库。
 
 ### 3. 启动服务
 
@@ -102,6 +129,23 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 - Swagger UI：`http://localhost:8000/docs`
 - ReDoc：`http://localhost:8000/redoc`
+
+### 模型管理 API
+
+```bash
+# 获取当前模型信息
+curl http://localhost:8000/api/model/info
+
+# 切换到 Qwen 模型
+curl -X POST http://localhost:8000/api/model/switch \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "qwen"}'
+
+# 切换到 DeepSeek 模型
+curl -X POST http://localhost:8000/api/model/switch \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "deepseek"}'
+```
 
 ## 测试
 
@@ -127,7 +171,13 @@ pytest tests/test_generator.py
 ### 3. 定制提示词模板
 在 `prompts/templates.py` 中修改提示词模板。
 
-### 4. 添加新的API接口
+### 4. 添加新的LLM服务
+1. 在 `services/` 下创建新的服务文件（如 `zhipu_service.py`）
+2. 继承 `BaseLLMService` 并实现 `generate()` 方法
+3. 在 `llm_service.py` 的 `VALID_PROVIDERS` 中添加新提供者
+4. 在 `_create_service()` 中添加分支
+
+### 5. 添加新的API接口
 在 `api/routes/` 目录中添加新的路由文件。
 
 ## 部署
@@ -139,16 +189,10 @@ pytest tests/test_generator.py
    docker build -t pogcc .
    ```
 
-2. 运行容器：
+2. 运行容器（挂载配置文件）：
    ```bash
-   docker run -p 8000:8000 --env-file .env pogcc
+   docker run -p 8000:8000 -v /path/to/config.json:/app/config.json pogcc
    ```
-
-### Docker Compose 部署
-
-```bash
-docker-compose up -d
-```
 
 ## 小组成员实现功能对应文件
 
