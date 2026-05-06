@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Request
 from app.schema.models import RAGQueryRequest, RAGQueryResponse, DocumentUploadRequest, DocumentUploadResponse
-from app.core.rag_agent.agent import RAGAgent
+from app.core.knowledge_agent import KnowledgeAgent
 from app.core.faiss_db import FAISSDB
 from app.core.document_parser import DocumentParser
+from app.services.web_search_service import WebSearchService
 
 router = APIRouter(prefix="/api/rag", tags=["rag"])
 
@@ -10,20 +11,19 @@ vector_db = FAISSDB()
 document_parser = DocumentParser()
 
 
-def _get_rag_agent(request: Request) -> RAGAgent:
-    return RAGAgent(
-        document_parser=document_parser,
-        vector_db=vector_db,
-        llm_service=request.app.state.llm_service
+def _get_knowledge_agent(request: Request) -> KnowledgeAgent:
+    return KnowledgeAgent(
+        llm_service=request.app.state.llm_service,
+        web_search_service=WebSearchService(),
     )
 
 
 @router.post("/query", response_model=RAGQueryResponse)
 async def rag_query(request: Request, body: RAGQueryRequest):
     try:
-        rag_agent = _get_rag_agent(request)
-        answer = rag_agent.process_query(body.query)
-        
+        agent = _get_knowledge_agent(request)
+        answer = agent.process_query(body.query)
+
         return RAGQueryResponse(
             success=True,
             answer=answer,
@@ -41,7 +41,7 @@ async def upload_document(request: DocumentUploadRequest):
     try:
         content = document_parser.parse(request.file_path)
         doc_id = vector_db.add_document(content)
-        
+
         return DocumentUploadResponse(
             success=True,
             doc_id=doc_id,

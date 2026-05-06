@@ -6,7 +6,19 @@ class OutlineMaker:
         self.llm_service = llm_service
     
     def generate_outline(self, topic, requirements=None, max_tokens=4096):
+        """生成PPT大纲
+        
+        Args:
+            topic (str): PPT主题
+            requirements (str, optional): 额外需求
+            
+        Returns:
+            dict: 生成的大纲结构
+        """
+        # 构建提示
         prompt = self._build_prompt(topic, requirements)
+        
+        # 调用LLM生成大纲
         outline_text = self.llm_service.generate(prompt, max_tokens=max_tokens)
         print(f"\n生成的大纲文本: {outline_text}")
         

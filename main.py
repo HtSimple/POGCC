@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import rag, generator, health, model
+from app.api.routes import rag, generator, health, model, search
 from app.utils.errors import AppException, exception_handler, generic_exception_handler
 from app.services.llm_service import LLMService
 from contextlib import asynccontextmanager
@@ -33,6 +33,7 @@ app.include_router(rag.router)
 app.include_router(generator.router)
 app.include_router(health.router)
 app.include_router(model.router)
+app.include_router(search.router)
 
 # 注册异常处理
 app.add_exception_handler(AppException, exception_handler)

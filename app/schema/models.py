@@ -78,3 +78,11 @@ class SwitchModelResponse(BaseModel):
     success: bool = Field(..., description="是否切换成功")
     current_provider: str = Field(..., description="切换后使用的LLM提供者")
     message: Optional[str] = Field(None, description="消息")
+
+class SearchKnowledgeRequest(BaseModel):
+    topic: str = Field(..., description="需要搜索知识的PPT主题")
+
+class SearchKnowledgeResponse(BaseModel):
+    success: bool = Field(..., description="是否成功")
+    knowledge: str = Field(..., description="整理后的知识摘要")
+    message: Optional[str] = Field(None, description="消息")
