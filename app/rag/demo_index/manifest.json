@@ -1,0 +1,10 @@
+[
+  {
+    "doc_id": "test_text_1389277f",
+    "file_name": "test_text.pdf",
+    "source_path": "D:\\python_work\\POGCC\\test_text.pdf",
+    "source_hash": "ae91afdd3ce27a27a6934c7ec86f4f243a4b2dea5411733ae55883c0ab4bf268",
+    "file_type": "pdf",
+    "num_chunks": 38
+  }
+]

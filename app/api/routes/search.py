@@ -12,6 +12,7 @@ async def search_knowledge(request: Request, body: SearchKnowledgeRequest):
         agent = KnowledgeAgent(
             llm_service=request.app.state.llm_service,
             web_search_service=WebSearchService(),
+            retrieval_service=getattr(request.app.state, "retrieval_service", None),
         )
         knowledge = agent.process_query(body.topic)
         return SearchKnowledgeResponse(

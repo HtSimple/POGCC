@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 from app.core.knowledge_agent import KnowledgeAgent
 from app.services.llm_service import LLMService
 from app.services.web_search_service import WebSearchService
@@ -8,13 +15,33 @@ if __name__ == "__main__":
     llm_service = LLMService()
     web_search_service = WebSearchService()
 
+    try:
+        from app.rag.service import RetrievalService
+        from app.utils.config import config
+
+        retrieval_service = RetrievalService(
+            persist_dir="app/rag/data_index",
+            embedding_model="app/rag/bge-small-en-v1.5",
+        )
+    except Exception:
+        retrieval_service = None
+
+    SAMPLE_PDF = Path(r"D:\杂物\大三下\软件经济\project\POGCC\app\rag\test_text.pdf")
+    if retrieval_service is not None:
+        pdf_path = SAMPLE_PDF if SAMPLE_PDF.is_file() else _ROOT / "app" / "rag" / "test_text.pdf"
+        if pdf_path.is_file():
+            ing = retrieval_service.batch_ingest([str(pdf_path.resolve())])[0]
+            print(f"上传/入库: {ing}")
+        else:
+            print(f"未找到 PDF，跳过入库: {SAMPLE_PDF}")
+
     test_steps = [
         ("qwen", "Qwen"),
         ("deepseek", "DeepSeek"),
         ("qwen", "Qwen（切换回）"),
     ]
 
-    test_query = "人工智能在医疗领域的应用"
+    test_query = "流水线技术"
 
     for i, (provider, label) in enumerate(test_steps):
         print(f"\n{'='*60}")
@@ -27,6 +54,7 @@ if __name__ == "__main__":
         agent = KnowledgeAgent(
             llm_service=llm_service,
             web_search_service=web_search_service,
+            retrieval_service=retrieval_service,
         )
 
         print(f"\n查询: {test_query}")

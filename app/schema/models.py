@@ -42,7 +42,7 @@ class RAGQueryResponse(BaseModel):
 class DocumentUploadResponse(BaseModel):
     """文档上传响应模型"""
     success: bool = Field(..., description="是否成功")
-    doc_id: int = Field(..., description="文档ID")
+    doc_id: str = Field(..., description="文档ID（本地 RAG 为字符串 doc_id）")
     message: Optional[str] = Field(None, description="消息")
 
 # 文档模型

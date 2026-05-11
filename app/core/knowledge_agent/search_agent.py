@@ -8,10 +8,21 @@ from app.prompts.templates import SEARCH_PLAN_PROMPT, SEARCH_EVALUATE_PROMPT, SE
 class SearchAgent:
 
     MAX_SEARCH_ROUNDS = 3
+    _LOCAL_CHUNK_TEXT_LIMIT = 1800
 
-    def __init__(self, llm_service=None, web_search_service=None):
+    @staticmethod
+    def _source_tag(result: dict) -> str:
+        """区分本地向量库与网络结果，便于下游摘要与排查。"""
+        url = str(result.get("url", "") or "")
+        title = str(result.get("title", "") or "")
+        if url.startswith("local://") or title.startswith("[本地]"):
+            return "【RAG本地库】"
+        return "【网络搜索】"
+
+    def __init__(self, llm_service=None, web_search_service=None, retrieval_service=None):
         self.llm_service = llm_service or LLMService()
         self.web_search_service = web_search_service or WebSearchService()
+        self.retrieval_service = retrieval_service
         self.graph = self._build_graph()
 
     def _build_graph(self):
@@ -50,7 +61,9 @@ class SearchAgent:
             print(f"[SearchAgent] 解析搜索规划失败，使用主题作为默认搜索词")
             search_queries = [topic]
 
-        print(f"规划搜索关键词: {search_queries}")
+        print(f"规划搜索关键词（共 {len(search_queries)} 个）:")
+        for qi, sq in enumerate(search_queries, 1):
+            print(f"  {qi}. {sq}")
         return {
             "topic": topic,
             "search_queries": search_queries,
@@ -67,7 +80,36 @@ class SearchAgent:
         search_round = state.get("search_round", 0) + 1
 
         new_results = []
+        seen_local_chunks: set[str] = set()
+
         for query in search_queries:
+            n_before = len(new_results)
+            if self.retrieval_service is not None:
+                try:
+                    local_resp = self.retrieval_service.search(query, top_k=5)
+                    n_local = len(local_resp.results)
+                    for item in local_resp.results:
+                        cid = item.chunk_id
+                        if cid in seen_local_chunks:
+                            continue
+                        seen_local_chunks.add(cid)
+                        text = item.text
+                        if len(text) > self._LOCAL_CHUNK_TEXT_LIMIT:
+                            text = text[: self._LOCAL_CHUNK_TEXT_LIMIT] + "..."
+                        new_results.append({
+                            "query": query,
+                            "title": f"[本地] {item.source_file}",
+                            "url": f"local://{item.doc_id}/{cid}",
+                            "content": text,
+                        })
+                    added_here = len(new_results) - n_before
+                    if n_local == 0:
+                        print(f"  [本地] 0 条命中（库空或词与文档不匹配）: {query[:80]}")
+                    else:
+                        print(f"  [本地] 新增 {added_here} 条（原始 {n_local} 条，去重后）: {query[:80]}")
+                except Exception as exc:
+                    print(f"  [本地] 检索失败: {exc}")
+
             print(f"  搜索: {query}")
             results = self.web_search_service.search(query, max_results=3)
             for r in results:
@@ -98,7 +140,8 @@ class SearchAgent:
 
         knowledge_text = ""
         for i, r in enumerate(search_results):
-            knowledge_text += f"\n[{i+1}] 来源: {r.get('title', '')}\n内容: {r.get('content', '')}\n"
+            tag = self._source_tag(r)
+            knowledge_text += f"\n[{i+1}] {tag}\n来源: {r.get('title', '')}\n内容: {r.get('content', '')}\n"
 
         if not knowledge_text.strip():
             knowledge_text = "暂无收集到的知识"
@@ -154,7 +197,8 @@ class SearchAgent:
 
         results_text = ""
         for i, r in enumerate(search_results):
-            results_text += f"\n[{i+1}] 标题: {r.get('title', '')}\n来源: {r.get('url', '')}\n内容: {r.get('content', '')}\n"
+            tag = self._source_tag(r)
+            results_text += f"\n[{i+1}] {tag}\n标题: {r.get('title', '')}\n来源: {r.get('url', '')}\n内容: {r.get('content', '')}\n"
 
         prompt = SEARCH_SUMMARIZE_PROMPT.format(
             topic=topic,

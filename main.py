@@ -3,12 +3,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import rag, generator, health, model, search
 from app.utils.errors import AppException, exception_handler, generic_exception_handler
 from app.services.llm_service import LLMService
+from app.utils.config import config
 from contextlib import asynccontextmanager
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.llm_service = LLMService()
+    try:
+        from app.rag.service import RetrievalService
+
+        persist_dir = config.get("rag_persist_dir") or "app/rag/data_index"
+        embedding_model = config.get("rag_embedding_model") or "app/rag/bge-small-en-v1.5"
+        app.state.retrieval_service = RetrievalService(
+            persist_dir=persist_dir,
+            embedding_model=embedding_model,
+        )
+    except Exception as exc:
+        print(f"[POGCC] 本地 RAG 未启动（上传与本地检索将不可用）: {exc}")
+        app.state.retrieval_service = None
     yield
 
 

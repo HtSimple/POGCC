@@ -15,6 +15,10 @@ POGCC/
 # 依赖文件
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # FAISS索引
 faiss_index
+
+# 本地 RAG 向量索引数据
+app/rag/data_index/

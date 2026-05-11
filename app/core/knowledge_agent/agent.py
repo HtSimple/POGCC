@@ -6,11 +6,12 @@ from .result_generator import ResultGenerator
 
 class KnowledgeAgent:
 
-    def __init__(self, llm_service=None, web_search_service=None):
+    def __init__(self, llm_service=None, web_search_service=None, retrieval_service=None):
         self.query_processor = QueryProcessor()
         self.search_agent = SearchAgent(
             llm_service=llm_service,
             web_search_service=web_search_service,
+            retrieval_service=retrieval_service,
         )
         self.result_generator = ResultGenerator(llm_service=llm_service)
         self.graph = self._build_graph()

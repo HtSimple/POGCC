@@ -1,0 +1,9 @@
+# 以管理员身份打开 PowerShell，然后运行：
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 输入 Y 确认
+
+# 然后再次激活
+.\venv\Scripts\Activate.ps1
+
+python D:\杂物\大三下\软件经济\project\POGCC\test_knowledge_agent.py
