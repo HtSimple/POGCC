@@ -116,7 +116,7 @@ process_query → retrieve_knowledge → generate_answer → END
 pip install -r requirements.txt
 ```
 
-本地 RAG 使用的向量模型需自行下载（仓库不附带，体积超过 GitHub 单文件限制）。将 **`BAAI/bge-small-en-v1.5`** 下载到项目内 **`app/rag/bge-small-en-v1.5/`**（[Hugging Face](https://huggingface.co/BAAI/bge-small-en-v1.5) 模型 ID）。
+本地 RAG 使用的向量模型需自行下载（仓库不附带，体积超过 GitHub 单文件限制）。将 **`BAAI/bge-small-en-v1.5`** 下载到项目内地址 **`app/rag/bge-small-en-v1.5/`**（[Hugging Face](https://huggingface.co/BAAI/bge-small-en-v1.5) 模型 ID）。
 
 ### 2. 配置 config.json
 
