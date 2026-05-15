@@ -41,7 +41,7 @@ if __name__ == "__main__":
         ("qwen", "Qwen（切换回）"),
     ]
 
-    test_query = "流水线技术"
+    test_query = "分点介绍流水线技术"
 
     for i, (provider, label) in enumerate(test_steps):
         print(f"\n{'='*60}")

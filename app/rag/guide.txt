@@ -6,4 +6,4 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # 然后再次激活
 .\venv\Scripts\Activate.ps1
 
-python D:\杂物\大三下\软件经济\project\POGCC\test_knowledge_agent.py
+python D:\杂物\大三下\软件经济\project\POGCC\test_knowledge_agent_mul.py

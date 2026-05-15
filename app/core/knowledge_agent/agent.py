@@ -6,13 +6,21 @@ from .result_generator import ResultGenerator
 
 class KnowledgeAgent:
 
-    def __init__(self, llm_service=None, web_search_service=None, retrieval_service=None):
+    def __init__(
+        self,
+        llm_service=None,
+        web_search_service=None,
+        retrieval_service=None,
+        *,
+        search_refine_knowledge: bool = False,
+    ):
         self.query_processor = QueryProcessor()
         self.search_agent = SearchAgent(
             llm_service=llm_service,
             web_search_service=web_search_service,
             retrieval_service=retrieval_service,
         )
+        self._search_refine_knowledge = search_refine_knowledge
         self.result_generator = ResultGenerator(llm_service=llm_service)
         self.graph = self._build_graph()
 
@@ -76,7 +84,9 @@ class KnowledgeAgent:
         # knowledge = "\n\n".join(knowledge_parts) if knowledge_parts else "无相关知识"
         # === 加入本地知识库检索后的参考代码结束 ===
 
-        knowledge = self.search_agent.search(query)  #加入本地知识库检索加入后删去该代码
+        knowledge = self.search_agent.search(
+            query, refine_knowledge=self._search_refine_knowledge
+        )  #加入本地知识库检索加入后删去该代码
         print(f"检索到知识摘要长度: {len(knowledge)} 字符")
         return {
             "query": query,

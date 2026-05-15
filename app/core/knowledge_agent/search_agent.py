@@ -23,9 +23,23 @@ class SearchAgent:
         self.llm_service = llm_service or LLMService()
         self.web_search_service = web_search_service or WebSearchService()
         self.retrieval_service = retrieval_service
-        self.graph = self._build_graph()
+        self._graph_fast = self._build_fast_graph()
+        self._graph_full = self._build_full_graph()
 
-    def _build_graph(self):
+    def _build_fast_graph(self):
+        """规划 → 执行检索 → 将结果拼成文本（不调评估 / 整理 LLM）。"""
+        graph = StateGraph(dict)
+        graph.add_node("plan_searches", self._plan_searches_node)
+        graph.add_node("execute_search", self._execute_search_node)
+        graph.add_node("materialize_knowledge", self._materialize_knowledge_from_results_node)
+        graph.set_entry_point("plan_searches")
+        graph.add_edge("plan_searches", "execute_search")
+        graph.add_edge("execute_search", "materialize_knowledge")
+        graph.add_edge("materialize_knowledge", END)
+        return graph.compile()
+
+    def _build_full_graph(self):
+        """含评估多轮与整理知识（LLM），需要时 search(..., refine_knowledge=True)。"""
         graph = StateGraph(dict)
 
         graph.add_node("plan_searches", self._plan_searches_node)
@@ -47,6 +61,27 @@ class SearchAgent:
         graph.add_edge("summarize_knowledge", END)
 
         return graph.compile()
+
+    def _format_search_results_as_knowledge(self, search_results: list) -> str:
+        knowledge_text = ""
+        for i, r in enumerate(search_results):
+            tag = self._source_tag(r)
+            knowledge_text += f"\n[{i+1}] {tag}\n来源: {r.get('title', '')}\n内容: {r.get('content', '')}\n"
+        if not knowledge_text.strip():
+            return "暂无收集到的知识"
+        return knowledge_text
+
+    def _materialize_knowledge_from_results_node(self, state):
+        search_results = state.get("search_results", [])
+        knowledge_text = self._format_search_results_as_knowledge(search_results)
+        return {
+            "topic": state["topic"],
+            "search_queries": state.get("search_queries", []),
+            "search_results": search_results,
+            "collected_knowledge": knowledge_text,
+            "search_round": state.get("search_round", 0),
+            "max_tokens": state.get("max_tokens", 4096),
+        }
 
     def _plan_searches_node(self, state):
         print("=== 规划搜索节点 ===")
@@ -138,13 +173,7 @@ class SearchAgent:
         search_results = state.get("search_results", [])
         search_round = state.get("search_round", 0)
 
-        knowledge_text = ""
-        for i, r in enumerate(search_results):
-            tag = self._source_tag(r)
-            knowledge_text += f"\n[{i+1}] {tag}\n来源: {r.get('title', '')}\n内容: {r.get('content', '')}\n"
-
-        if not knowledge_text.strip():
-            knowledge_text = "暂无收集到的知识"
+        knowledge_text = self._format_search_results_as_knowledge(search_results)
 
         prompt = SEARCH_EVALUATE_PROMPT.format(
             topic=topic,
@@ -235,8 +264,14 @@ class SearchAgent:
 
         return json.loads(text)
 
-    def search(self, topic, max_tokens=4096):
-        result = self.graph.invoke({
+    def search(self, topic, max_tokens=4096, refine_knowledge: bool = False):
+        """检索知识材料。
+
+        refine_knowledge=False（默认）：规划 → 执行搜索 → 将检索结果拼接为文本，跳过评估与整理 LLM。
+        refine_knowledge=True：走完整流程（评估多轮 + 整理知识摘要）。
+        """
+        graph = self._graph_full if refine_knowledge else self._graph_fast
+        result = graph.invoke({
             "topic": topic,
             "max_tokens": max_tokens,
         })
