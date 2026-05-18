@@ -250,6 +250,12 @@ select:disabled {
   align-items: center;
 }
 
+.batch-hint {
+  margin: -8px 0 12px;
+  color: #5f6b63;
+  font-size: 13px;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: #5f826e;
@@ -512,7 +518,7 @@ textarea:focus {
 
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 

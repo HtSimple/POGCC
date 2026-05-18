@@ -204,14 +204,13 @@
               </div>
               <label class="select-shell">
                 <span>当前页</span>
-                <select v-model="activeSlideId">
+                <select v-model="activeSlideId" :disabled="allContentLoading">
                   <option v-for="(slide, index) in slides" :key="slide.id" :value="slide.id">
                     {{ index + 1 }}. {{ slide.title || '未命名页面' }}
                   </option>
                 </select>
               </label>
             </div>
-
             <div v-if="!activeSlide" class="empty-state">请先完成大纲生成</div>
             <div v-else class="page-workbench">
               <div class="page-title-row">
@@ -230,10 +229,20 @@
                   <Search :size="18" />
                   {{ pageLoading.knowledge ? '检索中' : '补充知识' }}
                 </button>
-                <button class="secondary-button" type="button" :disabled="pageLoading.content"
+                <button class="secondary-button" type="button"
+                  :disabled="pageLoading.content || allContentLoading"
                   @click="fillContent(activeSlide)">
                   <FileText :size="18" />
                   {{ pageLoading.content ? '生成中' : '生成正文' }}
+                </button>
+                <button
+                  class="secondary-button"
+                  type="button"
+                  :disabled="allContentLoading || pageLoading.content || slides.length === 0"
+                  @click="fillAllContent"
+                >
+                  <Files :size="18" />
+                  {{ allContentLoading ? '全部生成中' : '全部生成正文' }}
                 </button>
                 <button class="secondary-button" type="button" :disabled="pageLoading.notes"
                   @click="fillNotes(activeSlide)">
@@ -461,6 +470,7 @@ import {
   Copy,
   Download,
   Eye,
+  Files,
   FileText,
   History,
   NotebookPen,
@@ -529,6 +539,7 @@ const pageLoading = reactive({
   notes: false,
   fact: false
 })
+const allContentLoading = ref(false)
 
 const generationStep = computed(() => generationSteps[generationStepIndex.value].key)
 const activeSlide = computed(() => slides.value.find((slide) => slide.id === activeSlideId.value) ?? slides.value[0])
@@ -779,28 +790,58 @@ async function fillKnowledge(slide: SlidePage) {
   }
 }
 
+async function generateSlideContent(slide: SlidePage): Promise<{ ok: boolean; message?: string }> {
+  const result = await expandContent(
+    {
+      title: slide.title,
+      section: slide.sectionTitle,
+      goal: slide.goal,
+      bullets: slide.bullets
+    },
+    slide.knowledge || requirementsText.value
+  )
+  if (result.success) {
+    slide.content = result.content
+    return { ok: true }
+  }
+  return { ok: false, message: result.message }
+}
+
 async function fillContent(slide: SlidePage) {
   pageLoading.content = true
   try {
-    const result = await expandContent(
-      {
-        title: slide.title,
-        section: slide.sectionTitle,
-        goal: slide.goal,
-        bullets: slide.bullets
-      },
-      slide.knowledge || requirementsText.value
-    )
-    if (result.success) {
-      slide.content = result.content
+    const outcome = await generateSlideContent(slide)
+    if (outcome.ok) {
       showToast('正文生成完成', 'success')
     } else {
-      showToast(result.message || '正文生成失败', 'warning')
+      showToast(outcome.message || '正文生成失败', 'warning')
     }
   } catch (error) {
     showToast(getErrorMessage(error), 'error')
   } finally {
     pageLoading.content = false
+  }
+}
+
+async function fillAllContent() {
+  if (slides.value.length === 0) {
+    showToast('请先完成大纲', 'warning')
+    return
+  }
+  allContentLoading.value = true
+  try {
+    const results = await Promise.all(slides.value.map((slide) => generateSlideContent(slide)))
+    const okCount = results.filter((r) => r.ok).length
+    const failCount = results.length - okCount
+    if (failCount === 0) {
+      showToast(`全部正文已生成（${okCount} 页）`, 'success')
+    } else {
+      showToast(`正文生成完成 ${okCount} 页，失败 ${failCount} 页`, failCount === results.length ? 'error' : 'warning')
+    }
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+  } finally {
+    allContentLoading.value = false
   }
 }
 

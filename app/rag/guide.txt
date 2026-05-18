@@ -7,3 +7,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\venv\Scripts\Activate.ps1
 
 python D:\杂物\大三下\软件经济\project\POGCC\test_knowledge_agent_mul.py
+
+
+前端
+cd D:\杂物\大三下\软件经济\project\POGCC\frontend
+npm run dev
+后端
+cd D:\杂物\大三下\软件经济\project\POGCC
+uvicorn main:app --reload --host 0.0.0.0 --port 8000

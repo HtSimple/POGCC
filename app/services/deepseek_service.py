@@ -41,10 +41,11 @@ class DeepSeekService:
                 reasoning = message.get('reasoning', '') or ''
                 content = message.get('content', '') or ''
 
-                final_answer = ""
-                if reasoning:
-                    final_answer += f"【思考过程】\n{reasoning}\n\n【最终回答】\n"
-                final_answer += content
+                include_reasoning = bool(self._config.get('deepseek_include_reasoning', False))
+                if include_reasoning and reasoning:
+                    final_answer = f"【思考过程】\n{reasoning}\n\n【最终回答】\n{content}"
+                else:
+                    final_answer = content
 
                 if not final_answer.strip():
                     finish_reason = result['choices'][0].get('finish_reason', '')

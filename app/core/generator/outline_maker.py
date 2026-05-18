@@ -1,4 +1,10 @@
+import re
+
 from app.prompts.templates import OUTLINE_TEMPLATE
+
+_SECTION_RE = re.compile(r"^(\d+)\.\s+(.+)$")
+_SUBSECTION_RE = re.compile(r"^([a-zA-Z])\.\s+(.+)$")
+
 
 class OutlineMaker:
     
@@ -68,50 +74,48 @@ class OutlineMaker:
         
         return prompt
     
+    @staticmethod
+    def _normalize_outline_line(line: str) -> str:
+        """去掉首尾空白及行首列表符 `-` / `•`。"""
+        text = line.strip()
+        if text.startswith("- "):
+            text = text[2:].strip()
+        elif text.startswith("• "):
+            text = text[2:].strip()
+        elif text.startswith("-") and len(text) > 1:
+            text = text[1:].strip()
+        return text
+
     def _parse_outline(self, outline_text):
-        """解析生成的大纲
-        
-        Args:
-            outline_text (str): LLM生成的大纲文本
-            
-        Returns:
-            dict: 解析后的大纲结构
-        """
-        # 简单的大纲解析，实际项目中可能需要更复杂的解析逻辑
-        # 这里假设LLM生成的是层级结构的大纲
-        
-        outline = {
-            "title": "",
-            "sections": []
-        }
-        
-        # 提取标题
-        lines = outline_text.strip().split('\n')
-        if lines:
-            outline["title"] = lines[0].strip()
-            
-            # 提取章节
-            current_section = None
-            for line in lines[1:]:
-                line = line.strip()
-                if not line:
-                    continue
-                
-                # 检测一级标题
-                if line.startswith('1. '):
-                    if current_section:
-                        outline["sections"].append(current_section)
-                    current_section = {
-                        "title": line[3:],
-                        "subsections": []
-                    }
-                # 检测二级标题
-                elif line.startswith('   a. '):
-                    if current_section:
-                        current_section["subsections"].append(line[5:])
-        
-        # 添加最后一个章节
+        """解析 LLM 大纲文本（支持 `- 标题`、`- 1. 章节`、`a. 小节` 等常见格式）。"""
+        outline = {"title": "", "sections": []}
+        lines = [ln for ln in outline_text.strip().split("\n") if ln.strip()]
+        if not lines:
+            return outline
+
+        outline["title"] = self._normalize_outline_line(lines[0])
+        current_section = None
+
+        for raw in lines[1:]:
+            line = self._normalize_outline_line(raw)
+            if not line:
+                continue
+
+            section_match = _SECTION_RE.match(line)
+            if section_match:
+                if current_section:
+                    outline["sections"].append(current_section)
+                current_section = {
+                    "title": section_match.group(2).strip(),
+                    "subsections": [],
+                }
+                continue
+
+            subsection_match = _SUBSECTION_RE.match(line)
+            if subsection_match and current_section is not None:
+                current_section["subsections"].append(subsection_match.group(2).strip())
+
         if current_section:
             outline["sections"].append(current_section)
-        
+
         return outline

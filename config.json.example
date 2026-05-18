@@ -2,5 +2,6 @@
   "deepseek_api_key": "your_deepseek_api_key_here",
   "dashscope_api_key": "your_dashscope_api_key_here",
   "tavily_api_key": "your_tavily_api_key_here",
-  "llm_provider": "deepseek"
+  "llm_provider": "deepseek",
+  "deepseek_include_reasoning": false
 }

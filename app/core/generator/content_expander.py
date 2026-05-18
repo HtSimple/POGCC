@@ -21,18 +21,33 @@ class ContentExpander:
             str: 构建好的提示
         """
         prompt = CONTENT_TEMPLATE
-        
-        # 提取节点标题
+
         if isinstance(outline_node, dict):
-            node_title = outline_node.get("title", "")
+            node_title = str(outline_node.get("title", "") or "").strip()
+            section = str(outline_node.get("section", "") or "").strip()
+            goal = str(outline_node.get("goal", "") or "").strip()
+            bullets_raw = outline_node.get("bullets", [])
+            if isinstance(bullets_raw, list):
+                bullets = "\n".join(f"- {str(b).strip()}" for b in bullets_raw if str(b).strip())
+            else:
+                bullets = str(bullets_raw).strip()
         else:
-            node_title = str(outline_node)
-        
-        prompt = prompt.replace("{node_title}", node_title)
-        
-        if context:
-            prompt = prompt.replace("{context}", context)
-        else:
-            prompt = prompt.replace("{context}", "")
-        
+            node_title = str(outline_node).strip()
+            section = ""
+            goal = ""
+            bullets = ""
+
+        if not bullets:
+            bullets = "（无）"
+        if not section:
+            section = "（无）"
+        if not goal:
+            goal = "（无）"
+
+        prompt = prompt.replace("{node_title}", node_title or "（无）")
+        prompt = prompt.replace("{section}", section)
+        prompt = prompt.replace("{goal}", goal)
+        prompt = prompt.replace("{bullets}", bullets)
+        prompt = prompt.replace("{context}", (context or "").strip() or "（无）")
+
         return prompt
