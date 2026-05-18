@@ -54,24 +54,56 @@ export async function mockGenerateOutline(topic: string, requirements: string) {
       {
         title: '1. 项目背景与目标',
         subsections: [
-          `${resolvedTopic}的背景与问题`,
-          '汇报目标与受众关注点'
+          {
+            title: `${resolvedTopic}的背景与问题`,
+            goal: '阐明主题背景与待解决的核心问题',
+            bullets: ['行业背景', '痛点分析', '问题定义']
+          },
+          {
+            title: '汇报目标与受众关注点',
+            goal: '明确汇报目的与听众关切',
+            bullets: ['汇报目标', '受众画像', '关键诉求']
+          }
         ]
       },
       {
         title: '2. 核心内容分析',
         subsections: [
-          '关键概念与技术路线',
-          '典型应用场景',
-          '方案价值与可行性'
+          {
+            title: '关键概念与技术路线',
+            goal: '解释核心概念并给出技术路径',
+            bullets: ['核心概念', '技术架构', '实施路线']
+          },
+          {
+            title: '典型应用场景',
+            goal: '展示代表性应用场景与价值',
+            bullets: ['场景一', '场景二', '应用成效']
+          },
+          {
+            title: '方案价值与可行性',
+            goal: '论证方案价值与落地可行性',
+            bullets: ['价值主张', '资源需求', '可行性分析']
+          }
         ]
       },
       {
         title: '3. 实施路径与总结',
         subsections: [
-          '落地流程与资源需求',
-          '风险控制与质量评估',
-          '总结与后续展望'
+          {
+            title: '落地流程与资源需求',
+            goal: '说明实施步骤与所需资源',
+            bullets: ['阶段划分', '关键里程碑', '资源清单']
+          },
+          {
+            title: '风险控制与质量评估',
+            goal: '识别风险并给出质量保障措施',
+            bullets: ['主要风险', '应对策略', '质量指标']
+          },
+          {
+            title: '总结与后续展望',
+            goal: '归纳结论并展望未来工作',
+            bullets: ['核心结论', '后续计划', '开放问题']
+          }
         ]
       }
     ]
@@ -80,7 +112,18 @@ export async function mockGenerateOutline(topic: string, requirements: string) {
   if (/商务|路演|客户/.test(requirements)) {
     outline.sections?.splice(2, 0, {
       title: '3. 商业价值',
-      subsections: ['收益分析与成本估算', '竞争优势与推广策略']
+      subsections: [
+        {
+          title: '收益分析与成本估算',
+          goal: '量化收益与成本结构',
+          bullets: ['收益来源', '成本构成', '投资回报']
+        },
+        {
+          title: '竞争优势与推广策略',
+          goal: '说明差异化优势与市场推广路径',
+          bullets: ['竞争优势', '目标市场', '推广策略']
+        }
+      ]
     })
   }
 
@@ -88,6 +131,32 @@ export async function mockGenerateOutline(topic: string, requirements: string) {
     success: true,
     outline,
     message: 'Mock 模式：大纲生成成功'
+  }
+}
+
+export async function mockSearchKnowledgeBatch(
+  items: Array<{ index: number; id?: string; query: string }>,
+  _refineKnowledge = false
+) {
+  await delay(800)
+  const results = await Promise.all(
+    items.map(async (item) => {
+      const single = await mockSearchKnowledge(item.query)
+      return {
+        index: item.index,
+        id: item.id,
+        success: single.success,
+        knowledge: single.knowledge,
+        has_sources: true,
+        message: single.message
+      }
+    })
+  )
+  return {
+    success: results.every((r) => r.success),
+    results,
+    message: `Mock 模式：批量检索完成（${results.length} 页）`,
+    elapsed_sec: 0.8
   }
 }
 
@@ -116,6 +185,32 @@ export async function mockQueryRag(query: string) {
       ? '通过：当前内容在 mock 检索摘要中有基本证据支撑。建议正式接入后端后继续补充真实来源页码，并人工复核关键数据。'
       : '需人工确认：输入内容较少，无法进行充分事实一致性判断。',
     message: 'Mock 模式：事实检查完成'
+  }
+}
+
+export async function mockExpandContentBatch(
+  items: Array<{ index: number; id?: string; outline_node: Record<string, unknown>; context?: string }>,
+  context?: string
+) {
+  await delay(900)
+  const results = await Promise.all(
+    items.map(async (item) => {
+      const pageContext = item.context ?? context ?? ''
+      const single = await mockExpandContent(item.outline_node, pageContext)
+      return {
+        index: item.index,
+        id: item.id,
+        success: single.success,
+        content: single.content,
+        message: single.message
+      }
+    })
+  )
+  return {
+    success: results.every((r) => r.success),
+    results,
+    message: `Mock 模式：批量生成完成（${results.length} 页）`,
+    elapsed_sec: 0.9
   }
 }
 

@@ -12,6 +12,34 @@ class ExpandContentRequest(BaseModel):
     outline_node: dict = Field(..., description="大纲节点")
     context: Optional[str] = Field(None, description="上下文信息")
 
+class BatchContentItem(BaseModel):
+    """批量正文生成单项"""
+    index: int = Field(..., description="页面序号，从 0 开始")
+    id: Optional[str] = Field(None, description="前端页面 ID，原样回传")
+    outline_node: dict = Field(..., description="大纲节点")
+    context: Optional[str] = Field(None, description="该项上下文，可覆盖批次级 context")
+
+class ExpandContentBatchRequest(BaseModel):
+    """批量补全内容请求"""
+    items: List[BatchContentItem] = Field(..., description="待生成页面列表")
+    context: Optional[str] = Field(None, description="批次共享上下文")
+    max_workers: Optional[int] = Field(None, ge=1, le=8, description="并行线程数，默认读 config")
+
+class BatchContentResultItem(BaseModel):
+    """批量正文生成单项结果"""
+    index: int = Field(..., description="页面序号")
+    id: Optional[str] = Field(None, description="前端页面 ID")
+    success: bool = Field(..., description="该项是否成功")
+    content: str = Field(..., description="生成的正文")
+    message: Optional[str] = Field(None, description="失败原因等")
+
+class ExpandContentBatchResponse(BaseModel):
+    """批量补全内容响应"""
+    success: bool = Field(..., description="是否至少有一项成功")
+    results: List[BatchContentResultItem] = Field(..., description="各页结果")
+    message: Optional[str] = Field(None, description="汇总消息")
+    elapsed_sec: Optional[float] = Field(None, description="总耗时（秒）")
+
 class RAGQueryRequest(BaseModel):
     """RAG查询请求模型"""
     query: str = Field(..., description="查询文本")
@@ -80,9 +108,37 @@ class SwitchModelResponse(BaseModel):
     message: Optional[str] = Field(None, description="消息")
 
 class SearchKnowledgeRequest(BaseModel):
-    topic: str = Field(..., description="需要搜索知识的PPT主题")
+    topic: str = Field(..., description="需要搜索知识的查询文本（可与前端补充知识 query 一致）")
+    refine_knowledge: bool = Field(
+        False,
+        description="True=评估+整理 LLM；False=快路径，仅检索并拼接来源",
+    )
 
 class SearchKnowledgeResponse(BaseModel):
     success: bool = Field(..., description="是否成功")
-    knowledge: str = Field(..., description="整理后的知识摘要")
+    knowledge: str = Field(..., description="检索摘要与来源（或整理后的知识摘要）")
     message: Optional[str] = Field(None, description="消息")
+
+class BatchKnowledgeItem(BaseModel):
+    index: int = Field(..., description="页面序号，从 0 开始")
+    id: Optional[str] = Field(None, description="前端页面 ID")
+    query: str = Field(..., description="该页检索 query")
+
+class SearchKnowledgeBatchRequest(BaseModel):
+    items: List[BatchKnowledgeItem] = Field(..., description="待检索页面列表")
+    refine_knowledge: bool = Field(False, description="是否走完整整理流程")
+    max_workers: Optional[int] = Field(None, ge=1, le=8, description="并行线程数")
+
+class BatchKnowledgeResultItem(BaseModel):
+    index: int
+    id: Optional[str] = None
+    success: bool
+    knowledge: str
+    has_sources: bool = False
+    message: Optional[str] = None
+
+class SearchKnowledgeBatchResponse(BaseModel):
+    success: bool
+    results: List[BatchKnowledgeResultItem]
+    message: Optional[str] = None
+    elapsed_sec: Optional[float] = None

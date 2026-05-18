@@ -272,6 +272,19 @@ select:disabled {
   gap: 16px;
 }
 
+.page-content-layout {
+  display: grid;
+  gap: 16px;
+}
+
+.content-block-primary textarea {
+  min-height: 200px;
+}
+
+.content-grid-secondary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .compact-grid {
   gap: 12px;
 }
@@ -518,8 +531,13 @@ textarea:focus {
 
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
+}
+
+.button-grid.batch-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 4px;
 }
 
 .markdown-preview {
@@ -757,6 +775,7 @@ details[open] > .page-summary-row::before {
 
   .form-grid,
   .content-grid,
+  .content-grid-secondary,
   .button-grid,
   .history-step-grid,
   .detail-grid {

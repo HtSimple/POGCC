@@ -3,5 +3,8 @@
   "dashscope_api_key": "your_dashscope_api_key_here",
   "tavily_api_key": "your_tavily_api_key_here",
   "llm_provider": "deepseek",
-  "deepseek_include_reasoning": false
+  "deepseek_include_reasoning": false,
+  "content_batch_max_workers": 3,
+  "knowledge_batch_max_workers": 3,
+  "search_query_max_workers": 4
 }

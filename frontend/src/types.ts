@@ -44,9 +44,15 @@ export interface ProjectRecord {
   markdown: string
 }
 
+export interface OutlineSubsection {
+  title?: string
+  goal?: string
+  bullets?: string[]
+}
+
 export interface OutlineSection {
   title?: string
-  subsections?: string[]
+  subsections?: Array<string | OutlineSubsection>
 }
 
 export interface OutlineResponse {

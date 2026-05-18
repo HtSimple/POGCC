@@ -1,8 +1,11 @@
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from langgraph.graph import StateGraph, END
 from app.services.llm_service import LLMService
 from app.services.web_search_service import WebSearchService
 from app.prompts.templates import SEARCH_PLAN_PROMPT, SEARCH_EVALUATE_PROMPT, SEARCH_SUMMARIZE_PROMPT
+from app.utils.config import config
 
 
 class SearchAgent:
@@ -108,52 +111,83 @@ class SearchAgent:
             "max_tokens": state.get("max_tokens", 4096),
         }
 
+    def _fetch_results_for_query(self, query: str) -> list[dict]:
+        """单条搜索词：本地 RAG + 网络（供并行调用）。"""
+        rows: list[dict] = []
+        if self.retrieval_service is not None:
+            try:
+                local_resp = self.retrieval_service.search(query, top_k=5)
+                if len(local_resp.results) == 0:
+                    print(f"  [本地] 0 条命中: {query[:80]}")
+                for item in local_resp.results:
+                    text = item.text
+                    if len(text) > self._LOCAL_CHUNK_TEXT_LIMIT:
+                        text = text[: self._LOCAL_CHUNK_TEXT_LIMIT] + "..."
+                    rows.append({
+                        "query": query,
+                        "chunk_id": item.chunk_id,
+                        "title": f"[本地] {item.source_file}",
+                        "url": f"local://{item.doc_id}/{item.chunk_id}",
+                        "content": text,
+                    })
+            except Exception as exc:
+                print(f"  [本地] 检索失败: {exc}")
+
+        print(f"  搜索: {query}")
+        for r in self.web_search_service.search(query, max_results=3):
+            rows.append({
+                "query": query,
+                "title": r.get("title", ""),
+                "url": r.get("url", ""),
+                "content": r.get("content", ""),
+            })
+        return rows
+
+    def _merge_query_rows(self, rows: list[dict], seen_local_chunks: set[str]) -> list[dict]:
+        merged: list[dict] = []
+        for row in rows:
+            cid = row.pop("chunk_id", None)
+            if cid is not None:
+                if cid in seen_local_chunks:
+                    continue
+                seen_local_chunks.add(cid)
+            merged.append(row)
+        return merged
+
     def _execute_search_node(self, state):
         print("=== 执行搜索节点 ===")
         search_queries = state.get("search_queries", [])
         existing_results = state.get("search_results", [])
         search_round = state.get("search_round", 0) + 1
 
-        new_results = []
+        new_results: list[dict] = []
         seen_local_chunks: set[str] = set()
 
-        for query in search_queries:
-            n_before = len(new_results)
-            if self.retrieval_service is not None:
-                try:
-                    local_resp = self.retrieval_service.search(query, top_k=5)
-                    n_local = len(local_resp.results)
-                    for item in local_resp.results:
-                        cid = item.chunk_id
-                        if cid in seen_local_chunks:
-                            continue
-                        seen_local_chunks.add(cid)
-                        text = item.text
-                        if len(text) > self._LOCAL_CHUNK_TEXT_LIMIT:
-                            text = text[: self._LOCAL_CHUNK_TEXT_LIMIT] + "..."
-                        new_results.append({
-                            "query": query,
-                            "title": f"[本地] {item.source_file}",
-                            "url": f"local://{item.doc_id}/{cid}",
-                            "content": text,
-                        })
-                    added_here = len(new_results) - n_before
-                    if n_local == 0:
-                        print(f"  [本地] 0 条命中（库空或词与文档不匹配）: {query[:80]}")
-                    else:
-                        print(f"  [本地] 新增 {added_here} 条（原始 {n_local} 条，去重后）: {query[:80]}")
-                except Exception as exc:
-                    print(f"  [本地] 检索失败: {exc}")
-
-            print(f"  搜索: {query}")
-            results = self.web_search_service.search(query, max_results=3)
-            for r in results:
-                new_results.append({
-                    "query": query,
-                    "title": r.get("title", ""),
-                    "url": r.get("url", ""),
-                    "content": r.get("content", ""),
-                })
+        if not search_queries:
+            pass
+        elif len(search_queries) == 1:
+            new_results = self._merge_query_rows(
+                self._fetch_results_for_query(search_queries[0]),
+                seen_local_chunks,
+            )
+        else:
+            max_q_workers = int(config.get("search_query_max_workers", 4) or 4)
+            max_q_workers = max(1, min(max_q_workers, len(search_queries), 8))
+            print(f"  并行执行 {len(search_queries)} 个搜索词 (workers={max_q_workers})")
+            with ThreadPoolExecutor(max_workers=max_q_workers) as executor:
+                future_map = {
+                    executor.submit(self._fetch_results_for_query, q): q
+                    for q in search_queries
+                }
+                for fut in as_completed(future_map):
+                    query = future_map[fut]
+                    try:
+                        rows = fut.result()
+                        added = self._merge_query_rows(rows, seen_local_chunks)
+                        new_results.extend(added)
+                        print(f"  [并行] 词「{query[:50]}」合并 {len(added)} 条")
+                    except Exception as exc:
+                        print(f"  [并行] 搜索词失败 {query[:60]}: {exc}")
 
         all_results = existing_results + new_results
         print(f"  本轮搜索到 {len(new_results)} 条结果，累计 {len(all_results)} 条")

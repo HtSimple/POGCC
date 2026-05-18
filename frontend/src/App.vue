@@ -204,7 +204,7 @@
               </div>
               <label class="select-shell">
                 <span>当前页</span>
-                <select v-model="activeSlideId" :disabled="allContentLoading">
+                <select v-model="activeSlideId" :disabled="allContentLoading || allKnowledgeLoading">
                   <option v-for="(slide, index) in slides" :key="slide.id" :value="slide.id">
                     {{ index + 1 }}. {{ slide.title || '未命名页面' }}
                   </option>
@@ -224,55 +224,78 @@
               </div>
 
               <div class="button-grid">
-                <button class="secondary-button" type="button" :disabled="pageLoading.knowledge"
+                <button class="secondary-button" type="button"
+                  :disabled="pageLoading.knowledge || allKnowledgeLoading || allContentLoading"
                   @click="fillKnowledge(activeSlide)">
                   <Search :size="18" />
                   {{ pageLoading.knowledge ? '检索中' : '补充知识' }}
                 </button>
-                <button class="secondary-button" type="button"
-                  :disabled="pageLoading.content || allContentLoading"
-                  @click="fillContent(activeSlide)">
-                  <FileText :size="18" />
-                  {{ pageLoading.content ? '生成中' : '生成正文' }}
-                </button>
                 <button
                   class="secondary-button"
                   type="button"
-                  :disabled="allContentLoading || pageLoading.content || slides.length === 0"
-                  @click="fillAllContent"
+                  :disabled="pageLoading.content || allContentLoading || allKnowledgeLoading"
+                  @click="fillContent(activeSlide)"
                 >
-                  <Files :size="18" />
-                  {{ allContentLoading ? '全部生成中' : '全部生成正文' }}
+                  <FileText :size="18" />
+                  {{ pageLoading.content ? '生成中' : '生成正文' }}
                 </button>
-                <button class="secondary-button" type="button" :disabled="pageLoading.notes"
+                <button class="secondary-button" type="button" :disabled="pageLoading.notes || allContentLoading || allKnowledgeLoading"
                   @click="fillNotes(activeSlide)">
                   <NotebookPen :size="18" />
                   {{ pageLoading.notes ? '生成中' : '生成备注' }}
                 </button>
-                <button class="secondary-button" type="button" :disabled="pageLoading.fact"
+                <button class="secondary-button" type="button" :disabled="pageLoading.fact || allContentLoading || allKnowledgeLoading"
                   @click="checkFacts(activeSlide)">
                   <CheckCircle2 :size="18" />
                   {{ pageLoading.fact ? '检查中' : '事实检查' }}
                 </button>
               </div>
 
-              <div class="content-grid">
-                <label>
-                  <span>检索摘要与来源</span>
-                  <textarea v-model="activeSlide.knowledge" rows="8" />
-                </label>
-                <label>
+              <p v-if="allKnowledgeLoading || allContentLoading" class="batch-hint">
+                <template v-if="allKnowledgeLoading">正在并行检索全部页面，请稍候…</template>
+                <template v-else>正在并行生成全部页面正文，请稍候…</template>
+              </p>
+
+              <div class="button-grid batch-actions">
+                <button
+                  class="secondary-button"
+                  type="button"
+                  :disabled="allKnowledgeLoading || allContentLoading || pageLoading.knowledge || slides.length === 0"
+                  @click="fillAllKnowledge"
+                >
+                  <Search :size="18" />
+                  {{ allKnowledgeLoading ? '全部检索中' : '全部检索' }}
+                </button>
+                <button
+                  class="secondary-button"
+                  type="button"
+                  :disabled="allContentLoading || allKnowledgeLoading || pageLoading.content || slides.length === 0"
+                  @click="fillAllContent"
+                >
+                  <Files :size="18" />
+                  {{ allContentLoading ? '全部生成中' : '全部生成' }}
+                </button>
+              </div>
+
+              <div class="page-content-layout">
+                <label class="content-block content-block-primary">
                   <span>正文内容</span>
-                  <textarea v-model="activeSlide.content" rows="8" />
+                  <textarea v-model="activeSlide.content" rows="10" />
                 </label>
-                <label>
-                  <span>演讲备注</span>
-                  <textarea v-model="activeSlide.notes" rows="8" />
-                </label>
-                <label>
-                  <span>事实检查结果</span>
-                  <textarea v-model="activeSlide.factCheckMessage" rows="8" />
-                </label>
+                <div class="content-grid content-grid-secondary">
+                  <label>
+                    <span>检索摘要与来源</span>
+                    <textarea v-model="activeSlide.knowledge" rows="8" />
+                  </label>
+                  <label>
+                    <span>演讲备注</span>
+                    <textarea v-model="activeSlide.notes" rows="8" />
+                  </label>
+                  <label>
+                    <span>事实检查结果</span>
+                    <textarea v-model="activeSlide.factCheckMessage" rows="8" />
+                  </label>
+                </div>
               </div>
             </div>
           </section>
@@ -485,6 +508,7 @@ import {
 } from 'lucide-vue-next'
 import {
   expandContent,
+  expandContentBatch,
   generateOutline,
   getApiBaseUrl,
   getHealth,
@@ -492,6 +516,7 @@ import {
   isUsingMockApi,
   queryRag,
   searchKnowledge,
+  searchKnowledgeBatch,
   switchModel,
   uploadDocument
 } from './api'
@@ -540,6 +565,7 @@ const pageLoading = reactive({
   fact: false
 })
 const allContentLoading = ref(false)
+const allKnowledgeLoading = ref(false)
 
 const generationStep = computed(() => generationSteps[generationStepIndex.value].key)
 const activeSlide = computed(() => slides.value.find((slide) => slide.id === activeSlideId.value) ?? slides.value[0])
@@ -716,18 +742,33 @@ async function handleGenerateOutline() {
   }
 }
 
-function normalizeOutline(outline: { title?: string; sections?: Array<{ title?: string; subsections?: string[] }> }) {
+function normalizeOutline(outline: {
+  title?: string
+  sections?: Array<{ title?: string; subsections?: Array<string | { title?: string; goal?: string; bullets?: string[] }> }>
+}) {
   const pages: SlidePage[] = []
   outline.sections?.forEach((section) => {
     const sectionTitle = cleanTitle(section.title || '')
     const subsections = section.subsections?.length ? section.subsections : [sectionTitle]
     subsections.forEach((subsection) => {
-      const title = cleanTitle(subsection)
+      if (typeof subsection === 'string') {
+        const title = cleanTitle(subsection)
+        pages.push(createSlide({
+          sectionTitle,
+          title,
+          goal: `围绕“${title}”说明核心信息`,
+          bullets: title ? [title] : []
+        }))
+        return
+      }
+      const title = cleanTitle(subsection.title || '')
+      const goal = (subsection.goal || '').trim() || `围绕“${title}”说明核心信息`
+      const bullets = (subsection.bullets || []).map((b) => String(b).trim()).filter(Boolean)
       pages.push(createSlide({
         sectionTitle,
         title,
-        goal: `围绕“${title}”说明核心信息`,
-        bullets: title ? [title] : []
+        goal,
+        bullets: bullets.length ? bullets : title ? [title] : []
       }))
     })
   })
@@ -772,11 +813,14 @@ function updateBullets(slideId: string, value: string) {
   slide.bullets = value.split('\n').map((line) => line.trim()).filter(Boolean)
 }
 
+function buildKnowledgeQuery(slide: SlidePage) {
+  return `${form.topic}\n${slide.sectionTitle}\n${slide.title}\n${slide.bullets.join('\n')}`
+}
+
 async function fillKnowledge(slide: SlidePage) {
   pageLoading.knowledge = true
   try {
-    const query = `${form.topic}\n${slide.sectionTitle}\n${slide.title}\n${slide.bullets.join('\n')}`
-    const result = await searchKnowledge(query)
+    const result = await searchKnowledge(buildKnowledgeQuery(slide))
     if (result.success) {
       slide.knowledge = result.knowledge
       showToast('知识补充完成', 'success')
@@ -787,6 +831,47 @@ async function fillKnowledge(slide: SlidePage) {
     showToast(getErrorMessage(error), 'error')
   } finally {
     pageLoading.knowledge = false
+  }
+}
+
+async function fillAllKnowledge() {
+  if (slides.value.length === 0) {
+    showToast('请先完成大纲', 'warning')
+    return
+  }
+  allKnowledgeLoading.value = true
+  try {
+    const items = slides.value.map((slide, index) => ({
+      index,
+      id: slide.id,
+      query: buildKnowledgeQuery(slide)
+    }))
+    const result = await searchKnowledgeBatch(items)
+    let okCount = 0
+    for (const row of result.results) {
+      const slide = slides.value.find((s) => s.id === row.id)
+      if (!slide) {
+        continue
+      }
+      if (row.success) {
+        slide.knowledge = row.knowledge
+        okCount += 1
+      }
+    }
+    const failCount = slides.value.length - okCount
+    const elapsedHint = result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
+    if (failCount === 0) {
+      showToast(`全部检索完成（${okCount} 页${elapsedHint}）`, 'success')
+    } else {
+      showToast(
+        `检索完成 ${okCount} 页，失败 ${failCount} 页${elapsedHint}`,
+        failCount === slides.value.length ? 'error' : 'warning'
+      )
+    }
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+  } finally {
+    allKnowledgeLoading.value = false
   }
 }
 
@@ -830,13 +915,38 @@ async function fillAllContent() {
   }
   allContentLoading.value = true
   try {
-    const results = await Promise.all(slides.value.map((slide) => generateSlideContent(slide)))
-    const okCount = results.filter((r) => r.ok).length
-    const failCount = results.length - okCount
+    const items = slides.value.map((slide, index) => ({
+      index,
+      id: slide.id,
+      outline_node: {
+        title: slide.title,
+        section: slide.sectionTitle,
+        goal: slide.goal,
+        bullets: slide.bullets
+      },
+      context: slide.knowledge || requirementsText.value
+    }))
+    const result = await expandContentBatch(items, requirementsText.value)
+    let okCount = 0
+    for (const row of result.results) {
+      const slide = slides.value.find((s) => s.id === row.id)
+      if (!slide) {
+        continue
+      }
+      if (row.success) {
+        slide.content = row.content
+        okCount += 1
+      }
+    }
+    const failCount = slides.value.length - okCount
+    const elapsedHint = result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
     if (failCount === 0) {
-      showToast(`全部正文已生成（${okCount} 页）`, 'success')
+      showToast(`全部正文已生成（${okCount} 页${elapsedHint}）`, 'success')
     } else {
-      showToast(`正文生成完成 ${okCount} 页，失败 ${failCount} 页`, failCount === results.length ? 'error' : 'warning')
+      showToast(
+        `正文生成完成 ${okCount} 页，失败 ${failCount} 页${elapsedHint}`,
+        failCount === slides.value.length ? 'error' : 'warning'
+      )
     }
   } catch (error) {
     showToast(getErrorMessage(error), 'error')
