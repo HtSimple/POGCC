@@ -139,7 +139,7 @@
             <div class="section-title with-action">
               <div>
                 <p class="eyebrow">Step 3</p>
-                <h3>生成并修改大纲</h3>
+                <h3>结构化大纲编辑</h3>
               </div>
               <div class="button-row">
                 <button class="secondary-button" type="button" @click="addSlide">
@@ -154,45 +154,93 @@
               </div>
             </div>
 
+            <div v-if="outlineProtocolMeta" class="protocol-strip">
+              <div>
+                <span>协议</span>
+                <strong>{{ outlineProtocolMeta.protocolVersion }}</strong>
+              </div>
+              <div>
+                <span>标题</span>
+                <strong>{{ outlineProtocolMeta.presentationTitle }}</strong>
+              </div>
+              <div>
+                <span>语言</span>
+                <strong>{{ outlineProtocolMeta.language }}</strong>
+              </div>
+              <div>
+                <span>目标页数</span>
+                <strong>{{ outlineProtocolMeta.targetSlideCount }}</strong>
+              </div>
+            </div>
+
             <div v-if="slides.length === 0" class="empty-state">完成任务信息后点击“生成大纲”</div>
-            <div v-else class="slide-list">
-              <article v-for="(slide, index) in slides" :key="slide.id" class="slide-editor">
-                <div class="slide-editor-head">
-                  <strong>第 {{ index + 1 }} 页</strong>
-                  <div class="button-row compact">
-                    <button class="ghost-button" type="button" title="上移" :disabled="index === 0"
-                      @click="moveSlide(index, -1)">
-                      <ArrowUp :size="17" />
-                    </button>
-                    <button class="ghost-button" type="button" title="下移" :disabled="index === slides.length - 1"
-                      @click="moveSlide(index, 1)">
-                      <ArrowDown :size="17" />
-                    </button>
-                    <button class="ghost-button danger" type="button" title="删除页面" @click="removeSlide(slide.id)">
-                      <Trash2 :size="17" />
-                    </button>
+            <div v-else class="outline-protocol-board">
+              <section v-for="section in outlineSectionGroups" :key="section.key" class="outline-section-block">
+                <div class="outline-section-head">
+                  <div>
+                    <p class="eyebrow">
+                      {{ section.sectionId || `sec-${String(section.index + 1).padStart(2, '0')}` }}
+                      · slides {{ section.start }}-{{ section.end }}
+                    </p>
+                    <h4>{{ section.title || '未命名章节' }}</h4>
                   </div>
+                  <span class="status-pill small">{{ section.slides.length }} 页</span>
                 </div>
-                <div class="form-grid compact-grid">
-                  <label>
-                    <span>章节</span>
-                    <input v-model.trim="slide.sectionTitle" type="text" />
-                  </label>
-                  <label>
-                    <span>标题</span>
-                    <input v-model.trim="slide.title" type="text" />
-                  </label>
-                  <label class="full-row">
-                    <span>核心目标</span>
-                    <input v-model.trim="slide.goal" type="text" />
-                  </label>
-                  <label class="full-row">
-                    <span>要点</span>
-                    <textarea :value="slide.bullets.join('\n')" rows="4"
-                      @input="updateBullets(slide.id, ($event.target as HTMLTextAreaElement).value)" />
-                  </label>
-                </div>
-              </article>
+
+                <article v-for="slide in section.slides" :key="slide.id" class="slide-editor protocol-slide-editor">
+                  <div class="slide-editor-head">
+                    <div class="slide-meta-title">
+                      <strong>{{ slide.protocolSlideId || `slide-${String(getSlideIndex(slide) + 1).padStart(3, '0')}` }}</strong>
+                      <span>第 {{ getSlideIndex(slide) + 1 }} 页</span>
+                    </div>
+                    <div class="button-row compact">
+                      <button class="ghost-button" type="button" title="上移" :disabled="getSlideIndex(slide) === 0"
+                        @click="moveSlide(getSlideIndex(slide), -1)">
+                        <ArrowUp :size="17" />
+                      </button>
+                      <button class="ghost-button" type="button" title="下移" :disabled="getSlideIndex(slide) === slides.length - 1"
+                        @click="moveSlide(getSlideIndex(slide), 1)">
+                        <ArrowDown :size="17" />
+                      </button>
+                      <button class="ghost-button danger" type="button" title="删除页面" @click="removeSlide(slide.id)">
+                        <Trash2 :size="17" />
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-grid compact-grid">
+                    <label>
+                      <span>章节</span>
+                      <input v-model.trim="slide.sectionTitle" type="text" />
+                    </label>
+                    <label>
+                      <span>页面角色</span>
+                      <select v-model="slide.slideRole">
+                        <option value="cover">cover</option>
+                        <option value="toc">toc</option>
+                        <option value="transition">transition</option>
+                        <option value="content">content</option>
+                        <option value="case-study">case-study</option>
+                        <option value="summary">summary</option>
+                        <option value="qa">qa</option>
+                        <option value="appendix">appendix</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>标题</span>
+                      <input v-model.trim="slide.title" type="text" />
+                    </label>
+                    <label>
+                      <span>章节目标</span>
+                      <input v-model.trim="slide.goal" type="text" />
+                    </label>
+                    <label class="full-row">
+                      <span>要点</span>
+                      <textarea :value="slide.bullets.join('\n')" rows="4"
+                        @input="updateBullets(slide.id, ($event.target as HTMLTextAreaElement).value)" />
+                    </label>
+                  </div>
+                </article>
+              </section>
             </div>
           </section>
 
@@ -521,7 +569,17 @@ import {
   uploadDocument
 } from './api'
 import { deleteRecord, loadHistory, upsertRecord } from './storage'
-import type { FactCheckStatus, ProjectForm, ProjectRecord, ReferenceDoc, ReferenceStatus, SlidePage } from './types'
+import type {
+  FactCheckStatus,
+  NarrativeOutline,
+  OutlineResponse,
+  PageContentProtocol,
+  ProjectForm,
+  ProjectRecord,
+  ReferenceDoc,
+  ReferenceStatus,
+  SlidePage
+} from './types'
 
 type AppMode = 'generate' | 'history'
 type GenerationStep = 'task' | 'references' | 'outline' | 'pages' | 'markdown'
@@ -553,6 +611,7 @@ const availableProviders = ref<string[]>([])
 const selectedProvider = ref('')
 const modelLoading = ref(false)
 const outlineLoading = ref(false)
+const outlineProtocolMeta = ref<Pick<NarrativeOutline, 'protocolVersion' | 'language' | 'presentationTitle' | 'targetSlideCount'> | null>(null)
 const historyRecords = ref<ProjectRecord[]>(loadHistory())
 const selectedHistoryId = ref<string | null>(null)
 const currentRecordId = ref(createId())
@@ -570,6 +629,38 @@ const allKnowledgeLoading = ref(false)
 const generationStep = computed(() => generationSteps[generationStepIndex.value].key)
 const activeSlide = computed(() => slides.value.find((slide) => slide.id === activeSlideId.value) ?? slides.value[0])
 const selectedHistory = computed(() => historyRecords.value.find((record) => record.id === selectedHistoryId.value) ?? null)
+const outlineSectionGroups = computed(() => {
+  const groups: Array<{
+    key: string
+    index: number
+    sectionId?: string
+    title: string
+    start: number
+    end: number
+    slides: SlidePage[]
+  }> = []
+
+  slides.value.forEach((slide, index) => {
+    const title = slide.sectionTitle || '未命名章节'
+    let group = groups.find((item) => item.title === title && item.sectionId === slide.sectionId)
+    if (!group) {
+      group = {
+        key: `${slide.sectionId || title}-${groups.length}`,
+        index: groups.length,
+        sectionId: slide.sectionId,
+        title,
+        start: index + 1,
+        end: index + 1,
+        slides: []
+      }
+      groups.push(group)
+    }
+    group.end = index + 1
+    group.slides.push(slide)
+  })
+
+  return groups
+})
 
 const requirementsText = computed(() => {
   const lines = [
@@ -742,10 +833,34 @@ async function handleGenerateOutline() {
   }
 }
 
-function normalizeOutline(outline: {
-  title?: string
-  sections?: Array<{ title?: string; subsections?: Array<string | { title?: string; goal?: string; bullets?: string[] }> }>
-}) {
+function normalizeOutline(outline: OutlineResponse) {
+  if (isNarrativeOutline(outline)) {
+    outlineProtocolMeta.value = {
+      protocolVersion: outline.protocolVersion,
+      language: outline.language,
+      presentationTitle: outline.presentationTitle,
+      targetSlideCount: outline.targetSlideCount
+    }
+    const pages = outline.sections.flatMap((section) =>
+      section.slides.map((slide) =>
+        createSlide({
+          protocolSlideId: slide.slideId,
+          slideNumber: slide.slideNumber,
+          slideRole: slide.slideRole,
+          sectionId: section.sectionId,
+          slideRange: section.slideRange,
+          sectionTitle: section.sectionTitle,
+          title: cleanTitle(slide.slideTitle),
+          goal: section.sectionObjective,
+          bullets: slide.keyPoints.map((point) => String(point).trim()).filter(Boolean),
+          notes: slide.notes || ''
+        })
+      )
+    )
+    return pages.length ? pages : [createSlide({ sectionTitle: outline.presentationTitle, title: outline.presentationTitle })]
+  }
+
+  outlineProtocolMeta.value = null
   const pages: SlidePage[] = []
   outline.sections?.forEach((section) => {
     const sectionTitle = cleanTitle(section.title || '')
@@ -780,8 +895,28 @@ function normalizeOutline(outline: {
   return [createSlide({ sectionTitle: outline.title || form.topic, title: outline.title || form.topic })]
 }
 
+function isNarrativeOutline(outline: OutlineResponse): outline is NarrativeOutline {
+  return (outline as NarrativeOutline).protocolVersion === 'ppt-narrative-outline.v1'
+}
+
+function pageContentToText(pageContent?: PageContentProtocol | null) {
+  const slide = pageContent?.slides?.[0]
+  if (!slide) {
+    return ''
+  }
+  return [
+    slide.coreMessage,
+    ...slide.displayBullets.map((item) => `- ${item}`),
+    slide.actionableTakeaway || ''
+  ].filter(Boolean).join('\n')
+}
+
 function addSlide() {
   const slide = createSlide({
+    protocolSlideId: `slide-${String(slides.value.length + 1).padStart(3, '0')}`,
+    slideNumber: slides.value.length + 1,
+    slideRole: slides.value.length === 0 ? 'cover' : 'content',
+    sectionId: `sec-${String(outlineSectionGroups.value.length + 1).padStart(2, '0')}`,
     sectionTitle: '自定义章节',
     title: `新增页面 ${slides.value.length + 1}`,
     bullets: []
@@ -792,6 +927,11 @@ function addSlide() {
 
 function removeSlide(slideId: string) {
   slides.value = slides.value.filter((slide) => slide.id !== slideId)
+}
+
+function getSlideIndex(slide: SlidePage) {
+  const index = slides.value.findIndex((item) => item.id === slide.id)
+  return index >= 0 ? index : 0
 }
 
 function moveSlide(index: number, direction: -1 | 1) {
@@ -878,6 +1018,9 @@ async function fillAllKnowledge() {
 async function generateSlideContent(slide: SlidePage): Promise<{ ok: boolean; message?: string }> {
   const result = await expandContent(
     {
+      id: slide.protocolSlideId || slide.id,
+      number: slides.value.findIndex((item) => item.id === slide.id) + 1,
+      role: slide.slideRole || 'content',
       title: slide.title,
       section: slide.sectionTitle,
       goal: slide.goal,
@@ -886,7 +1029,7 @@ async function generateSlideContent(slide: SlidePage): Promise<{ ok: boolean; me
     slide.knowledge || requirementsText.value
   )
   if (result.success) {
-    slide.content = result.content
+    slide.content = pageContentToText(result.page_content) || result.content
     return { ok: true }
   }
   return { ok: false, message: result.message }
@@ -919,6 +1062,9 @@ async function fillAllContent() {
       index,
       id: slide.id,
       outline_node: {
+        id: slide.protocolSlideId || slide.id,
+        number: index + 1,
+        role: slide.slideRole || 'content',
         title: slide.title,
         section: slide.sectionTitle,
         goal: slide.goal,
@@ -934,7 +1080,7 @@ async function fillAllContent() {
         continue
       }
       if (row.success) {
-        slide.content = row.content
+        slide.content = pageContentToText(row.page_content) || row.content
         okCount += 1
       }
     }
@@ -1182,6 +1328,11 @@ function removeHistoryRecord(recordId: string) {
 function createSlide(input: Partial<SlidePage> = {}): SlidePage {
   return {
     id: createId(),
+    protocolSlideId: input.protocolSlideId,
+    slideNumber: input.slideNumber,
+    slideRole: input.slideRole || 'content',
+    sectionId: input.sectionId,
+    slideRange: input.slideRange,
     sectionTitle: input.sectionTitle || '',
     title: input.title || '',
     goal: input.goal || '',

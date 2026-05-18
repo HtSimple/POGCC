@@ -127,3 +127,88 @@ SEARCH_SUMMARIZE_PROMPT = """
 4. 保留重要的数据、案例和引用
 5. 使用中文输出
 """
+
+
+OUTLINE_JSON_TEMPLATE = """
+You are generating a PPT narrative outline. Return only one valid JSON object.
+
+The JSON must follow protocolVersion "ppt-narrative-outline.v1".
+Required top-level fields:
+- protocolVersion: "ppt-narrative-outline.v1"
+- language: "zh-CN"
+- presentationTitle: string
+- targetSlideCount: integer from 3 to 50
+- sections: array
+
+Each section must contain:
+- sectionId: "sec-01", "sec-02", ...
+- sectionTitle
+- sectionObjective
+- slideRange: {"start": number, "end": number}
+- slides
+
+Each slide must contain:
+- slideId: "slide-001", "slide-002", ...
+- slideNumber
+- slideRole: one of cover, toc, transition, content, case-study, summary, qa, appendix
+- slideTitle
+- keyPoints: 2 to 5 strings
+- notes: optional short planning notes
+
+Rules:
+- The number of slides across all sections must equal targetSlideCount when the user provides a target page count.
+- Use Chinese content unless the user explicitly requests another language.
+- Use the reference context as the primary factual basis when it is provided.
+- If reference context is provided, reflect its concrete concepts in sectionTitle, slideTitle, and keyPoints.
+- Do not output Markdown, comments, or code fences.
+
+Topic:
+{topic}
+
+Requirements:
+{requirements}
+
+Reference context:
+{reference_context}
+""".strip()
+
+
+PAGE_CONTENT_JSON_TEMPLATE = """
+You are expanding one PPT slide into structured page content. Return only one valid JSON object.
+
+The JSON must follow protocolVersion "ppt-page-content.v1".
+Required top-level fields:
+- protocolVersion: "ppt-page-content.v1"
+- language: "zh-CN"
+- presentationTitle
+- researchPolicy
+- slides: array with exactly one slide
+
+researchPolicy must contain:
+- triggerReason: one of user_requested, insufficient_input, fact_verification
+- depthLevel: one of light, standard, deep
+- sourcePriority: one to five values from official_sites, government_reports, academic_sources, authoritative_media, industry_reports
+- maxSourcesPerSlide: optional integer from 1 to 8
+
+The slide must contain:
+- slideId: "slide-001" if no slide id is provided
+- slideNumber: integer from 1 to 50
+- slideRole: one of cover, toc, transition, content, case-study, summary, qa, appendix
+- pageGoal
+- slideTitle
+- coreMessage
+- displayBullets: 3 to 5 strings
+- keyData: array, may be empty
+- evidencePack: array, may be empty if no reliable sources are available
+- actionableTakeaway
+- speakerNotes
+
+Do not invent fake sources. If the context has no reliable source, use evidencePack: [] and keyData: [].
+Do not output Markdown, comments, or code fences.
+
+Outline node:
+{outline_node}
+
+Reference context:
+{context}
+""".strip()

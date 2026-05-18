@@ -18,8 +18,12 @@ class QwenService:
             base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
         )
 
-    def generate(self, prompt, model="qwen3.6-plus", temperature=0.3, max_tokens=4096):
+    def generate(self, prompt, model="qwen3.6-plus", temperature=0.3, max_tokens=4096, response_format=None):
         try:
+            kwargs = {}
+            if response_format is not None:
+                kwargs["response_format"] = response_format
+
             completion = self.client.chat.completions.create(
                 model=model,
                 messages=[
@@ -28,7 +32,8 @@ class QwenService:
                 ],
                 temperature=temperature,
                 max_tokens=max_tokens,
-                stream=False
+                stream=False,
+                **kwargs,
             )
 
             content = completion.choices[0].message.content

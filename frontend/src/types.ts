@@ -22,6 +22,11 @@ export interface ReferenceDoc {
 
 export interface SlidePage {
   id: string
+  protocolSlideId?: string
+  slideNumber?: number
+  slideRole?: SlideRole
+  sectionId?: string
+  slideRange?: SlideRange
   sectionTitle: string
   title: string
   goal: string
@@ -44,6 +49,86 @@ export interface ProjectRecord {
   markdown: string
 }
 
+export type SlideRole = 'cover' | 'toc' | 'transition' | 'content' | 'case-study' | 'summary' | 'qa' | 'appendix'
+
+export interface SlideRange {
+  start: number
+  end: number
+}
+
+export interface OutlineProtocolSlide {
+  slideId: string
+  slideNumber: number
+  slideRole: SlideRole
+  slideTitle: string
+  keyPoints: string[]
+  notes?: string
+}
+
+export interface NarrativeOutlineSection {
+  sectionId: string
+  sectionTitle: string
+  sectionObjective: string
+  slideRange: SlideRange
+  slides: OutlineProtocolSlide[]
+}
+
+export interface NarrativeOutline {
+  protocolVersion: 'ppt-narrative-outline.v1'
+  language: string
+  presentationTitle: string
+  targetSlideCount: number
+  sections: NarrativeOutlineSection[]
+}
+
+export interface ResearchPolicy {
+  triggerReason: 'user_requested' | 'insufficient_input' | 'fact_verification'
+  depthLevel: 'light' | 'standard' | 'deep'
+  sourcePriority: string[]
+  maxSourcesPerSlide?: number
+}
+
+export interface KeyDataItem {
+  label: string
+  value: number
+  unit: string
+  year: number
+  sourceRefId: string
+}
+
+export interface EvidenceItem {
+  sourceRefId: string
+  claim: string
+  sourceTitle: string
+  sourceType: string
+  url: string
+  publishDate: string
+  credibility: 'high' | 'medium'
+  quote?: string
+}
+
+export interface PageContentSlide {
+  slideId: string
+  slideNumber: number
+  slideRole: SlideRole
+  pageGoal: string
+  slideTitle: string
+  coreMessage: string
+  displayBullets: string[]
+  keyData: KeyDataItem[]
+  evidencePack: EvidenceItem[]
+  actionableTakeaway?: string
+  speakerNotes: string
+}
+
+export interface PageContentProtocol {
+  protocolVersion: 'ppt-page-content.v1'
+  language: string
+  presentationTitle: string
+  researchPolicy: ResearchPolicy
+  slides: PageContentSlide[]
+}
+
 export interface OutlineSubsection {
   title?: string
   goal?: string
@@ -55,7 +140,7 @@ export interface OutlineSection {
   subsections?: Array<string | OutlineSubsection>
 }
 
-export interface OutlineResponse {
+export type OutlineResponse = NarrativeOutline | {
   title?: string
   sections?: OutlineSection[]
 }

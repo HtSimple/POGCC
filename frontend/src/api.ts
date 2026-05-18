@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { HealthResponse, ModelInfoResponse, OutlineResponse } from './types'
+import type { HealthResponse, ModelInfoResponse, OutlineResponse, PageContentProtocol } from './types'
 import {
   mockExpandContent,
   mockExpandContentBatch,
@@ -126,13 +126,18 @@ export async function queryRag(query: string) {
 
 export async function expandContent(outlineNode: Record<string, unknown>, context: string) {
   if (useMock) {
-    return mockExpandContent(outlineNode, context)
+    return mockExpandContent(outlineNode, context) as Promise<{
+      success: boolean
+      content: string
+      page_content?: PageContentProtocol | null
+      message?: string
+    }>
   }
   const { data } = await api.post('/api/generator/content', {
     outline_node: outlineNode,
     context
   })
-  return data as { success: boolean; content: string; message?: string }
+  return data as { success: boolean; content: string; page_content?: PageContentProtocol | null; message?: string }
 }
 
 export interface BatchContentItemPayload {
@@ -147,6 +152,7 @@ export interface BatchContentResultItem {
   id?: string
   success: boolean
   content: string
+  page_content?: PageContentProtocol | null
   message?: string
 }
 
@@ -156,7 +162,12 @@ export async function expandContentBatch(
   maxWorkers?: number
 ) {
   if (useMock) {
-    return mockExpandContentBatch(items, context)
+    return mockExpandContentBatch(items, context) as Promise<{
+      success: boolean
+      results: BatchContentResultItem[]
+      message?: string
+      elapsed_sec?: number
+    }>
   }
   const { data } = await api.post('/api/generator/content/batch', {
     items,

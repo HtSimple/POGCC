@@ -1,133 +1,238 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Literal, Optional
 
-# 请求模型
+from pydantic import BaseModel, Field
+
+
+SlideRole = Literal[
+    "cover",
+    "toc",
+    "transition",
+    "content",
+    "case-study",
+    "summary",
+    "qa",
+    "appendix",
+]
+
+
+class SlideRange(BaseModel):
+    start: int = Field(..., ge=1, le=50)
+    end: int = Field(..., ge=1, le=50)
+
+
+class OutlineSlide(BaseModel):
+    slideId: str = Field(..., pattern=r"^slide-[0-9]{3}$")
+    slideNumber: int = Field(..., ge=1, le=50)
+    slideRole: SlideRole
+    slideTitle: str = Field(..., min_length=2, max_length=80)
+    keyPoints: list[str] = Field(..., min_length=2, max_length=5)
+    notes: str = Field("", max_length=300)
+
+
+class OutlineSection(BaseModel):
+    sectionId: str = Field(..., pattern=r"^sec-[0-9]{2}$")
+    sectionTitle: str = Field(..., min_length=2, max_length=80)
+    sectionObjective: str = Field(..., min_length=8, max_length=200)
+    slideRange: SlideRange
+    slides: list[OutlineSlide] = Field(..., min_length=1, max_length=20)
+
+
+class NarrativeOutline(BaseModel):
+    protocolVersion: Literal["ppt-narrative-outline.v1"]
+    language: str = Field(..., min_length=2, max_length=20)
+    presentationTitle: str = Field(..., min_length=4, max_length=120)
+    targetSlideCount: int = Field(..., ge=3, le=50)
+    sections: list[OutlineSection] = Field(..., min_length=1, max_length=12)
+
+
+class ResearchPolicy(BaseModel):
+    triggerReason: Literal["user_requested", "insufficient_input", "fact_verification"]
+    depthLevel: Literal["light", "standard", "deep"]
+    sourcePriority: list[
+        Literal[
+            "official_sites",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports",
+        ]
+    ] = Field(..., min_length=1, max_length=5)
+    maxSourcesPerSlide: Optional[int] = Field(None, ge=1, le=8)
+
+
+class KeyDataItem(BaseModel):
+    label: str = Field(..., min_length=2, max_length=60)
+    value: float
+    unit: str = Field(..., min_length=1, max_length=20)
+    year: int = Field(..., ge=1990, le=2100)
+    sourceRefId: str = Field(..., pattern=r"^src-[0-9]{3}$")
+
+
+class EvidenceItem(BaseModel):
+    sourceRefId: str = Field(..., pattern=r"^src-[0-9]{3}$")
+    claim: str = Field(..., min_length=2, max_length=180)
+    sourceTitle: str = Field(..., min_length=2, max_length=120)
+    sourceType: Literal[
+        "official_sites",
+        "government_reports",
+        "academic_sources",
+        "authoritative_media",
+        "industry_reports",
+    ]
+    url: str = Field(..., max_length=300)
+    publishDate: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$")
+    credibility: Literal["high", "medium"]
+    quote: str = Field("", max_length=220)
+
+
+class PageContentSlide(BaseModel):
+    slideId: str = Field(..., pattern=r"^slide-[0-9]{3}$")
+    slideNumber: int = Field(..., ge=1, le=50)
+    slideRole: SlideRole
+    pageGoal: str = Field(..., min_length=8, max_length=120)
+    slideTitle: str = Field(..., min_length=2, max_length=80)
+    coreMessage: str = Field(..., min_length=12, max_length=140)
+    displayBullets: list[str] = Field(..., min_length=3, max_length=5)
+    keyData: list[KeyDataItem] = Field(default_factory=list, max_length=4)
+    evidencePack: list[EvidenceItem] = Field(default_factory=list, max_length=5)
+    actionableTakeaway: str = Field("", max_length=120)
+    speakerNotes: str = Field(..., min_length=10, max_length=300)
+
+
+class PageContentProtocol(BaseModel):
+    protocolVersion: Literal["ppt-page-content.v1"]
+    language: str = Field(..., min_length=2, max_length=20)
+    presentationTitle: str = Field(..., min_length=4, max_length=120)
+    researchPolicy: ResearchPolicy
+    slides: list[PageContentSlide] = Field(..., min_length=1, max_length=50)
+
+
 class GenerateOutlineRequest(BaseModel):
-    """生成大纲请求模型"""
-    topic: str = Field(..., description="PPT主题")
-    requirements: Optional[str] = Field(None, description="额外需求")
+    topic: str = Field(..., description="PPT topic")
+    requirements: Optional[str] = Field(None, description="Generation requirements")
+
 
 class ExpandContentRequest(BaseModel):
-    """补全内容请求模型"""
-    outline_node: dict = Field(..., description="大纲节点")
-    context: Optional[str] = Field(None, description="上下文信息")
+    outline_node: dict = Field(..., description="Outline node")
+    context: Optional[str] = Field(None, description="Reference context")
+
 
 class BatchContentItem(BaseModel):
-    """批量正文生成单项"""
-    index: int = Field(..., description="页面序号，从 0 开始")
-    id: Optional[str] = Field(None, description="前端页面 ID，原样回传")
-    outline_node: dict = Field(..., description="大纲节点")
-    context: Optional[str] = Field(None, description="该项上下文，可覆盖批次级 context")
+    index: int = Field(..., description="Item index")
+    id: Optional[str] = Field(None, description="Client item id")
+    outline_node: dict = Field(..., description="Outline node")
+    context: Optional[str] = Field(None, description="Item-specific context")
+
 
 class ExpandContentBatchRequest(BaseModel):
-    """批量补全内容请求"""
-    items: List[BatchContentItem] = Field(..., description="待生成页面列表")
-    context: Optional[str] = Field(None, description="批次共享上下文")
-    max_workers: Optional[int] = Field(None, ge=1, le=8, description="并行线程数，默认读 config")
+    items: list[BatchContentItem] = Field(..., description="Items to expand")
+    context: Optional[str] = Field(None, description="Shared context")
+    max_workers: Optional[int] = Field(None, ge=1, le=8, description="Worker count")
+
 
 class BatchContentResultItem(BaseModel):
-    """批量正文生成单项结果"""
-    index: int = Field(..., description="页面序号")
-    id: Optional[str] = Field(None, description="前端页面 ID")
-    success: bool = Field(..., description="该项是否成功")
-    content: str = Field(..., description="生成的正文")
-    message: Optional[str] = Field(None, description="失败原因等")
+    index: int = Field(..., description="Item index")
+    id: Optional[str] = Field(None, description="Client item id")
+    success: bool = Field(..., description="Whether generation succeeded")
+    content: str = Field(..., description="Legacy text content")
+    page_content: Optional[PageContentProtocol] = None
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class ExpandContentBatchResponse(BaseModel):
-    """批量补全内容响应"""
-    success: bool = Field(..., description="是否至少有一项成功")
-    results: List[BatchContentResultItem] = Field(..., description="各页结果")
-    message: Optional[str] = Field(None, description="汇总消息")
-    elapsed_sec: Optional[float] = Field(None, description="总耗时（秒）")
+    success: bool = Field(..., description="Whether any item succeeded")
+    results: list[BatchContentResultItem] = Field(..., description="Batch results")
+    message: Optional[str] = Field(None, description="Result message")
+    elapsed_sec: Optional[float] = Field(None, description="Elapsed seconds")
+
 
 class RAGQueryRequest(BaseModel):
-    """RAG查询请求模型"""
-    query: str = Field(..., description="查询文本")
+    query: str = Field(..., description="RAG query")
+
 
 class DocumentUploadRequest(BaseModel):
-    """文档上传请求模型"""
-    file_path: str = Field(..., description="文档文件路径")
+    file_path: str = Field(..., description="Document file path")
 
-# 响应模型
+
 class GenerateOutlineResponse(BaseModel):
-    """生成大纲响应模型"""
-    success: bool = Field(..., description="是否成功")
-    outline: dict = Field(..., description="生成的大纲")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether generation succeeded")
+    outline: NarrativeOutline = Field(..., description="Narrative outline protocol")
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class ExpandContentResponse(BaseModel):
-    """补全内容响应模型"""
-    success: bool = Field(..., description="是否成功")
-    content: str = Field(..., description="补全的内容")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether generation succeeded")
+    content: str = Field(..., description="Legacy text content")
+    page_content: Optional[PageContentProtocol] = None
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class RAGQueryResponse(BaseModel):
-    """RAG查询响应模型"""
-    success: bool = Field(..., description="是否成功")
-    answer: str = Field(..., description="生成的回答")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether query succeeded")
+    answer: str = Field(..., description="Generated answer")
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class DocumentUploadResponse(BaseModel):
-    """文档上传响应模型"""
-    success: bool = Field(..., description="是否成功")
-    doc_id: str = Field(..., description="文档ID（本地 RAG 为字符串 doc_id）")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether upload succeeded")
+    doc_id: str = Field(..., description="Document id")
+    message: Optional[str] = Field(None, description="Result message")
 
-# 文档模型
+
 class DocumentMetadata(BaseModel):
-    """文档元数据模型"""
-    doc_id: int = Field(..., description="文档ID")
-    title: str = Field(..., description="文档标题")
-    file_path: str = Field(..., description="文件路径")
-    created_at: str = Field(..., description="创建时间")
+    doc_id: int = Field(..., description="Document id")
+    title: str = Field(..., description="Document title")
+    file_path: str = Field(..., description="Document file path")
+    created_at: str = Field(..., description="Created timestamp")
+
 
 class Document(BaseModel):
-    """文档模型"""
-    metadata: DocumentMetadata = Field(..., description="文档元数据")
-    content: str = Field(..., description="文档内容")
+    metadata: DocumentMetadata = Field(..., description="Document metadata")
+    content: str = Field(..., description="Document content")
 
-# 健康检查响应模型
+
 class HealthResponse(BaseModel):
-    """健康检查响应模型"""
-    status: str = Field(..., description="服务状态")
-    version: str = Field(..., description="服务版本")
+    status: str = Field(..., description="Service status")
+    version: str = Field(..., description="Service version")
+
 
 class ModelInfoResponse(BaseModel):
-    """模型信息响应模型"""
-    current_provider: str = Field(..., description="当前使用的LLM提供者")
-    available_providers: List[str] = Field(..., description="可用的LLM提供者列表")
+    current_provider: str = Field(..., description="Current LLM provider")
+    available_providers: list[str] = Field(..., description="Available providers")
+
 
 class SwitchModelRequest(BaseModel):
-    """切换模型请求模型"""
-    provider: str = Field(..., description="要切换的LLM提供者名称，如 deepseek 或 qwen")
+    provider: str = Field(..., description="Target LLM provider")
+
 
 class SwitchModelResponse(BaseModel):
-    """切换模型响应模型"""
-    success: bool = Field(..., description="是否切换成功")
-    current_provider: str = Field(..., description="切换后使用的LLM提供者")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether switch succeeded")
+    current_provider: str = Field(..., description="Current LLM provider")
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class SearchKnowledgeRequest(BaseModel):
-    topic: str = Field(..., description="需要搜索知识的查询文本（可与前端补充知识 query 一致）")
-    refine_knowledge: bool = Field(
-        False,
-        description="True=评估+整理 LLM；False=快路径，仅检索并拼接来源",
-    )
+    topic: str = Field(..., description="Knowledge search topic")
+    refine_knowledge: bool = Field(False, description="Whether to refine knowledge")
+
 
 class SearchKnowledgeResponse(BaseModel):
-    success: bool = Field(..., description="是否成功")
-    knowledge: str = Field(..., description="检索摘要与来源（或整理后的知识摘要）")
-    message: Optional[str] = Field(None, description="消息")
+    success: bool = Field(..., description="Whether search succeeded")
+    knowledge: str = Field(..., description="Retrieved knowledge")
+    message: Optional[str] = Field(None, description="Result message")
+
 
 class BatchKnowledgeItem(BaseModel):
-    index: int = Field(..., description="页面序号，从 0 开始")
-    id: Optional[str] = Field(None, description="前端页面 ID")
-    query: str = Field(..., description="该页检索 query")
+    index: int = Field(..., description="Item index")
+    id: Optional[str] = Field(None, description="Client item id")
+    query: str = Field(..., description="Knowledge query")
+
 
 class SearchKnowledgeBatchRequest(BaseModel):
-    items: List[BatchKnowledgeItem] = Field(..., description="待检索页面列表")
-    refine_knowledge: bool = Field(False, description="是否走完整整理流程")
-    max_workers: Optional[int] = Field(None, ge=1, le=8, description="并行线程数")
+    items: list[BatchKnowledgeItem] = Field(..., description="Items to search")
+    refine_knowledge: bool = Field(False, description="Whether to refine knowledge")
+    max_workers: Optional[int] = Field(None, ge=1, le=8, description="Worker count")
+
 
 class BatchKnowledgeResultItem(BaseModel):
     index: int
@@ -137,8 +242,9 @@ class BatchKnowledgeResultItem(BaseModel):
     has_sources: bool = False
     message: Optional[str] = None
 
+
 class SearchKnowledgeBatchResponse(BaseModel):
     success: bool
-    results: List[BatchKnowledgeResultItem]
+    results: list[BatchKnowledgeResultItem]
     message: Optional[str] = None
     elapsed_sec: Optional[float] = None

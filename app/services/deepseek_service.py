@@ -13,7 +13,7 @@ class DeepSeekService:
         if not self.api_key:
             raise ValueError("配置文件中未设置 deepseek_api_key")
 
-    def generate(self, prompt, model="DeepSeek-R1", temperature=0.3, max_tokens=4096):
+    def generate(self, prompt, model="DeepSeek-R1", temperature=0.3, max_tokens=4096, response_format=None):
         url = "https://llmapi.tongji.edu.cn/v1/chat/completions"
 
         headers = {
@@ -30,6 +30,8 @@ class DeepSeekService:
             "temperature": temperature,
             "max_tokens": max_tokens
         }
+        if response_format is not None:
+            payload["response_format"] = response_format
 
         try:
             response = requests.post(url, headers=headers, json=payload)

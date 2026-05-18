@@ -701,6 +701,77 @@ details[open] > .page-summary-row::before {
   padding-left: 20px;
 }
 
+.protocol-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #dce9e1;
+  border-radius: 8px;
+  background: #fbfdfb;
+}
+
+.protocol-strip div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.protocol-strip span {
+  color: #668274;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.protocol-strip strong {
+  overflow: hidden;
+  color: #172d21;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outline-protocol-board,
+.outline-section-block {
+  display: grid;
+  gap: 14px;
+}
+
+.outline-section-block {
+  padding: 16px;
+  border: 1px solid #dce9e1;
+  border-radius: 8px;
+  background: #fbfdfb;
+}
+
+.outline-section-head,
+.slide-meta-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.outline-section-head h4 {
+  margin: 4px 0 0;
+  color: #152d20;
+  font-size: 18px;
+}
+
+.protocol-slide-editor {
+  background: #ffffff;
+}
+
+.slide-meta-title {
+  justify-content: flex-start;
+}
+
+.slide-meta-title span {
+  color: #688075;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .history-step-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -777,6 +848,7 @@ details[open] > .page-summary-row::before {
   .content-grid,
   .content-grid-secondary,
   .button-grid,
+  .protocol-strip,
   .history-step-grid,
   .detail-grid {
     grid-template-columns: 1fr;
