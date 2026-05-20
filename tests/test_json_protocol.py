@@ -5,9 +5,16 @@ from types import SimpleNamespace
 import pytest
 from pydantic import ValidationError
 
-from app.api.routes.generator import expand_content, generate_outline
+from app.api.routes.generator import expand_content, generate_notes, generate_outline
+from app.core.generator.notes_generator import NotesGenerator
 from app.core.generator.outline_maker import OutlineMaker
-from app.schema.models import ExpandContentRequest, GenerateOutlineRequest, NarrativeOutline, PageContentProtocol
+from app.schema.models import (
+    ExpandContentRequest,
+    GenerateNotesRequest,
+    GenerateOutlineRequest,
+    NarrativeOutline,
+    PageContentProtocol,
+)
 from app.utils.json_protocol import parse_json_object
 
 
@@ -144,6 +151,15 @@ def test_invalid_outline_schema_rejects_missing_field():
         NarrativeOutline.model_validate(broken)
 
 
+def test_invalid_outline_schema_rejects_non_continuous_slide_numbers():
+    broken = json.loads(json.dumps(VALID_OUTLINE))
+    broken["sections"][0]["slides"][0]["slideId"] = "slide-003"
+    broken["sections"][0]["slides"][0]["slideNumber"] = 3
+    broken["sections"][0]["slideRange"] = {"start": 3, "end": 3}
+    with pytest.raises(ValidationError):
+        NarrativeOutline.model_validate(broken)
+
+
 def test_valid_page_content_allows_empty_evidence():
     parsed = PageContentProtocol.model_validate(VALID_PAGE_CONTENT)
     assert parsed.slides[0].evidencePack == []
@@ -204,6 +220,67 @@ def test_generator_content_api_returns_legacy_and_protocol_fields():
     assert body["success"] is True
     assert body["content"]
     assert body["page_content"]["protocolVersion"] == "ppt-page-content.v1"
+
+
+def test_generator_notes_api_returns_speaker_notes():
+    notes_payload = {
+        "notes": "这一页可以先说明页面结论，再结合已有证据解释原因，最后自然过渡到下一页，不添加没有来源的新事实。"
+    }
+    request = SimpleNamespace(
+        app=SimpleNamespace(
+            state=SimpleNamespace(llm_service=FakeLLM([json.dumps(notes_payload, ensure_ascii=False)]))
+        )
+    )
+
+    response = asyncio.run(
+        generate_notes(
+            request,
+            GenerateNotesRequest(
+                project_id="project-001",
+                slide_id="slide-001",
+                slide_title="环境保护的意义",
+                slide_content="环境保护能够降低污染影响，并推动资源节约。",
+                knowledge_evidence="参考资料说明城市垃圾分类和节能减排有助于改善环境质量。",
+                style_requirement="口语化、适合课堂展示",
+            ),
+        )
+    )
+
+    body = response.model_dump()
+    assert body["success"] is True
+    assert body["notes"] == notes_payload["notes"]
+
+
+def test_notes_generator_accepts_plain_text_notes():
+    raw_notes = "这一页可以用更口语化的方式说明环境保护为什么需要公众参与，并结合页面正文解释垃圾分类、节能减排和绿色出行之间的关系。"
+    generator = NotesGenerator(llm_service=FakeLLM([raw_notes]))
+
+    result = generator.generate_notes(
+        project_id="project-001",
+        slide_id="slide-001",
+        slide_title="公众参与环境保护",
+        slide_content="公众可以通过垃圾分类、节能减排和绿色出行参与环境保护。",
+        knowledge_evidence="参考资料强调环境保护需要政府监管、企业责任和公众参与。",
+        style_requirement="口语化",
+    )
+
+    assert result["notes"] == raw_notes
+
+
+def test_notes_generator_retries_provider_truncation_error():
+    raw_notes = "这一页可以先概括环境保护与绿色生活的关系，再提醒听众关注个人行动、企业责任和制度约束之间的配合。"
+    generator = NotesGenerator(llm_service=FakeLLM(["[DeepSeek] 回复被截断，请增加 max_tokens 后重试", raw_notes]))
+
+    result = generator.generate_notes(
+        project_id="project-001",
+        slide_id="slide-001",
+        slide_title="环境保护与绿色生活",
+        slide_content="环境保护需要个人、企业和政府共同参与。",
+        knowledge_evidence="参考资料强调环境保护不是单一部门的工作。",
+        style_requirement="口语化",
+    )
+
+    assert result["notes"] == raw_notes
 
 
 def test_generator_outline_uses_retrieved_reference_context():

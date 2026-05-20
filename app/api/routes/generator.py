@@ -1,10 +1,13 @@
 import asyncio
+import json
 import re
+from pathlib import Path
 
 from fastapi import APIRouter, Request
 
 from app.core.generator.batch_content import expand_content_batch, is_llm_error_content
 from app.core.generator.content_expander import ContentExpander
+from app.core.generator.notes_generator import NotesGenerator
 from app.core.generator.outline_maker import OutlineMaker
 from app.schema.models import (
     BatchContentResultItem,
@@ -12,11 +15,14 @@ from app.schema.models import (
     ExpandContentBatchResponse,
     ExpandContentRequest,
     ExpandContentResponse,
+    GenerateNotesRequest,
+    GenerateNotesResponse,
     GenerateOutlineRequest,
     GenerateOutlineResponse,
 )
 
 router = APIRouter(prefix="/api/generator", tags=["generator"])
+OUTPUT_JSON_PATH = Path(__file__).resolve().parents[3] / "output.json"
 
 
 def _get_outline_maker(request: Request) -> OutlineMaker:
@@ -25,6 +31,10 @@ def _get_outline_maker(request: Request) -> OutlineMaker:
 
 def _get_content_expander(request: Request) -> ContentExpander:
     return ContentExpander(llm_service=request.app.state.llm_service)
+
+
+def _get_notes_generator(request: Request) -> NotesGenerator:
+    return NotesGenerator(llm_service=request.app.state.llm_service)
 
 
 @router.post("/outline", response_model=GenerateOutlineResponse)
@@ -40,7 +50,7 @@ async def generate_outline(request: Request, body: GenerateOutlineRequest):
         )
 
         has_reference_context = bool(reference_context.strip())
-        return GenerateOutlineResponse(
+        response = GenerateOutlineResponse(
             success=True,
             outline=outline,
             message=(
@@ -49,12 +59,37 @@ async def generate_outline(request: Request, body: GenerateOutlineRequest):
                 else ("outline generated with reference context" if has_reference_context else "outline generated")
             ),
         )
+        await asyncio.to_thread(_save_output_json, _outline_output_payload(response, outline_maker))
+        return response
     except Exception as exc:
-        return GenerateOutlineResponse(
+        response = GenerateOutlineResponse(
             success=False,
             outline=_fallback_outline(body.topic),
             message=f"outline generation failed: {exc}",
         )
+        await asyncio.to_thread(_save_output_json, response.model_dump())
+        return response
+
+
+def _save_output_json(payload: dict) -> None:
+    OUTPUT_JSON_PATH.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def _outline_output_payload(response: GenerateOutlineResponse, outline_maker: OutlineMaker) -> dict:
+    if not outline_maker.last_used_fallback:
+        return response.model_dump()
+
+    return {
+        "success": False,
+        "source": "raw_llm_output",
+        "message": "model output failed JSON protocol validation; fallback was returned to API caller",
+        "schema_error": outline_maker.last_schema_error,
+        "validation_error": outline_maker.last_validation_error,
+        "raw_llm_output": outline_maker.last_raw_output,
+    }
 
 
 def _build_outline_reference_context(request: Request, body: GenerateOutlineRequest) -> str:
@@ -165,6 +200,32 @@ async def expand_content_batch_route(request: Request, body: ExpandContentBatchR
             results=[],
             message=f"batch content generation failed: {exc}",
             elapsed_sec=None,
+        )
+
+
+@router.post("/notes", response_model=GenerateNotesResponse)
+async def generate_notes(request: Request, body: GenerateNotesRequest):
+    try:
+        notes_generator = _get_notes_generator(request)
+        result = await asyncio.to_thread(
+            notes_generator.generate_notes,
+            body.project_id,
+            body.slide_id,
+            body.slide_title,
+            body.slide_content,
+            body.knowledge_evidence,
+            body.style_requirement,
+        )
+        return GenerateNotesResponse(
+            success=True,
+            notes=result["notes"],
+            message="speaker notes generated",
+        )
+    except Exception as exc:
+        return GenerateNotesResponse(
+            success=False,
+            notes="",
+            message=f"speaker notes generation failed: {exc}",
         )
 
 

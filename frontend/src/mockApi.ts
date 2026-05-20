@@ -236,3 +236,21 @@ export async function mockExpandContent(outlineNode: Record<string, unknown>, co
     message: 'Mock 模式：内容生成完成'
   }
 }
+
+export async function mockGenerateNotes(payload: {
+  slide_title: string
+  slide_content: string
+  knowledge_evidence?: string
+  style_requirement?: string
+}) {
+  await delay(500)
+  const title = payload.slide_title || '当前页面'
+  const evidence = payload.knowledge_evidence?.trim()
+  return {
+    success: true,
+    notes: evidence
+      ? `讲到“${title}”这一页时，可以先用一句话承接前文，再解释页面正文中的核心判断。这里的补充说明应围绕已有证据展开，强调这些信息如何支持页面观点，同时提醒听众关注结论背后的适用边界。`
+      : `讲到“${title}”这一页时，可以先概括页面想解决的问题，再把正文内容转化成更自然的口头表达。由于当前没有额外证据，备注只围绕页面已有内容展开，不补充新的事实或数字。`,
+    message: 'Mock speaker notes generated'
+  }
+}

@@ -3,6 +3,7 @@ import type { HealthResponse, ModelInfoResponse, OutlineResponse, PageContentPro
 import {
   mockExpandContent,
   mockExpandContentBatch,
+  mockGenerateNotes,
   mockGenerateOutline,
   mockGetHealth,
   mockGetModelInfo,
@@ -138,6 +139,23 @@ export async function expandContent(outlineNode: Record<string, unknown>, contex
     context
   })
   return data as { success: boolean; content: string; page_content?: PageContentProtocol | null; message?: string }
+}
+
+export interface GenerateNotesPayload {
+  project_id?: string
+  slide_id: string
+  slide_title: string
+  slide_content: string
+  knowledge_evidence?: string
+  style_requirement?: string
+}
+
+export async function generateNotes(payload: GenerateNotesPayload) {
+  if (useMock) {
+    return mockGenerateNotes(payload)
+  }
+  const { data } = await api.post('/api/generator/notes', payload)
+  return data as { success: boolean; notes: string; message?: string }
 }
 
 export interface BatchContentItemPayload {

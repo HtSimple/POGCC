@@ -71,6 +71,16 @@ class LLMService:
             kwargs["model"] = model
         return self._service.generate(prompt, **kwargs)
 
+    def generate_json_object(self, prompt, model=None, temperature=0.2, max_tokens=4096):
+        kwargs = {
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "response_format": {"type": "json_object"},
+        }
+        if model is not None:
+            kwargs["model"] = model
+        return self._service.generate(prompt, **kwargs)
+
     @property
     def provider_name(self):
         return self.provider

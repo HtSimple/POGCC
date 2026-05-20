@@ -40,13 +40,18 @@ class OutlineMaker:
         self.llm_service = llm_service
         self.last_used_fallback = False
         self.last_validation_error: str | None = None
+        self.last_raw_output: str | None = None
+        self.last_schema_error: str | None = None
 
-    def generate_outline(self, topic, requirements=None, reference_context=None, max_tokens=4096):
+    def generate_outline(self, topic, requirements=None, reference_context=None, max_tokens=8192):
         self.last_used_fallback = False
         self.last_validation_error = None
+        self.last_raw_output = None
+        self.last_schema_error = None
 
         prompt = self._build_json_prompt(topic, requirements, reference_context)
         outline_text = self._generate_protocol_json(prompt, max_tokens=max_tokens)
+        self.last_raw_output = outline_text
 
         try:
             outline = self._parse_protocol_outline(outline_text)
@@ -81,6 +86,20 @@ class OutlineMaker:
             )
             if raw and not raw.startswith("["):
                 return raw
+            self.last_schema_error = raw or "empty json_schema response"
+
+        if hasattr(self.llm_service, "generate_json_object"):
+            json_prompt = (
+                prompt
+                + "\n\nReturn a single valid JSON object only. "
+                + "Do not wrap it in Markdown fences. "
+                + "All slides must be continuous from slide-001 / slideNumber 1 "
+                + "through targetSlideCount."
+            )
+            raw = self.llm_service.generate_json_object(json_prompt, temperature=0.2, max_tokens=max_tokens)
+            if raw and not raw.startswith("["):
+                return raw
+            self.last_schema_error = (self.last_schema_error or "") + "\njson_object fallback failed: " + (raw or "empty response")
 
         return self.llm_service.generate(prompt, temperature=0.2, max_tokens=max_tokens)
 

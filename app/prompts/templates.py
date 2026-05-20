@@ -157,9 +157,14 @@ Each slide must contain:
 
 Rules:
 - The number of slides across all sections must equal targetSlideCount when the user provides a target page count.
+- Slides must be continuous and start from 1: slideNumber must be 1, 2, 3 ... targetSlideCount with no missing numbers.
+- slideId must match slideNumber exactly: slide-001 for slideNumber 1, slide-002 for slideNumber 2, etc.
+- section slideRange must match the first and last slideNumber inside that section.
 - Use Chinese content unless the user explicitly requests another language.
 - Use the reference context as the primary factual basis when it is provided.
 - If reference context is provided, reflect its concrete concepts in sectionTitle, slideTitle, and keyPoints.
+- Treat audience/target audience as the people receiving the presentation, never as the presenter identity.
+- Do not create presenter identity fields such as "汇报人", "我是...", or "由...进行汇报" unless the user explicitly provides a presenter identity.
 - Do not output Markdown, comments, or code fences.
 
 Topic:
@@ -204,6 +209,9 @@ The slide must contain:
 - speakerNotes
 
 Do not invent fake sources. If the context has no reliable source, use evidencePack: [] and keyData: [].
+Treat audience/target audience as the people receiving the presentation, never as the presenter identity.
+Do not write "汇报人", "我是...", "由课程讲师进行", or similar presenter identity statements unless the user explicitly provides a presenter identity.
+If the audience is "课程讲师", write content as being addressed to course instructors, not as being presented by a course instructor.
 Do not output Markdown, comments, or code fences.
 
 Outline node:
@@ -211,4 +219,44 @@ Outline node:
 
 Reference context:
 {context}
+""".strip()
+
+
+SPEAKER_NOTES_JSON_TEMPLATE = """
+You are generating speaker notes for one PPT slide. Return only one valid JSON object.
+
+Required JSON shape:
+{
+  "notes": "string"
+}
+
+Rules:
+- Write in Chinese unless the style requirement explicitly asks for another language.
+- The notes must be suitable for oral delivery, not a copy of the slide body.
+- Add background explanation, concept clarification, and transitions to nearby context when useful.
+- Use only the slide content and the provided knowledge evidence as factual basis.
+- Do not introduce unsourced facts, fake numbers, fake citations, or fake source names.
+- Treat the target audience as listeners, not as the speaker. Do not say "我是课程讲师" or claim the speaker is the audience unless explicitly provided.
+- Prefer neutral opening phrases such as "本页可以先说明..." instead of inventing a speaker identity.
+- If evidence is weak or empty, keep the notes cautious and phrase them as explanation of the slide content.
+- Keep the notes between 120 and 260 Chinese characters unless the style requirement says otherwise.
+- Do not output Markdown, comments, code fences, or bullet lists.
+
+Project id:
+{project_id}
+
+Slide id:
+{slide_id}
+
+Slide title:
+{slide_title}
+
+Slide content:
+{slide_content}
+
+Knowledge evidence:
+{knowledge_evidence}
+
+Style requirement:
+{style_requirement}
 """.strip()

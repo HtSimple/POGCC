@@ -1,6 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 SlideRole = Literal[
@@ -43,6 +43,37 @@ class NarrativeOutline(BaseModel):
     presentationTitle: str = Field(..., min_length=4, max_length=120)
     targetSlideCount: int = Field(..., ge=3, le=50)
     sections: list[OutlineSection] = Field(..., min_length=1, max_length=12)
+
+    @model_validator(mode="after")
+    def validate_slide_sequence(self):
+        slides = [slide for section in self.sections for slide in section.slides]
+        slide_numbers = [slide.slideNumber for slide in slides]
+
+        expected = list(range(1, self.targetSlideCount + 1))
+        if slide_numbers != expected:
+            raise ValueError(
+                "outline slides must be continuous from 1 to targetSlideCount; "
+                f"expected {expected}, got {slide_numbers}"
+            )
+
+        for index, slide in enumerate(slides, start=1):
+            expected_id = f"slide-{index:03d}"
+            if slide.slideId != expected_id:
+                raise ValueError(
+                    "outline slideId must match slideNumber sequence; "
+                    f"expected {expected_id}, got {slide.slideId}"
+                )
+
+        for section in self.sections:
+            section_numbers = [slide.slideNumber for slide in section.slides]
+            if section.slideRange.start != min(section_numbers) or section.slideRange.end != max(section_numbers):
+                raise ValueError(
+                    "section slideRange must match its slides; "
+                    f"{section.sectionId} has range {section.slideRange.start}-{section.slideRange.end} "
+                    f"but slides {section_numbers}"
+                )
+
+        return self
 
 
 class ResearchPolicy(BaseModel):
@@ -117,6 +148,15 @@ class ExpandContentRequest(BaseModel):
     context: Optional[str] = Field(None, description="Reference context")
 
 
+class GenerateNotesRequest(BaseModel):
+    project_id: Optional[str] = Field(None, description="Project id")
+    slide_id: str = Field(..., min_length=1, max_length=80, description="Slide id")
+    slide_title: str = Field(..., min_length=1, max_length=120, description="Slide title")
+    slide_content: str = Field(..., min_length=1, max_length=3000, description="Slide body content")
+    knowledge_evidence: Optional[str] = Field(None, max_length=6000, description="Evidence or retrieved knowledge")
+    style_requirement: Optional[str] = Field(None, max_length=1000, description="Speaker note style requirement")
+
+
 class BatchContentItem(BaseModel):
     index: int = Field(..., description="Item index")
     id: Optional[str] = Field(None, description="Client item id")
@@ -164,6 +204,12 @@ class ExpandContentResponse(BaseModel):
     success: bool = Field(..., description="Whether generation succeeded")
     content: str = Field(..., description="Legacy text content")
     page_content: Optional[PageContentProtocol] = None
+    message: Optional[str] = Field(None, description="Result message")
+
+
+class GenerateNotesResponse(BaseModel):
+    success: bool = Field(..., description="Whether generation succeeded")
+    notes: str = Field("", description="Generated speaker notes")
     message: Optional[str] = Field(None, description="Result message")
 
 

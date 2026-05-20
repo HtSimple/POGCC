@@ -557,6 +557,7 @@ import {
 import {
   expandContent,
   expandContentBatch,
+  generateNotes,
   generateOutline,
   getApiBaseUrl,
   getHealth,
@@ -666,7 +667,8 @@ const requirementsText = computed(() => {
   const lines = [
     `使用场景：${form.scene}`,
     `目标页数：${form.pageCount}`,
-    form.audience ? `受众对象：${form.audience}` : '',
+    form.audience ? `目标受众：${form.audience}（这是听众/观看者，不是汇报人身份）` : '',
+    '不要根据目标受众推断汇报人身份；除非用户明确提供汇报人，否则不要生成“汇报人”“我是...”等身份表述。',
     form.requirements ? `额外要求：${form.requirements}` : ''
   ]
   return lines.filter(Boolean).join('\n')
@@ -957,6 +959,13 @@ function buildKnowledgeQuery(slide: SlidePage) {
   return `${form.topic}\n${slide.sectionTitle}\n${slide.title}\n${slide.bullets.join('\n')}`
 }
 
+function buildSlideGenerationContext(slide: SlidePage) {
+  return [
+    requirementsText.value,
+    slide.knowledge ? `检索证据：\n${slide.knowledge}` : ''
+  ].filter(Boolean).join('\n\n')
+}
+
 async function fillKnowledge(slide: SlidePage) {
   pageLoading.knowledge = true
   try {
@@ -1026,7 +1035,7 @@ async function generateSlideContent(slide: SlidePage): Promise<{ ok: boolean; me
       goal: slide.goal,
       bullets: slide.bullets
     },
-    slide.knowledge || requirementsText.value
+    buildSlideGenerationContext(slide)
   )
   if (result.success) {
     slide.content = pageContentToText(result.page_content) || result.content
@@ -1070,7 +1079,7 @@ async function fillAllContent() {
         goal: slide.goal,
         bullets: slide.bullets
       },
-      context: slide.knowledge || requirementsText.value
+      context: buildSlideGenerationContext(slide)
     }))
     const result = await expandContentBatch(items, requirementsText.value)
     let okCount = 0
@@ -1104,15 +1113,17 @@ async function fillAllContent() {
 async function fillNotes(slide: SlidePage) {
   pageLoading.notes = true
   try {
-    const context = [
-      '请生成适合演讲者使用的备注，内容比幻灯片正文更完整。',
-      `页面标题：${slide.title}`,
-      `正文：${slide.content}`,
-      `证据：${slide.knowledge}`
-    ].join('\n')
-    const result = await expandContent({ title: `${slide.title} 演讲备注` }, context)
+    const result = await generateNotes({
+      project_id: currentRecordId.value || 'current-project',
+      slide_id: slide.protocolSlideId || slide.id,
+      slide_title: slide.title,
+      slide_content: slide.content || slide.bullets.join('\n'),
+      knowledge_evidence: slide.knowledge,
+      style_requirement: requirementsText.value
+    })
     if (result.success) {
-      slide.notes = result.content
+      slide.notes = result.notes
+      saveCurrentRecord(false)
       showToast('备注生成完成', 'success')
     } else {
       showToast(result.message || '备注生成失败', 'warning')
