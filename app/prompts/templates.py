@@ -130,133 +130,133 @@ SEARCH_SUMMARIZE_PROMPT = """
 
 
 OUTLINE_JSON_TEMPLATE = """
-You are generating a PPT narrative outline. Return only one valid JSON object.
+你正在生成 PPT 叙事大纲。仅返回一个合法的 JSON 对象。
 
-The JSON must follow protocolVersion "ppt-narrative-outline.v1".
-Required top-level fields:
+JSON 必须遵循 protocolVersion "ppt-narrative-outline.v1"。
+必需的顶层字段：
 - protocolVersion: "ppt-narrative-outline.v1"
 - language: "zh-CN"
 - presentationTitle: string
-- targetSlideCount: integer from 3 to 50
+- targetSlideCount: 3 到 50 的整数
 - sections: array
 
-Each section must contain:
+每个 section 必须包含：
 - sectionId: "sec-01", "sec-02", ...
 - sectionTitle
 - sectionObjective
 - slideRange: {"start": number, "end": number}
 - slides
 
-Each slide must contain:
+每个 slide 必须包含：
 - slideId: "slide-001", "slide-002", ...
 - slideNumber
-- slideRole: one of cover, toc, transition, content, case-study, summary, qa, appendix
+- slideRole: 取 cover, toc, transition, content, case-study, summary, qa, appendix 之一
 - slideTitle
-- keyPoints: 2 to 5 strings
-- notes: optional short planning notes
+- keyPoints: 2 到 5 个字符串
+- notes: 可选的简短规划备注
 
-Rules:
-- The number of slides across all sections must equal targetSlideCount when the user provides a target page count.
-- Slides must be continuous and start from 1: slideNumber must be 1, 2, 3 ... targetSlideCount with no missing numbers.
-- slideId must match slideNumber exactly: slide-001 for slideNumber 1, slide-002 for slideNumber 2, etc.
-- section slideRange must match the first and last slideNumber inside that section.
-- Use Chinese content unless the user explicitly requests another language.
-- Use the reference context as the primary factual basis when it is provided.
-- If reference context is provided, reflect its concrete concepts in sectionTitle, slideTitle, and keyPoints.
-- Treat audience/target audience as the people receiving the presentation, never as the presenter identity.
-- Do not create presenter identity fields such as "汇报人", "我是...", or "由...进行汇报" unless the user explicitly provides a presenter identity.
-- Do not output Markdown, comments, or code fences.
+规则：
+- 当用户提供了目标页数时，所有 section 中的 slide 总数必须等于 targetSlideCount。
+- slide 必须连续且从 1 开始：slideNumber 必须是 1, 2, 3 ... targetSlideCount，不得缺号。
+- slideId 必须与 slideNumber 严格对应：slideNumber 1 对应 slide-001，slideNumber 2 对应 slide-002，以此类推。
+- section 的 slideRange 必须对应该 section 内第一个和最后一个 slideNumber。
+- 除非用户明确要求其他语言，否则内容使用中文。
+- 当提供了 reference context 时，以其作为主要事实依据。
+- 若提供了 reference context，应在 sectionTitle、slideTitle 和 keyPoints 中体现其具体概念。
+- 将 audience/target audience 视为演示的接收者，而非汇报人身份。
+- 除非用户明确提供了汇报人身份，否则不要创建「汇报人」「我是...」「由...进行汇报」等汇报人身份字段。
+- 不要输出 Markdown、注释或代码围栏。
 
-Topic:
+主题：
 {topic}
 
-Requirements:
+要求：
 {requirements}
 
-Reference context:
+参考资料：
 {reference_context}
 """.strip()
 
 
 PAGE_CONTENT_JSON_TEMPLATE = """
-You are expanding one PPT slide into structured page content. Return only one valid JSON object.
+你正在将一页 PPT 扩写为结构化页面内容。仅返回一个合法的 JSON 对象。
 
-The JSON must follow protocolVersion "ppt-page-content.v1".
-Required top-level fields:
+JSON 必须遵循 protocolVersion "ppt-page-content.v1"。
+必需的顶层字段：
 - protocolVersion: "ppt-page-content.v1"
 - language: "zh-CN"
 - presentationTitle
 - researchPolicy
-- slides: array with exactly one slide
+- slides: 仅包含一页 slide 的数组
 
-researchPolicy must contain:
-- triggerReason: one of user_requested, insufficient_input, fact_verification
-- depthLevel: one of light, standard, deep
-- sourcePriority: one to five values from official_sites, government_reports, academic_sources, authoritative_media, industry_reports
-- maxSourcesPerSlide: optional integer from 1 to 8
+researchPolicy 必须包含：
+- triggerReason: 取 user_requested, insufficient_input, fact_verification 之一
+- depthLevel: 取 light, standard, deep 之一
+- sourcePriority: 从 official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 5 个值
+- maxSourcesPerSlide: 可选，1 到 8 的整数
 
-The slide must contain:
-- slideId: "slide-001" if no slide id is provided
-- slideNumber: integer from 1 to 50
-- slideRole: one of cover, toc, transition, content, case-study, summary, qa, appendix
+slide 必须包含：
+- slideId: 若未提供 slide id，则使用 "slide-001"
+- slideNumber: 1 到 50 的整数
+- slideRole: 取 cover, toc, transition, content, case-study, summary, qa, appendix 之一
 - pageGoal
 - slideTitle
 - coreMessage
-- displayBullets: 3 to 5 strings
-- keyData: array, may be empty
-- evidencePack: array, may be empty if no reliable sources are available
+- displayBullets: 3 到 5 个字符串
+- keyData: 数组，可为空
+- evidencePack: 数组，若无可靠来源可为空
 - actionableTakeaway
 - speakerNotes
 
-Do not invent fake sources. If the context has no reliable source, use evidencePack: [] and keyData: [].
-Treat audience/target audience as the people receiving the presentation, never as the presenter identity.
-Do not write "汇报人", "我是...", "由课程讲师进行", or similar presenter identity statements unless the user explicitly provides a presenter identity.
-If the audience is "课程讲师", write content as being addressed to course instructors, not as being presented by a course instructor.
-Do not output Markdown, comments, or code fences.
+不要编造虚假来源。若 context 中没有可靠来源，请使用 evidencePack: [] 和 keyData: []。
+将 audience/target audience 视为演示的接收者，而非汇报人身份。
+除非用户明确提供了汇报人身份，否则不要写「汇报人」「我是...」「由课程讲师进行」等类似汇报人身份的表述。
+若受众是「课程讲师」，内容应面向课程讲师讲述，而不是以课程讲师身份进行汇报。
+不要输出 Markdown、注释或代码围栏。
 
-Outline node:
+大纲节点：
 {outline_node}
 
-Reference context:
+参考资料：
 {context}
 """.strip()
 
 
 SPEAKER_NOTES_JSON_TEMPLATE = """
-You are generating speaker notes for one PPT slide. Return only one valid JSON object.
+你正在为一页 PPT 生成演讲备注。仅返回一个合法的 JSON 对象。
 
-Required JSON shape:
+必需的 JSON 结构：
 {
   "notes": "string"
 }
 
-Rules:
-- Write in Chinese unless the style requirement explicitly asks for another language.
-- The notes must be suitable for oral delivery, not a copy of the slide body.
-- Add background explanation, concept clarification, and transitions to nearby context when useful.
-- Use only the slide content and the provided knowledge evidence as factual basis.
-- Do not introduce unsourced facts, fake numbers, fake citations, or fake source names.
-- Treat the target audience as listeners, not as the speaker. Do not say "我是课程讲师" or claim the speaker is the audience unless explicitly provided.
-- Prefer neutral opening phrases such as "本页可以先说明..." instead of inventing a speaker identity.
-- If evidence is weak or empty, keep the notes cautious and phrase them as explanation of the slide content.
-- Keep the notes between 120 and 260 Chinese characters unless the style requirement says otherwise.
-- Do not output Markdown, comments, code fences, or bullet lists.
+规则：
+- 除非 style requirement 明确要求其他语言，否则使用中文撰写。
+- 备注应适合口头讲述，不要照搬幻灯片正文。
+- 在有助于理解时，可补充背景说明、概念澄清以及与前后文的过渡。
+- 仅以 slide content 和提供的 knowledge evidence 作为事实依据。
+- 不要引入无来源的事实、虚假数字、虚假引用或虚假来源名称。
+- 将目标受众视为听众，而非演讲者。不要说「我是课程讲师」或声称演讲者就是受众，除非已明确提供。
+- 优先使用「本页可以先说明...」等中性开场，不要虚构演讲者身份。
+- 若 evidence 较弱或为空，备注应谨慎，仅围绕 slide content 进行解释性表述。
+- 除非 style requirement 另有说明，备注长度控制在 120 到 260 个汉字之间。
+- 不要输出 Markdown、注释、代码围栏或 bullet 列表。
 
-Project id:
+项目 id：
 {project_id}
 
-Slide id:
+Slide id：
 {slide_id}
 
-Slide title:
+页面标题：
 {slide_title}
 
-Slide content:
+页面正文：
 {slide_content}
 
-Knowledge evidence:
+知识证据：
 {knowledge_evidence}
 
-Style requirement:
+风格要求：
 {style_requirement}
 """.strip()

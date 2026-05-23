@@ -11,7 +11,7 @@ OUTLINE_RESPONSE_SCHEMA = {
     "properties": {
         "protocolVersion": {"type": "string", "const": "ppt-narrative-outline.v1"},
         "language": {"type": "string", "minLength": 2, "maxLength": 20},
-        "presentationTitle": {"type": "string", "minLength": 4, "maxLength": 120},
+        "presentationTitle": {"type": "string", "minLength": 1, "maxLength": 120},
         "targetSlideCount": {"type": "integer", "minimum": 3, "maximum": 50},
         "sections": {
             "type": "array",
@@ -74,7 +74,7 @@ PAGE_CONTENT_RESPONSE_SCHEMA = {
     "properties": {
         "protocolVersion": {"type": "string", "const": "ppt-page-content.v1"},
         "language": {"type": "string", "minLength": 2, "maxLength": 20},
-        "presentationTitle": {"type": "string", "minLength": 4, "maxLength": 120},
+        "presentationTitle": {"type": "string", "minLength": 1, "maxLength": 120},
         "researchPolicy": {
             "type": "object",
             "additionalProperties": False,

@@ -40,7 +40,7 @@ class OutlineSection(BaseModel):
 class NarrativeOutline(BaseModel):
     protocolVersion: Literal["ppt-narrative-outline.v1"]
     language: str = Field(..., min_length=2, max_length=20)
-    presentationTitle: str = Field(..., min_length=4, max_length=120)
+    presentationTitle: str = Field(..., min_length=1, max_length=120)
     targetSlideCount: int = Field(..., ge=3, le=50)
     sections: list[OutlineSection] = Field(..., min_length=1, max_length=12)
 
@@ -133,7 +133,7 @@ class PageContentSlide(BaseModel):
 class PageContentProtocol(BaseModel):
     protocolVersion: Literal["ppt-page-content.v1"]
     language: str = Field(..., min_length=2, max_length=20)
-    presentationTitle: str = Field(..., min_length=4, max_length=120)
+    presentationTitle: str = Field(..., min_length=1, max_length=120)
     researchPolicy: ResearchPolicy
     slides: list[PageContentSlide] = Field(..., min_length=1, max_length=50)
 

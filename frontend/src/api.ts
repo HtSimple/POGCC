@@ -19,7 +19,7 @@ const useMock = (import.meta.env.VITE_USE_MOCK ?? 'true') === 'true'
 
 export const api = axios.create({
   baseURL,
-  timeout: 200000
+  timeout: 300000
 })
 
 export function getApiBaseUrl() {
