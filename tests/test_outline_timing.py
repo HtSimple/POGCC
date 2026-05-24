@@ -3,7 +3,7 @@
 
 在项目根目录执行：
     python tests/test_outline_timing.py
-    python tests/test_outline_timing.py "拿破仑" deepseek
+    python tests/test_outline_timing.py "计算机原理" deepseek
     python tests/test_outline_timing.py "拿破仑" deepseek --pages 10
 
 换模型（三选一）：
