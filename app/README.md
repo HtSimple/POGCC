@@ -36,7 +36,7 @@ app/
 ├── services/            # 服务层
 │   ├── __init__.py
 │   ├── llm_service.py        # LLM 服务工厂（支持运行时切换模型）
-│   ├── deepseek_service.py   # DeepSeek 服务（同济大学 LLM 平台）
+│   ├── deepseek_service.py   # DeepSeek 服务（官方 OpenAI 兼容接口）
 │   ├── qwen_service.py       # Qwen 服务（阿里云百炼）
 │   └── web_search_service.py # 网络搜索服务（Tavily API）
 └── utils/               # 工具类
@@ -48,6 +48,7 @@ app/
 ## 核心功能
 
 ### 1. 知识 Agent（KnowledgeAgent）
+
 基于 LangGraph 状态图实现的知识检索与回答生成流程：
 
 ```
@@ -65,6 +66,7 @@ process_query → retrieve_knowledge → generate_answer → END
 - **结果生成**：基于检索到的知识生成回答
 
 ### 2. 网络搜索 Agent（SearchAgent）
+
 具备自我规划能力的知识检索链路：
 
 - **规划搜索**：LLM 分析主题，自动生成多个搜索关键词，覆盖不同维度
@@ -74,23 +76,28 @@ process_query → retrieve_knowledge → generate_answer → END
 - **整理知识**：将搜索结果整理为结构化的知识摘要
 
 ### 3. 生成模块
+
 - **大纲生成**：根据用户需求生成PPT大纲结构
 - **内容补全**：基于大纲节点扩写详细内容
 
 ### 4. 文档解析
+
 - **Word解析**：解析.docx和.doc文件
 - **PDF解析**：解析.pdf文件
 
 ### 5. 向量数据库
+
 - **文档存储**：存储文档向量
 - **相似性搜索**：基于向量相似度检索相关文档
 
 ### 6. LLM 模型管理
+
 - **双模型支持**：支持 DeepSeek 和 Qwen 两种大语言模型
 - **运行时切换**：通过 API 动态切换模型，无需重启服务
 - **前端集成**：前端可通过按钮一键切换模型
 
 ### 7. API接口
+
 - **知识查询接口**：`/api/rag/query`、`/api/rag/upload`
 - **搜索接口**：`/api/search/knowledge`
 - **生成接口**：`/api/generator/outline`、`/api/generator/content`
@@ -120,7 +127,7 @@ pip install -r requirements.txt
 
 ### 2. 配置 config.json
 
-复制 `config.json.example` 为 `config.json` 并填写 API Key：
+复制 `config.json.example` 为 `config.json`，并按需填写 API Key 和并发配置：
 
 ```bash
 cp config.json.example config.json
@@ -133,16 +140,31 @@ cp config.json.example config.json
   "deepseek_api_key": "你的DeepSeek API Key",
   "dashscope_api_key": "你的阿里云百炼 API Key",
   "tavily_api_key": "你的Tavily API Key",
-  "llm_provider": "deepseek"
+  "llm_provider": "deepseek",
+  "content_batch_max_workers": 3,
+  "knowledge_batch_max_workers": 3,
+  "search_query_max_workers": 4
 }
 ```
 
-| 字段 | 说明 | 获取方式 |
-| :--- | :--- | :--- |
-| `deepseek_api_key` | DeepSeek API 密钥 | 同济大学 LLM 平台 Key |
-| `dashscope_api_key` | 阿里云百炼 API 密钥 | 阿里云 DashScope Key |
-| `tavily_api_key` | Tavily 搜索 API 密钥 | [tavily.com](https://tavily.com) 注册获取，免费额度每月1000次 |
-| `llm_provider` | 默认使用的模型 | `deepseek` 或 `qwen` |
+| 字段                          | 说明                                                                                                                    | 是否必须                        |
+| :---------------------------- | :---------------------------------------------------------------------------------------------------------------------- | :------------------------------ |
+| `deepseek_api_key`            | DeepSeek API 密钥，当前 DeepSeek 服务通过官方 OpenAI 兼容接口调用，默认模型为 `deepseek-v4-pro`，并关闭 thinking 模式。 | 使用 `deepseek` 时必须填写      |
+| `dashscope_api_key`           | 阿里云百炼 / DashScope API 密钥，用于 Qwen 服务。                                                                       | 只有使用 `qwen` 时需要          |
+| `tavily_api_key`              | Tavily 搜索 API 密钥，用于网络搜索和知识检索增强。                                                                      | 只有使用搜索功能时需要          |
+| `llm_provider`                | 默认 LLM 提供方，可选值为 `deepseek` 或 `qwen`。                                                                        | 建议保留；缺省时使用 `deepseek` |
+| `content_batch_max_workers`   | 批量生成页面内容时的最大并发数。代码会限制在 `1` 到 `8` 之间。                                                          | 可选；缺省为 `3`                |
+| `knowledge_batch_max_workers` | 批量知识检索时的最大并发数。代码会限制在 `1` 到 `8` 之间。                                                              | 可选；缺省为 `3`                |
+| `search_query_max_workers`    | 多个搜索词并行搜索时的最大并发数。代码会限制在 `1` 到 `8` 之间。                                                        | 可选；缺省为 `4`                |
+
+如果只使用 DeepSeek 生成大纲，最小配置如下：
+
+```json
+{
+  "deepseek_api_key": "你的DeepSeek API Key",
+  "llm_provider": "deepseek"
+}
+```
 
 > ⚠️ `config.json` 已在 `.gitignore` 中，不会被提交到代码仓库。
 
@@ -187,81 +209,18 @@ curl -X POST http://localhost:8000/api/search/knowledge \
 
 ## 测试
 
-运行测试：
-
+所有命令默认在项目根目录执行；使用 conda 时先运行 `conda activate POGCC`。
+最直观的真实后端验证是大纲生成，会读取 `config.json` 并消耗 DeepSeek 额度：
 ```bash
-# 运行所有测试
-pytest tests/
-
-# 运行特定测试
-pytest tests/test_rag.py
-pytest tests/test_generator.py
+python tests/test_outline_timing.py "人工智能导论" deepseek --pages 5
 ```
-
-运行集成测试脚本：
-
+不消耗 API 额度的基础检查：
 ```bash
-# 测试知识 Agent（双模型切换 + 网络搜索）
-python test_rag_agent.py
+python -m compileall app tests
+pytest tests/test_json_protocol.py tests/test_generator.py tests/new/schema -v
 ```
-
-## 扩展和定制
-
-### 1. 添加新的文档解析器
-在 `core/document_parser.py` 中添加新的解析器实现。
-
-### 2. 扩展向量数据库
-在 `core/faiss_db.py` 中扩展向量数据库功能。
-
-### 3. 定制提示词模板
-在 `prompts/templates.py` 中修改提示词模板，包括：
-- `OUTLINE_TEMPLATE`：大纲生成提示词
-- `CONTENT_TEMPLATE`：内容补全提示词
-- `RAG_TEMPLATE`：知识查询回答提示词
-- `SEARCH_PLAN_PROMPT`：搜索规划提示词
-- `SEARCH_EVALUATE_PROMPT`：知识充分性评估提示词
-- `SEARCH_SUMMARIZE_PROMPT`：知识整理提示词
-
-### 4. 添加新的LLM服务
-1. 在 `services/` 下创建新的服务文件（如 `zhipu_service.py`）
-2. 继承 `BaseLLMService` 并实现 `generate()` 方法
-3. 在 `llm_service.py` 的 `VALID_PROVIDERS` 中添加新提供者
-4. 在 `_create_service()` 中添加分支
-
-### 5. 添加新的API接口
-在 `api/routes/` 目录中添加新的路由文件。
-
-### 6. 集成本地知识库
-在 `knowledge_agent/agent.py` 的 `_retrieve_knowledge_node` 中已预留本地知识库检索逻辑（注释形式），等向量数据库同学完成后取消注释即可实现"先本地后网络"的混合检索策略。
-
-## 部署
-
-### Docker 部署
-
-1. 构建镜像：
-   ```bash
-   docker build -t pogcc .
-   ```
-
-2. 运行容器（挂载配置文件）：
-   ```bash
-   docker run -p 8000:8000 -v /path/to/config.json:/app/config.json pogcc
-   ```
-
-## 小组成员实现功能对应文件
-
-| 功能模块 | 对应文件/文件夹 | 说明 |
-| :--- | :--- | :--- |
-| **文件解析** | `core/document_parser.py` | 实现Word和PDF文档的解析功能 |
-| **RAG向量数据库** | `core/faiss_db.py` | 实现基于FAISS的向量数据库存储和检索 |
-| **语义划分** | `core/knowledge_agent/` | 在知识 Agent 模块中实现文本语义切分功能 |
-| **JSON Schema标准** | `schema/models.py` | 定义大纲和页级内容的JSON Schema标准 |
-| **网络搜索Agent** | `core/knowledge_agent/search_agent.py` + `services/web_search_service.py` | 自我规划的网络知识检索链路 |
-
-### 集成说明
-
-1. **文件解析**：直接使用 `DocumentParser` 类的 `parse()` 方法解析文档
-2. **向量数据库**：使用 `FAISSDB` 类的 `add_document()` 和 `search()` 方法进行文档管理和检索
-3. **语义划分**：在 `knowledge_agent` 模块中集成到文档处理流程
-4. **JSON Schema**：在 `models.py` 中定义数据模型，用于API请求和响应验证
-5. **网络搜索**：使用 `SearchAgent` 类的 `search()` 方法进行自我规划的网络知识检索
+完整接口链路验证：
+```bash
+python tests/new/e2e/test_full_generation.py --topic "人工智能导论"
+```
+E2E 会自动检测后端是否启动，未启动时会尝试拉起 `uvicorn`；该测试会调用 LLM，可能消耗 API 额度。
