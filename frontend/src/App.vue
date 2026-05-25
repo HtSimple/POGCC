@@ -1038,11 +1038,50 @@ function pageContentToText(pageContent?: PageContentProtocol | null) {
   if (!slide) {
     return ''
   }
+  const plainLines: string[] = []
+  const addPlainLine = (value?: string) => {
+    const text = (value || '').trim()
+    if (!text || isDuplicatePageLine(text, plainLines)) {
+      return
+    }
+    plainLines.push(text)
+  }
+
+  addPlainLine(slide.coreMessage)
+  const bulletLines: string[] = []
+  slide.displayBullets.forEach((item) => {
+    const text = item.trim()
+    if (text && !isDuplicatePageLine(text, [...plainLines, ...bulletLines])) {
+      bulletLines.push(text)
+    }
+  })
+  addPlainLine(slide.actionableTakeaway || '')
+
   return [
-    slide.coreMessage,
-    ...slide.displayBullets.map((item) => `- ${item}`),
-    slide.actionableTakeaway || ''
-  ].filter(Boolean).join('\n')
+    ...plainLines.slice(0, 1),
+    ...bulletLines.map((item) => `- ${item}`),
+    ...plainLines.slice(1)
+  ].join('\n')
+}
+
+function compactPageLine(value: string) {
+  return value.replace(/[\s，。；：、,.!！?？\-]/g, '')
+}
+
+function isDuplicatePageLine(candidate: string, existing: string[]) {
+  const compactCandidate = compactPageLine(candidate)
+  return existing.some((item) => {
+    const compactItem = compactPageLine(item)
+    return (
+      compactCandidate === compactItem ||
+      (compactCandidate.length >= 18 && compactItem.includes(compactCandidate)) ||
+      (compactItem.length >= 18 && compactCandidate.includes(compactItem))
+    )
+  })
+}
+
+function pageContentToSpeakerNotes(pageContent?: PageContentProtocol | null) {
+  return pageContent?.slides?.[0]?.speakerNotes?.trim() || ''
 }
 
 function normalizeOutlineSlides() {
@@ -1301,6 +1340,7 @@ async function generateSlideContent(slide: SlidePage): Promise<{ ok: boolean; me
   )
   if (result.success) {
     slide.content = pageContentToText(result.page_content) || result.content
+    slide.notes = pageContentToSpeakerNotes(result.page_content) || slide.notes
     return { ok: true }
   }
   return { ok: false, message: result.message }
@@ -1352,6 +1392,7 @@ async function fillAllContent() {
       }
       if (row.success) {
         slide.content = pageContentToText(row.page_content) || row.content
+        slide.notes = pageContentToSpeakerNotes(row.page_content) || slide.notes
         okCount += 1
       }
     }

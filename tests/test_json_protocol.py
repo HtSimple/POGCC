@@ -222,6 +222,85 @@ def test_generator_content_api_returns_legacy_and_protocol_fields():
     assert body["page_content"]["protocolVersion"] == "ppt-page-content.v1"
 
 
+def test_generator_content_normalizes_local_document_evidence_shape():
+    malformed_content = json.loads(json.dumps(VALID_PAGE_CONTENT))
+    malformed_content["researchPolicy"]["sourcePriority"] = ["local_document"]
+    malformed_content["slides"][0]["evidencePack"] = [
+        {
+            "sourceDescription": "本地资料：环境保护与低碳生活措施",
+            "sourceType": "local_document",
+            "keyClaim": "垃圾分类、节能减排和绿色出行是推进低碳生活的重要措施。",
+            "retrievedAt": "2025-01-01",
+        }
+    ]
+    request = SimpleNamespace(
+        app=SimpleNamespace(
+            state=SimpleNamespace(llm_service=FakeLLM([json.dumps(malformed_content, ensure_ascii=False)]))
+        )
+    )
+
+    response = asyncio.run(
+        expand_content(
+            request,
+            ExpandContentRequest(
+                outline_node={
+                    "id": "slide-001",
+                    "number": 1,
+                    "title": "环境挑战与绿色转型",
+                    "section": "背景问题",
+                    "goal": "阐述环境保护的重要性及当前面临的主要问题",
+                    "bullets": ["城市发展", "公众健康", "资源安全"],
+                },
+                context="本地资料",
+            ),
+        )
+    )
+
+    body = response.model_dump()
+    evidence = body["page_content"]["slides"][0]["evidencePack"][0]
+    assert body["success"] is True
+    assert evidence["sourceRefId"] == "src-001"
+    assert evidence["claim"] == "垃圾分类、节能减排和绿色出行是推进低碳生活的重要措施。"
+    assert evidence["sourceTitle"] == "本地资料：环境保护与低碳生活措施"
+    assert evidence["sourceType"] == "local_document"
+    assert evidence["publishDate"] == "2025-01-01"
+
+
+def test_generator_content_normalizes_short_or_meta_display_bullets():
+    malformed_content = json.loads(json.dumps(VALID_PAGE_CONTENT))
+    malformed_content["slides"][0]["displayBullets"] = ["学术汇报", "课程讲师"]
+    request = SimpleNamespace(
+        app=SimpleNamespace(
+            state=SimpleNamespace(llm_service=FakeLLM([json.dumps(malformed_content, ensure_ascii=False)]))
+        )
+    )
+
+    response = asyncio.run(
+        expand_content(
+            request,
+            ExpandContentRequest(
+                outline_node={
+                    "id": "slide-001",
+                    "number": 1,
+                    "title": "环境保护与绿色生活",
+                    "section": "主题导入",
+                    "goal": "阐述环境保护的重要性与当前面临的主要问题",
+                    "bullets": ["城市发展", "公众健康", "资源安全"],
+                },
+                context="本地资料",
+            ),
+        )
+    )
+
+    body = response.model_dump()
+    bullets = body["page_content"]["slides"][0]["displayBullets"]
+    assert body["success"] is True
+    assert len(bullets) >= 3
+    assert "学术汇报" not in bullets
+    assert "课程讲师" not in bullets
+    assert body["page_content"]["slides"][0]["speakerNotes"]
+
+
 def test_generator_notes_api_returns_speaker_notes():
     notes_payload = {
         "notes": "这一页可以先说明页面结论，再结合已有证据解释原因，最后自然过渡到下一页，不添加没有来源的新事实。"

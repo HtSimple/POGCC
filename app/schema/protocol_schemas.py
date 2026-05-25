@@ -88,7 +88,7 @@ PAGE_CONTENT_RESPONSE_SCHEMA = {
                     "maxItems": 5,
                     "items": {
                         "type": "string",
-                        "enum": ["official_sites", "government_reports", "academic_sources", "authoritative_media", "industry_reports"],
+                        "enum": ["local_document", "official_sites", "government_reports", "academic_sources", "authoritative_media", "industry_reports"],
                     },
                 },
                 "maxSourcesPerSlide": {"type": "integer", "minimum": 1, "maximum": 8},
@@ -168,7 +168,7 @@ PAGE_CONTENT_RESPONSE_SCHEMA = {
                                 "sourceTitle": {"type": "string", "minLength": 2, "maxLength": 120},
                                 "sourceType": {
                                     "type": "string",
-                                    "enum": ["official_sites", "government_reports", "academic_sources", "authoritative_media", "industry_reports"],
+                                    "enum": ["local_document", "official_sites", "government_reports", "academic_sources", "authoritative_media", "industry_reports"],
                                 },
                                 "url": {"type": "string", "maxLength": 300},
                                 "publishDate": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
@@ -178,7 +178,7 @@ PAGE_CONTENT_RESPONSE_SCHEMA = {
                         },
                     },
                     "actionableTakeaway": {"type": "string", "maxLength": 120},
-                    "speakerNotes": {"type": "string", "minLength": 10, "maxLength": 300},
+                    "speakerNotes": {"type": "string", "minLength": 10, "maxLength": 600},
                 },
             },
         },

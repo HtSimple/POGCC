@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from typing import Any
 
 from pydantic import ValidationError
@@ -27,6 +28,111 @@ def _normalize_slide_number(value: Any) -> int:
     except (TypeError, ValueError):
         number = 1
     return max(1, min(number, 50))
+
+
+def _normalize_source_type(value: Any) -> str:
+    text = _clean_text(value, "local_document")
+    allowed = {
+        "local_document",
+        "official_sites",
+        "government_reports",
+        "academic_sources",
+        "authoritative_media",
+        "industry_reports",
+    }
+    return text if text in allowed else "local_document"
+
+
+def _compact_text(value: Any) -> str:
+    return "".join(ch for ch in _clean_text(value) if ch.isalnum())
+
+
+def _is_duplicate_text(candidate: str, existing: list[str]) -> bool:
+    compact_candidate = _compact_text(candidate)
+    if not compact_candidate:
+        return True
+    for item in existing:
+        compact_item = _compact_text(item)
+        if compact_candidate == compact_item:
+            return True
+        if len(compact_candidate) >= 18 and compact_candidate in compact_item:
+            return True
+        if len(compact_item) >= 18 and compact_item in compact_candidate:
+            return True
+    return False
+
+
+def _normalize_evidence_pack(items: Any) -> list[dict[str, Any]]:
+    if not isinstance(items, list):
+        return []
+
+    normalized = []
+    today = date.today().isoformat()
+    for index, item in enumerate(items, start=1):
+        if not isinstance(item, dict):
+            continue
+
+        source_ref_id = _clean_text(item.get("sourceRefId"), f"src-{index:03d}")
+        if not source_ref_id.startswith("src-") or len(source_ref_id) != 7:
+            source_ref_id = f"src-{index:03d}"
+
+        normalized.append({
+            "sourceRefId": source_ref_id,
+            "claim": _clean_text(item.get("claim") or item.get("keyClaim"), "本地资料支持该页面观点"),
+            "sourceTitle": _clean_text(
+                item.get("sourceTitle") or item.get("sourceDescription"),
+                "本地参考资料",
+            ),
+            "sourceType": _normalize_source_type(item.get("sourceType")),
+            "url": _clean_text(item.get("url"), ""),
+            "publishDate": _clean_text(item.get("publishDate") or item.get("retrievedAt"), today),
+            "credibility": _clean_text(item.get("credibility"), "medium"),
+            "quote": _clean_text(item.get("quote"), ""),
+        })
+
+    return normalized
+
+
+def _normalize_display_bullets(items: Any, node: dict[str, Any], slide: dict[str, Any]) -> list[str]:
+    raw_items = items if isinstance(items, list) else []
+    blocked = {
+        "",
+        "学术汇报",
+        "课程汇报",
+        "课堂汇报",
+        "课程讲师",
+        "项目评委",
+        "企业客户",
+        "目标受众",
+        "受众对象",
+    }
+
+    bullets: list[str] = []
+    core_message = _clean_text(slide.get("coreMessage"))
+    takeaway = _clean_text(slide.get("actionableTakeaway"))
+    reserved = [core_message, takeaway]
+    for item in raw_items:
+        text = _clean_text(item)
+        if not text or text in blocked or text.startswith("目标受众") or text.startswith("受众对象"):
+            continue
+        if not _is_duplicate_text(text, bullets + reserved):
+            bullets.append(text)
+
+    for item in node.get("bullets") or []:
+        text = _clean_text(item)
+        if text and text not in blocked and not _is_duplicate_text(text, bullets + reserved):
+            bullets.append(text)
+
+    while len(bullets) < 3:
+        fallback = [
+            f"围绕“{node['title']}”展开核心说明",
+            f"结合“{node['section']}”明确页面重点",
+            "承接后续内容形成完整叙事",
+        ][len(bullets)]
+        if fallback not in bullets:
+            bullets.append(fallback)
+
+    return bullets[:5]
 
 
 class ContentExpander:
@@ -151,5 +257,7 @@ class ContentExpander:
             slide.setdefault("pageGoal", node["goal"])
             slide.setdefault("keyData", [])
             slide.setdefault("evidencePack", [])
+            slide["displayBullets"] = _normalize_display_bullets(slide.get("displayBullets"), node, slide)
+            slide["evidencePack"] = _normalize_evidence_pack(slide.get("evidencePack"))
 
         return PageContentProtocol.model_validate(data)

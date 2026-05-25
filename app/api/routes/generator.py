@@ -153,6 +153,14 @@ async def expand_content(request: Request, body: ExpandContentRequest):
         )
         content = result.get("content") or ""
 
+        if result.get("page_content") is None:
+            return ExpandContentResponse(
+                success=False,
+                content="",
+                page_content=None,
+                message=result.get("message") or "structured content validation failed",
+            )
+
         if is_llm_error_content(content):
             return ExpandContentResponse(
                 success=False,
