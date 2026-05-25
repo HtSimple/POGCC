@@ -527,6 +527,44 @@
       </section>
     </main>
 
+    <div v-if="isGenerating" class="generating-overlay" role="status" aria-live="polite" aria-busy="true">
+      <div class="generating-overlay__panel">
+        <div class="generating-dancers" aria-hidden="true">
+          <span class="party-note party-note-1">♪</span>
+          <span class="party-note party-note-2">♫</span>
+          <span class="party-note party-note-3">♩</span>
+          <span class="party-spark party-spark-1">✦</span>
+          <span class="party-spark party-spark-2">✧</span>
+          <div class="dancer dancer-1">
+            <span class="dancer-head"><span class="dancer-grin"></span></span>
+            <span class="dancer-body"></span>
+            <span class="dancer-arm dancer-arm-left"></span>
+            <span class="dancer-arm dancer-arm-right"></span>
+            <span class="dancer-leg dancer-leg-left"></span>
+            <span class="dancer-leg dancer-leg-right"></span>
+          </div>
+          <div class="dancer dancer-2">
+            <span class="dancer-sweat"></span>
+            <span class="dancer-head"><span class="dancer-grin"></span></span>
+            <span class="dancer-body"></span>
+            <span class="dancer-arm dancer-arm-left"></span>
+            <span class="dancer-arm dancer-arm-right"></span>
+            <span class="dancer-leg dancer-leg-left"></span>
+            <span class="dancer-leg dancer-leg-right"></span>
+          </div>
+          <div class="dancer dancer-3">
+            <span class="dancer-head"><span class="dancer-grin"></span></span>
+            <span class="dancer-body"></span>
+            <span class="dancer-arm dancer-arm-left"></span>
+            <span class="dancer-arm dancer-arm-right"></span>
+            <span class="dancer-leg dancer-leg-left"></span>
+            <span class="dancer-leg dancer-leg-right"></span>
+          </div>
+        </div>
+        <p>{{ generatingLabel }}</p>
+      </div>
+    </div>
+
     <div v-if="toast" class="toast" :class="toast.type">{{ toast.message }}</div>
   </div>
 </template>
@@ -626,6 +664,28 @@ const pageLoading = reactive({
 })
 const allContentLoading = ref(false)
 const allKnowledgeLoading = ref(false)
+
+const isGenerating = computed(
+  () =>
+    outlineLoading.value ||
+    allContentLoading.value ||
+    allKnowledgeLoading.value ||
+    pageLoading.knowledge ||
+    pageLoading.content ||
+    pageLoading.notes ||
+    pageLoading.fact
+)
+
+const generatingLabel = computed(() => {
+  if (outlineLoading.value) return '正在生成大纲，请稍候…'
+  if (allKnowledgeLoading.value) return '正在并行检索全部页面…'
+  if (allContentLoading.value) return '正在并行生成全部正文…'
+  if (pageLoading.knowledge) return '正在补充知识…'
+  if (pageLoading.content) return '正在生成正文…'
+  if (pageLoading.notes) return '正在生成演讲备注…'
+  if (pageLoading.fact) return '正在进行事实检查…'
+  return '正在生成，请稍候…'
+})
 
 const generationStep = computed(() => generationSteps[generationStepIndex.value].key)
 const activeSlide = computed(() => slides.value.find((slide) => slide.id === activeSlideId.value) ?? slides.value[0])
