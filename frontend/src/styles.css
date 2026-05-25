@@ -747,9 +747,74 @@ details[open] > .page-summary-row::before {
 .outline-section-head,
 .slide-meta-title {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+}
+
+.outline-section-head {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.outline-section-head-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.outline-section-title-input {
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 10px;
+  border: 1px solid #dce9e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #152d20;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.outline-section-title-input:focus {
+  outline: none;
+  border-color: #4fa87a;
+  box-shadow: 0 0 0 3px rgba(79, 168, 122, 0.15);
+}
+
+.outline-section-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.outline-section-action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.outline-section-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .outline-section-head {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .outline-section-actions {
+    flex: 0 0 320px;
+    width: 320px;
+  }
 }
 
 .outline-section-head h4 {

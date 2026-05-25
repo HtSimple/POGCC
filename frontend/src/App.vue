@@ -142,10 +142,6 @@
                 <h3>结构化大纲编辑</h3>
               </div>
               <div class="button-row">
-                <button class="secondary-button" type="button" @click="addSlide">
-                  <Plus :size="18" />
-                  新增页
-                </button>
                 <button class="primary-button" type="button" :disabled="outlineLoading || !form.topic"
                   @click="handleGenerateOutline">
                   <WandSparkles :size="18" />
@@ -177,14 +173,41 @@
             <div v-else class="outline-protocol-board">
               <section v-for="section in outlineSectionGroups" :key="section.key" class="outline-section-block">
                 <div class="outline-section-head">
-                  <div>
+                  <div class="outline-section-head-main">
                     <p class="eyebrow">
                       {{ section.sectionId || `sec-${String(section.index + 1).padStart(2, '0')}` }}
                       · slides {{ section.start }}-{{ section.end }}
                     </p>
-                    <h4>{{ section.title || '未命名章节' }}</h4>
+                    <input
+                      class="outline-section-title-input"
+                      :value="section.title"
+                      type="text"
+                      placeholder="章节标题"
+                      @change="renameSectionGroup(section, ($event.target as HTMLInputElement).value)"
+                    />
                   </div>
-                  <span class="status-pill small">{{ section.slides.length }} 页</span>
+                  <div class="outline-section-actions">
+                    <div class="outline-section-action-buttons">
+                      <button
+                        class="secondary-button outline-section-btn"
+                        type="button"
+                        title="在本章末尾插入一页"
+                        @click="addSlideInSection(section)"
+                      >
+                        <Plus :size="18" />
+                        本章内插入
+                      </button>
+                      <button
+                        class="secondary-button outline-section-btn"
+                        type="button"
+                        title="在本章后新建章节"
+                        @click="addSectionAfter(section)"
+                      >
+                        <Plus :size="18" />
+                        本章后新章
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <article v-for="slide in section.slides" :key="slide.id" class="slide-editor protocol-slide-editor">
@@ -209,8 +232,16 @@
                   </div>
                   <div class="form-grid compact-grid">
                     <label>
-                      <span>章节</span>
-                      <input v-model.trim="slide.sectionTitle" type="text" />
+                      <span>所属章节</span>
+                      <select
+                        :value="slide.sectionId || ''"
+                        @change="handleSlideSectionChange(slide.id, ($event.target as HTMLSelectElement).value)"
+                      >
+                        <option v-for="option in outlineSectionCatalog" :key="option.sectionId" :value="option.sectionId">
+                          {{ option.label }}
+                        </option>
+                        <option value="__new__">+ 新建章节…</option>
+                      </select>
                     </label>
                     <label>
                       <span>页面角色</span>
@@ -623,6 +654,18 @@ import type {
 type AppMode = 'generate' | 'history'
 type GenerationStep = 'task' | 'references' | 'outline' | 'pages' | 'markdown'
 
+type OutlineSectionGroup = {
+  key: string
+  index: number
+  sectionId: string
+  title: string
+  start: number
+  end: number
+  slides: SlidePage[]
+}
+
+const NEW_SECTION_OPTION = '__new__'
+
 const generationSteps: Array<{ key: GenerationStep; label: string; summary: string }> = [
   { key: 'task', label: '任务信息', summary: '填写主题与要求' },
   { key: 'references', label: '参考资料', summary: '路径入库与状态反馈' },
@@ -691,37 +734,42 @@ const generationStep = computed(() => generationSteps[generationStepIndex.value]
 const activeSlide = computed(() => slides.value.find((slide) => slide.id === activeSlideId.value) ?? slides.value[0])
 const selectedHistory = computed(() => historyRecords.value.find((record) => record.id === selectedHistoryId.value) ?? null)
 const outlineSectionGroups = computed(() => {
-  const groups: Array<{
-    key: string
-    index: number
-    sectionId?: string
-    title: string
-    start: number
-    end: number
-    slides: SlidePage[]
-  }> = []
+  const groups: OutlineSectionGroup[] = []
+  let current: OutlineSectionGroup | null = null
 
   slides.value.forEach((slide, index) => {
+    const sectionId = slide.sectionId || `sec-${String((current?.index ?? -1) + 2).padStart(2, '0')}`
     const title = slide.sectionTitle || '未命名章节'
-    let group = groups.find((item) => item.title === title && item.sectionId === slide.sectionId)
-    if (!group) {
-      group = {
-        key: `${slide.sectionId || title}-${groups.length}`,
+
+    if (!current || current.sectionId !== sectionId) {
+      current = {
+        key: `${sectionId}-${groups.length}`,
         index: groups.length,
-        sectionId: slide.sectionId,
+        sectionId,
         title,
         start: index + 1,
         end: index + 1,
-        slides: []
+        slides: [slide]
       }
-      groups.push(group)
+      groups.push(current)
+      return
     }
-    group.end = index + 1
-    group.slides.push(slide)
+
+    current.end = index + 1
+    current.slides.push(slide)
   })
 
   return groups
 })
+
+const outlineSectionCatalog = computed(() =>
+  outlineSectionGroups.value.map((section) => ({
+    sectionId: section.sectionId,
+    sectionTitle: section.title,
+    goal: section.slides[0]?.goal || '',
+    label: `${section.sectionId} · ${section.title || '未命名章节'}`
+  }))
+)
 
 const requirementsText = computed(() => {
   const lines = [
@@ -886,6 +934,7 @@ async function handleGenerateOutline() {
       return
     }
     slides.value = normalizeOutline(result.outline)
+    normalizeOutlineSlides()
     activeSlideId.value = slides.value[0]?.id ?? ''
     showToast('大纲生成成功，可以检查并修改页面结构', 'success')
   } catch (error) {
@@ -973,22 +1022,150 @@ function pageContentToText(pageContent?: PageContentProtocol | null) {
   ].filter(Boolean).join('\n')
 }
 
-function addSlide() {
+function normalizeOutlineSlides() {
+  renumberSectionIdsInOrder()
+  slides.value.forEach((slide, index) => {
+    slide.slideNumber = index + 1
+    slide.protocolSlideId = `slide-${String(index + 1).padStart(3, '0')}`
+  })
+  if (outlineProtocolMeta.value) {
+    outlineProtocolMeta.value.targetSlideCount = slides.value.length
+  }
+}
+
+/** 按文档顺序将连续章节重编号为 sec-01、sec-02… */
+function renumberSectionIdsInOrder() {
+  if (!slides.value.length) {
+    return
+  }
+
+  let sectionNumber = 0
+  let previousGroupKey: string | null = null
+
+  slides.value.forEach((slide) => {
+    const groupKey = slide.sectionId || `__${slide.sectionTitle || 'section'}`
+    if (groupKey !== previousGroupKey) {
+      sectionNumber += 1
+      previousGroupKey = groupKey
+    }
+    slide.sectionId = `sec-${String(sectionNumber).padStart(2, '0')}`
+  })
+}
+
+function insertSlideAt(insertIndex: number, input: Partial<SlidePage> = {}) {
   const slide = createSlide({
-    protocolSlideId: `slide-${String(slides.value.length + 1).padStart(3, '0')}`,
-    slideNumber: slides.value.length + 1,
     slideRole: slides.value.length === 0 ? 'cover' : 'content',
-    sectionId: `sec-${String(outlineSectionGroups.value.length + 1).padStart(2, '0')}`,
-    sectionTitle: '自定义章节',
+    title: `新增页面 ${slides.value.length + 1}`,
+    bullets: [],
+    ...input
+  })
+  const next = [...slides.value]
+  next.splice(insertIndex, 0, slide)
+  slides.value = next
+  normalizeOutlineSlides()
+  activeSlideId.value = slide.id
+  return slide
+}
+
+function moveSlideToSectionEnd(slideId: string, targetSectionId: string) {
+  const fromIndex = slides.value.findIndex((slide) => slide.id === slideId)
+  if (fromIndex < 0) {
+    return
+  }
+
+  const next = [...slides.value]
+  const [item] = next.splice(fromIndex, 1)
+
+  let insertAt = next.length
+  for (let index = next.length - 1; index >= 0; index -= 1) {
+    if (next[index].sectionId === targetSectionId) {
+      insertAt = index + 1
+      break
+    }
+  }
+
+  next.splice(insertAt, 0, item)
+  slides.value = next
+}
+
+function addSlideInSection(section: OutlineSectionGroup) {
+  insertSlideAt(section.end, {
+    slideRole: 'content',
+    sectionId: section.sectionId,
+    sectionTitle: section.title,
+    goal: section.slides[0]?.goal || '',
     title: `新增页面 ${slides.value.length + 1}`,
     bullets: []
   })
-  slides.value.push(slide)
-  activeSlideId.value = slide.id
+}
+
+function addSectionAfter(section: OutlineSectionGroup) {
+  insertSlideAt(section.end, {
+    slideRole: 'content',
+    sectionId: '__new_section__',
+    sectionTitle: '新章节',
+    goal: '',
+    title: '新章节页面',
+    bullets: []
+  })
+}
+
+function handleSlideSectionChange(slideId: string, targetSectionId: string) {
+  const slide = slides.value.find((item) => item.id === slideId)
+  if (!slide) {
+    return
+  }
+
+  if (targetSectionId === NEW_SECTION_OPTION) {
+    slide.sectionId = '__new_section__'
+    slide.sectionTitle = '新章节'
+    slide.goal = ''
+    moveSlideToSectionEnd(slideId, '__new_section__')
+    normalizeOutlineSlides()
+    return
+  }
+
+  const option = outlineSectionCatalog.value.find((item) => item.sectionId === targetSectionId)
+  if (!option) {
+    return
+  }
+
+  slide.sectionId = option.sectionId
+  slide.sectionTitle = option.sectionTitle
+  slide.goal = option.goal
+  moveSlideToSectionEnd(slideId, option.sectionId)
+  normalizeOutlineSlides()
+}
+
+function renameSectionGroup(section: OutlineSectionGroup, value: string) {
+  const title = value.trim() || '未命名章节'
+  section.slides.forEach((slide) => {
+    slide.sectionTitle = title
+  })
+}
+
+function syncSlideSectionFromNeighbor(index: number) {
+  const slide = slides.value[index]
+  const above = slides.value[index - 1]
+  const below = slides.value[index + 1]
+
+  if (above) {
+    slide.sectionId = above.sectionId
+    slide.sectionTitle = above.sectionTitle
+    slide.goal = above.goal
+    return
+  }
+
+  if (below) {
+    slide.sectionId = below.sectionId
+    slide.sectionTitle = below.sectionTitle
+    slide.goal = below.goal
+  }
 }
 
 function removeSlide(slideId: string) {
   slides.value = slides.value.filter((slide) => slide.id !== slideId)
+  normalizeOutlineSlides()
 }
 
 function getSlideIndex(slide: SlidePage) {
@@ -1005,6 +1182,8 @@ function moveSlide(index: number, direction: -1 | 1) {
   const [item] = next.splice(index, 1)
   next.splice(target, 0, item)
   slides.value = next
+  syncSlideSectionFromNeighbor(target)
+  normalizeOutlineSlides()
 }
 
 function updateBullets(slideId: string, value: string) {
@@ -1369,6 +1548,7 @@ function restoreRecord(record: ProjectRecord) {
   Object.assign(form, record.form)
   references.value = record.references.map((doc) => ({ ...doc }))
   slides.value = record.slides.map((slide) => ({ ...slide, bullets: [...slide.bullets] }))
+  normalizeOutlineSlides()
   activeSlideId.value = slides.value[0]?.id ?? ''
   generationStepIndex.value = getRestoreStepIndex(record)
   activeMode.value = 'generate'
