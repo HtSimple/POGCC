@@ -5,7 +5,8 @@
 前端通过 Vite 环境变量控制数据来源：
 
 ```bash
-VITE_USE_MOCK=true
+$env:VITE_USE_MOCK="true"
+$env:VITE_USE_MOCK="false"
 ```
 
 取值说明：

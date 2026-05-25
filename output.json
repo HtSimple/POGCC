@@ -1,8 +1,177 @@
 {
-  "success": false,
-  "source": "raw_llm_output",
-  "message": "model output failed JSON protocol validation; fallback was returned to API caller",
-  "schema_error": null,
-  "validation_error": "1 validation error for NarrativeOutline\n  Value error, outline slides must be continuous from 1 to targetSlideCount; expected [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], got [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] [type=value_error, input_value={'protocolVersion': 'ppt-...大数据处理']}]}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
-  "raw_llm_output": "{\n  \"protocolVersion\": \"ppt-narrative-outline.v1\",\n  \"language\": \"zh-CN\",\n  \"presentationTitle\": \"计算机系统体系结构关键技术解析\",\n  \"targetSlideCount\": 20,\n  \"sections\": [\n    {\n      \"sectionId\": \"sec-01\",\n      \"sectionTitle\": \"计算机系统基本概念\",\n      \"sectionObjective\": \"介绍计算机系统层次结构、核心概念及性能评价指标\",\n      \"slideRange\": {\n        \"start\": 3,\n        \"end\": 5\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-003\",\n          \"slideNumber\": 3,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"系统层次结构与虚拟机\",\n          \"keyPoints\": [\n            \"计算机五级层次结构：微程序→机器语言→汇编→高级语言→应用语言\",\n            \"虚拟机概念：通过软件实现的机器功能抽象\",\n            \"翻译与解释机制的区别与实现原理\"\n          ],\n          \"notes\": \"重点对比翻译（整体转换）与解释（逐条执行）的差异\"\n        },\n        {\n          \"slideId\": \"slide-004\",\n          \"slideNumber\": 4,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"系统结构、组成与实现\",\n          \"keyPoints\": [\n            \"计算机系统结构定义：程序员可见的功能特性\",\n            \"透明性概念：客观存在但不可见的系统特性\",\n            \"Amdahl定律：系统优化性能提升的理论极限\"\n          ],\n          \"notes\": \"结合实例说明透明性在硬件设计中的体现\"\n        },\n        {\n          \"slideId\": \"slide-005\",\n          \"slideNumber\": 5,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"存储程序与兼容性\",\n          \"keyPoints\": [\n            \"冯·诺依曼架构核心：指令驱动与程序存储\",\n            \"系列机概念：相同系统结构的硬件演进\",\n            \"软件兼容类型：向前/向后兼容的实现意义\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-02\",\n      \"sectionTitle\": \"指令级并行与流水线\",\n      \"sectionObjective\": \"解析流水线冲突类型及解决方案\",\n      \"slideRange\": {\n        \"start\": 6,\n        \"end\": 8\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-006\",\n          \"slideNumber\": 6,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"流水线冲突类型\",\n          \"keyPoints\": [\n            \"数据冲突：写后读(RAW)、读后写(WAR)、写后写(WAW)\",\n            \"控制冲突：分支指令导致的流水线清空\",\n            \"结构冲突：硬件资源争用问题\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-007\",\n          \"slideNumber\": 7,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"冲突解决技术\",\n          \"keyPoints\": [\n            \"定向技术：数据旁路减少写后读停顿\",\n            \"分支预测：静态/动态预测控制流\",\n            \"指令调度：编译器重排指令序列\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-008\",\n          \"slideNumber\": 8,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"高级流水线技术\",\n          \"keyPoints\": [\n            \"多指令流出：超标量与超长指令字\",\n            \"动态调度：Tomasulo算法实现\",\n            \"链接技术：向量指令并行优化\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-03\",\n      \"sectionTitle\": \"向量处理技术\",\n      \"sectionObjective\": \"阐述向量处理原理与性能优化方法\",\n      \"slideRange\": {\n        \"start\": 9,\n        \"end\": 10\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-009\",\n          \"slideNumber\": 9,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"向量处理基础\",\n          \"keyPoints\": [\n            \"分段开采：长向量循环处理机制\",\n            \"半性能向量长度：评估向量机效率指标\",\n            \"向量长度临界值：流水优于标量的最小长度\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-010\",\n          \"slideNumber\": 10,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"向量处理机架构\",\n          \"keyPoints\": [\n            \"存储器-存储器结构：直接访问主存\",\n            \"寄存器-寄存器结构：降低访问延迟\",\n            \"并行处理单元：SIMD模式加速计算\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-04\",\n      \"sectionTitle\": \"多处理机系统\",\n      \"sectionObjective\": \"分析多处理机架构及并发控制机制\",\n      \"slideRange\": {\n        \"start\": 11,\n        \"end\": 14\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-011\",\n          \"slideNumber\": 11,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"多处理机分类\",\n          \"keyPoints\": [\n            \"耦合度：紧密耦合 vs 松散耦合系统\",\n            \"同构型：相同功能处理器集群\",\n            \"异构型：专用处理器协同工作\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-012\",\n          \"slideNumber\": 12,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"共享存储架构\",\n          \"keyPoints\": [\n            \"SMP：对称式共享存储器多处理机\",\n            \"DSM：分布式共享存储物理分布逻辑统一\",\n            \"通信延迟组成：发送开销+传输时间+接收开销\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-013\",\n          \"slideNumber\": 13,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"多Cache一致性\",\n          \"keyPoints\": [\n            \"监听协议：总线嗅探实现一致性\",\n            \"目录协议：集中记录数据块状态\",\n            \"写作废 vs 写更新策略对比\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-014\",\n          \"slideNumber\": 14,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"同步与多线程\",\n          \"keyPoints\": [\n            \"栅栏同步：全局进度协调机制\",\n            \"同时多线程(SMT)：开发线程级与指令级并行\",\n            \"粗粒度 vs 细粒度多线程切换策略\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-05\",\n      \"sectionTitle\": \"机群系统\",\n      \"sectionObjective\": \"探讨机群架构及高可用解决方案\",\n      \"slideRange\": {\n        \"start\": 15,\n        \"end\": 17\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-015\",\n          \"slideNumber\": 15,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"机群系统概述\",\n          \"keyPoints\": [\n            \"定义：独立计算机通过高速网络互联\",\n            \"单一系统映像：透明访问的四种含义\",\n            \"可扩放性：线性增加计算能力\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-016\",\n          \"slideNumber\": 16,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"机群分类与应用\",\n          \"keyPoints\": [\n            \"高可用机群：故障转移与冗余机制\",\n            \"负载均衡机群：动态任务调度策略\",\n            \"高性能计算群：替代传统超级计算机\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-017\",\n          \"slideNumber\": 17,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"Beowulf机群实践\",\n          \"keyPoints\": [\n            \"构建要素：普通硬件+Linux系统+GNU工具\",\n            \"性能价格比：千分之一成本实现同等算力\",\n            \"典型案例：科学计算与大数据处理\"\n          ]\n        }\n      ]\n    }\n  ]\n}"
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "PPT大纲智能生成与内容补全系统项目汇报",
+    "targetSlideCount": 10,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "项目背景与挑战",
+        "sectionObjective": "介绍项目背景、行业痛点及核心挑战，引出项目目标。",
+        "slideRange": {
+          "start": 1,
+          "end": 3
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "PPT大纲智能生成与内容补全系统",
+            "keyPoints": [
+              "项目名称：PPT大纲智能生成与内容补全系统",
+              "项目类型：课程项目",
+              "汇报场景：学术汇报"
+            ],
+            "notes": "封面页，展示项目名称与类型。"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "行业背景与痛点分析",
+            "keyPoints": [
+              "大语言模型在结构化演示文稿生成中缺乏垂直行业背景知识",
+              "现有AI PPT工具重排版、轻内容，导致逻辑断层与内容空洞",
+              "用户需深度修改，AI未转化为实际生产力"
+            ],
+            "notes": "阐述项目背景，引用参考资料中的行业现状描述。"
+          },
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "项目目标与预期影响",
+            "keyPoints": [
+              "填补高质量内容生成市场空白，探索LLM在深度创作场景的工程化落地",
+              "将20页深度PPT的资料筛选与初稿大纲梳理时间缩减60%以上",
+              "通过知识挂载降低内容出错风险，提升办公产出质量"
+            ],
+            "notes": "明确项目目标，强调降本增效与专业深度。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "项目范围与核心功能",
+        "sectionObjective": "定义项目范围，介绍核心功能模块与技术路线。",
+        "slideRange": {
+          "start": 4,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "项目范围说明",
+            "keyPoints": [
+              "聚焦解决AI生成PPT的“逻辑断层”与“内容幻觉”问题",
+              "交付可运行的Python软件原型，实现端到端流程",
+              "范围内包含逻辑建模、Prompt工程、Agentic RAG、演讲备注生成"
+            ],
+            "notes": "基于参考资料明确项目边界与交付物。"
+          },
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "核心功能模块",
+            "keyPoints": [
+              "逻辑建模与Schema设计：基于Json/Schema的结构化约束机制",
+              "Prompt工程与优化：多轮次指令实现长文档精准提取",
+              "Agentic RAG链路：DeepResearch能力，外部权威知识挂载",
+              "演讲备注自动生成：深度、可读性强的备注内容"
+            ],
+            "notes": "逐一介绍四个核心功能模块。"
+          },
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "content",
+            "slideTitle": "技术路线与模型选型",
+            "keyPoints": [
+              "采用DeepSeek、Qwen等主流大语言模型",
+              "结合RAGAS评估框架进行事实一致性校验",
+              "构建黄金数据集进行盲测对比实验"
+            ],
+            "notes": "说明技术选型与实验设计思路。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "可衡量组织价值与评估方法",
+        "sectionObjective": "展示MOV量化指标、评估方法与预期提升效果。",
+        "slideRange": {
+          "start": 7,
+          "end": 8
+        },
+        "slides": [
+          {
+            "slideId": "slide-007",
+            "slideNumber": 7,
+            "slideRole": "content",
+            "slideTitle": "可衡量组织价值（MOV）",
+            "keyPoints": [
+              "采用相对精准率（Relative Precision）作为核心指标",
+              "构建黄金数据集，进行盲测对比实验",
+              "采用LLM-as-a-Judge与人工抽检交叉验证"
+            ],
+            "notes": "介绍MOV定义与评估执行路径。"
+          },
+          {
+            "slideId": "slide-008",
+            "slideNumber": 8,
+            "slideRole": "content",
+            "slideTitle": "量化计算公式与预期提升",
+            "keyPoints": [
+              "单次生成准确率 = 正确事实数 / 总事实数",
+              "相对提升率 = (系统精准率 - 基线精准率) / 基线精准率 × 100%",
+              "预期MOV目标：相对提升率 ≥ 50%"
+            ],
+            "notes": "展示具体计算公式，明确预期目标。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "项目组织与总结",
+        "sectionObjective": "说明项目组织影响、管理安排，并总结项目价值。",
+        "slideRange": {
+          "start": 9,
+          "end": 10
+        },
+        "slides": [
+          {
+            "slideId": "slide-009",
+            "slideNumber": 9,
+            "slideRole": "content",
+            "slideTitle": "组织影响与项目管理",
+            "keyPoints": [
+              "验证AI在高质量内容生成领域的可行路径",
+              "为办公智能体、知识驱动内容生产工具提供参考",
+              "提升团队效率，积累技术优势，增强市场竞争力"
+            ],
+            "notes": "阐述项目对组织的长远影响。"
+          },
+          {
+            "slideId": "slide-010",
+            "slideNumber": 10,
+            "slideRole": "summary",
+            "slideTitle": "总结与展望",
+            "keyPoints": [
+              "项目聚焦逻辑断层与内容幻觉，实现端到端PPT生成",
+              "通过Agentic RAG与结构化约束提升内容质量",
+              "预期显著降本增效，推动AI在深度创作场景的落地"
+            ],
+            "notes": "总结项目核心价值，展望未来应用。"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated with reference context"
 }
