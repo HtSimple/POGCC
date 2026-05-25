@@ -995,9 +995,9 @@ details[open] > .page-summary-row::before {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 22px;
-  width: 280px;
-  height: 108px;
+  gap: 26px;
+  width: 300px;
+  height: 118px;
   padding: 0 8px;
 }
 
@@ -1012,13 +1012,13 @@ details[open] > .page-summary-row::before {
 }
 
 .party-note {
-  color: #2d734f;
+  color: #e52535;
   font-size: 18px;
   opacity: 0.85;
 }
 
 .party-spark {
-  color: #f0b429;
+  color: #f5b800;
   font-size: 14px;
 }
 
@@ -1055,8 +1055,8 @@ details[open] > .page-summary-row::before {
 
 .dancer {
   position: relative;
-  width: 40px;
-  height: 78px;
+  width: 48px;
+  height: 88px;
   transform-origin: center bottom;
 }
 
@@ -1072,235 +1072,312 @@ details[open] > .page-summary-row::before {
   animation: creep-sway-wild 0.44s cubic-bezier(0.45, 0, 0.55, 1) infinite 0.24s;
 }
 
-.dancer-head {
+/* 猪猪侠造型 */
+.ggbond-helmet {
   position: absolute;
-  top: 0;
+  top: -1px;
   left: 50%;
-  z-index: 2;
-  width: 19px;
-  height: 18px;
-  margin-left: -9.5px;
-  border-radius: 46% 46% 40% 40%;
-  background: linear-gradient(145deg, #4fa87a 0%, #2d734f 100%);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  z-index: 5;
+  width: 28px;
+  height: 15px;
+  margin-left: -14px;
+  border-radius: 55% 55% 18% 18%;
+  background: linear-gradient(180deg, #fff176 0%, #ffd54f 45%, #f5b800 100%);
+  box-shadow: 0 2px 0 #c49000, inset 0 1px 0 rgba(255, 255, 255, 0.55);
   animation: creep-head 0.52s ease-in-out infinite;
 }
 
-.dancer-2 .dancer-head {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-head {
-  animation-delay: 0.24s;
-}
-
-.dancer-head::before,
-.dancer-head::after {
+.ggbond-helmet::after {
   content: "";
   position: absolute;
-  top: 5px;
-  width: 5px;
-  height: 1px;
+  bottom: -4px;
+  left: 50%;
+  width: 32px;
+  height: 6px;
+  margin-left: -16px;
   border-radius: 999px;
-  background: #142018;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, #ffd54f 0%, #f0a800 100%);
 }
 
-.dancer-head::before {
-  left: 3px;
+.ggbond-head {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 3;
+  width: 26px;
+  height: 24px;
+  margin-left: -13px;
+  border-radius: 48% 48% 44% 44%;
+  background: linear-gradient(145deg, #ffc9d4 0%, #ff9eb5 55%, #f58ba8 100%);
+  box-shadow: inset 0 -2px 0 rgba(214, 90, 120, 0.25);
+  animation: creep-head 0.52s ease-in-out infinite;
+}
+
+.ggbond-ear {
+  position: absolute;
+  top: 6px;
+  width: 7px;
+  height: 9px;
+  border-radius: 50% 50% 20% 20%;
+  background: #ff9eb5;
+  border: 1px solid #f07a98;
+}
+
+.ggbond-ear-left {
+  left: -4px;
+  transform: rotate(-28deg);
+}
+
+.ggbond-ear-right {
+  right: -4px;
   transform: rotate(28deg);
+}
+
+.ggbond-eye {
+  position: absolute;
+  top: 8px;
+  width: 6px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #2a1520;
+  z-index: 2;
+}
+
+.ggbond-eye::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #1a1018;
+}
+
+.ggbond-eye-left {
+  left: 4px;
   animation: creep-eye-left 0.52s ease-in-out infinite;
 }
 
-.dancer-head::after {
-  right: 3px;
-  transform: rotate(-28deg);
+.ggbond-eye-right {
+  right: 4px;
   animation: creep-eye-right 0.52s ease-in-out infinite;
 }
 
-.dancer-2 .dancer-head::before,
-.dancer-2 .dancer-head::after {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-head::before,
-.dancer-3 .dancer-head::after {
-  animation-delay: 0.24s;
-}
-
-.dancer-grin {
+.ggbond-snout {
   position: absolute;
-  bottom: 3px;
+  bottom: 1px;
   left: 50%;
-  width: 10px;
-  height: 5px;
-  margin-left: -5px;
-  border: 2px solid #142018;
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-  background: transparent;
+  z-index: 4;
+  width: 16px;
+  height: 12px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffb0c5 0%, #ff85a8 100%);
+  border: 1px solid #e86d90;
   animation: creep-grin 0.52s ease-in-out infinite;
 }
 
-.dancer-2 .dancer-grin {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-grin {
-  animation-delay: 0.24s;
-}
-
-.dancer-sweat {
+.ggbond-snout::before,
+.ggbond-snout::after {
+  content: "";
   position: absolute;
-  top: 2px;
-  right: 2px;
-  z-index: 4;
-  width: 4px;
-  height: 7px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: rgba(120, 190, 255, 0.85);
-  animation: creep-sweat 0.7s ease-in-out infinite;
+  top: 5px;
+  width: 3px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d44d72;
 }
 
-.dancer-body {
+.ggbond-snout::before {
+  left: 4px;
+}
+
+.ggbond-snout::after {
+  right: 4px;
+}
+
+.ggbond-cape {
   position: absolute;
-  top: 17px;
+  top: 28px;
   left: 50%;
-  width: 15px;
-  height: 19px;
-  margin-left: -7.5px;
-  border-radius: 10px 10px 14px 14px;
-  background: linear-gradient(180deg, #45a072 0%, #245a3d 100%);
-  transform: rotate(12deg);
+  z-index: 0;
+  width: 34px;
+  height: 22px;
+  margin-left: -17px;
+  background: linear-gradient(180deg, #ff4d62 0%, #c41e2a 100%);
+  border-radius: 4px 4px 40% 40%;
+  transform: rotate(-6deg);
+  animation: creep-body 0.52s ease-in-out infinite;
+}
+
+.ggbond-body {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  z-index: 2;
+  width: 18px;
+  height: 20px;
+  margin-left: -9px;
+  border-radius: 10px 10px 12px 12px;
+  background: linear-gradient(180deg, #ff3d52 0%, #e52535 55%, #c41e2a 100%);
+  transform: rotate(8deg);
   transform-origin: top center;
   animation: creep-body 0.52s ease-in-out infinite;
 }
 
-.dancer-2 .dancer-body {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-body {
-  animation-delay: 0.24s;
-}
-
-.dancer-body::after {
+.ggbond-body::before {
   content: "";
   position: absolute;
-  bottom: -6px;
+  top: 8px;
+  left: 50%;
+  width: 20px;
+  height: 5px;
+  margin-left: -10px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #ffe566 0%, #f5b800 100%);
+  box-shadow: 0 1px 0 #c49000;
+}
+
+.ggbond-body::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
   left: 50%;
   width: 22px;
-  height: 11px;
+  height: 8px;
   margin-left: -11px;
   border-radius: 50%;
-  background: #245a3d;
+  background: #c41e2a;
   animation: creep-hip 0.52s ease-in-out infinite;
 }
 
-.dancer-2 .dancer-body::after {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-body::after {
-  animation-delay: 0.24s;
-}
-
-.dancer-arm {
+.ggbond-arm {
   position: absolute;
-  top: 21px;
+  top: 32px;
   width: 18px;
-  height: 3px;
+  height: 4px;
   border-radius: 999px;
-  background: #245a3d;
+  background: linear-gradient(90deg, #e52535 0%, #ff3d52 100%);
   transform-origin: 13px center;
   z-index: 1;
 }
 
-.dancer-arm::after {
+.ggbond-arm::after {
   content: "";
   position: absolute;
-  top: -2px;
-  width: 5px;
-  height: 5px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #4fa87a;
+  background: #ff9eb5;
+  border: 1px solid #f07a98;
 }
 
-.dancer-arm-left {
-  left: -3px;
+.ggbond-arm-left {
+  left: -4px;
   animation: creep-arm-left 0.52s ease-in-out infinite;
 }
 
-.dancer-arm-left::after {
-  left: -2px;
+.ggbond-arm-left::after {
+  left: -3px;
 }
 
-.dancer-arm-right {
-  right: -3px;
+.ggbond-arm-right {
+  right: -4px;
   transform-origin: 5px center;
   animation: creep-arm-right 0.52s ease-in-out infinite;
 }
 
-.dancer-arm-right::after {
-  right: -2px;
+.ggbond-arm-right::after {
+  right: -3px;
 }
 
-.dancer-1 .dancer-arm-left {
+.dancer-1 .ggbond-arm-left {
   animation-name: creep-arm-left-wild;
 }
 
-.dancer-1 .dancer-arm-right {
+.dancer-1 .ggbond-arm-right {
   animation-name: creep-arm-right-wild;
 }
 
-.dancer-3 .dancer-arm-left {
+.dancer-3 .ggbond-arm-left {
   animation-name: creep-arm-left-flail;
 }
 
-.dancer-3 .dancer-arm-right {
+.dancer-3 .ggbond-arm-right {
   animation-name: creep-arm-right-flail;
 }
 
-.dancer-2 .dancer-arm-left,
-.dancer-2 .dancer-arm-right,
-.dancer-2 .dancer-leg-left,
-.dancer-2 .dancer-leg-right {
-  animation-delay: 0.12s;
-}
-
-.dancer-3 .dancer-arm-left,
-.dancer-3 .dancer-arm-right,
-.dancer-3 .dancer-leg-left,
-.dancer-3 .dancer-leg-right {
-  animation-delay: 0.24s;
-}
-
-.dancer-leg {
+.ggbond-leg {
   position: absolute;
-  top: 44px;
-  width: 4px;
-  height: 24px;
-  border-radius: 999px;
-  background: #1b3f2c;
+  top: 48px;
+  width: 5px;
+  height: 22px;
+  border-radius: 3px 3px 6px 6px;
+  background: linear-gradient(180deg, #e52535 0%, #9e1824 100%);
   transform-origin: top center;
 }
 
-.dancer-leg-left {
-  left: 10px;
+.ggbond-leg::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 9px;
+  height: 5px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: #2a1520;
+}
+
+.ggbond-leg-left {
+  left: 12px;
   animation: creep-leg-left 0.52s ease-in-out infinite;
 }
 
-.dancer-leg-right {
-  right: 10px;
+.ggbond-leg-right {
+  right: 12px;
   animation: creep-leg-right 0.52s ease-in-out infinite;
 }
 
-.dancer-3 .dancer-leg-left {
+.dancer-3 .ggbond-leg-left {
   animation-name: creep-leg-kick-left;
 }
 
-.dancer-3 .dancer-leg-right {
+.dancer-3 .ggbond-leg-right {
   animation-name: creep-leg-kick-right;
+}
+
+.dancer-2 .ggbond-helmet,
+.dancer-2 .ggbond-head,
+.dancer-2 .ggbond-cape,
+.dancer-2 .ggbond-body,
+.dancer-2 .ggbond-body::after,
+.dancer-2 .ggbond-eye-left,
+.dancer-2 .ggbond-eye-right,
+.dancer-2 .ggbond-snout,
+.dancer-2 .ggbond-arm-left,
+.dancer-2 .ggbond-arm-right,
+.dancer-2 .ggbond-leg-left,
+.dancer-2 .ggbond-leg-right {
+  animation-delay: 0.12s;
+}
+
+.dancer-3 .ggbond-helmet,
+.dancer-3 .ggbond-head,
+.dancer-3 .ggbond-cape,
+.dancer-3 .ggbond-body,
+.dancer-3 .ggbond-body::after,
+.dancer-3 .ggbond-eye-left,
+.dancer-3 .ggbond-eye-right,
+.dancer-3 .ggbond-snout,
+.dancer-3 .ggbond-arm-left,
+.dancer-3 .ggbond-arm-right,
+.dancer-3 .ggbond-leg-left,
+.dancer-3 .ggbond-leg-right {
+  animation-delay: 0.24s;
 }
 
 .generating-overlay__panel p {

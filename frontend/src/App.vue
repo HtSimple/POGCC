@@ -566,30 +566,53 @@
           <span class="party-note party-note-3">♩</span>
           <span class="party-spark party-spark-1">✦</span>
           <span class="party-spark party-spark-2">✧</span>
-          <div class="dancer dancer-1">
-            <span class="dancer-head"><span class="dancer-grin"></span></span>
-            <span class="dancer-body"></span>
-            <span class="dancer-arm dancer-arm-left"></span>
-            <span class="dancer-arm dancer-arm-right"></span>
-            <span class="dancer-leg dancer-leg-left"></span>
-            <span class="dancer-leg dancer-leg-right"></span>
+          <div class="dancer ggbond dancer-1">
+            <span class="ggbond-helmet"></span>
+            <span class="ggbond-head">
+              <span class="ggbond-ear ggbond-ear-left"></span>
+              <span class="ggbond-ear ggbond-ear-right"></span>
+              <span class="ggbond-eye ggbond-eye-left"></span>
+              <span class="ggbond-eye ggbond-eye-right"></span>
+              <span class="ggbond-snout"></span>
+            </span>
+            <span class="ggbond-cape"></span>
+            <span class="ggbond-body"></span>
+            <span class="ggbond-arm ggbond-arm-left"></span>
+            <span class="ggbond-arm ggbond-arm-right"></span>
+            <span class="ggbond-leg ggbond-leg-left"></span>
+            <span class="ggbond-leg ggbond-leg-right"></span>
           </div>
-          <div class="dancer dancer-2">
-            <span class="dancer-sweat"></span>
-            <span class="dancer-head"><span class="dancer-grin"></span></span>
-            <span class="dancer-body"></span>
-            <span class="dancer-arm dancer-arm-left"></span>
-            <span class="dancer-arm dancer-arm-right"></span>
-            <span class="dancer-leg dancer-leg-left"></span>
-            <span class="dancer-leg dancer-leg-right"></span>
+          <div class="dancer ggbond dancer-2">
+            <span class="ggbond-helmet"></span>
+            <span class="ggbond-head">
+              <span class="ggbond-ear ggbond-ear-left"></span>
+              <span class="ggbond-ear ggbond-ear-right"></span>
+              <span class="ggbond-eye ggbond-eye-left"></span>
+              <span class="ggbond-eye ggbond-eye-right"></span>
+              <span class="ggbond-snout"></span>
+            </span>
+            <span class="ggbond-cape"></span>
+            <span class="ggbond-body"></span>
+            <span class="ggbond-arm ggbond-arm-left"></span>
+            <span class="ggbond-arm ggbond-arm-right"></span>
+            <span class="ggbond-leg ggbond-leg-left"></span>
+            <span class="ggbond-leg ggbond-leg-right"></span>
           </div>
-          <div class="dancer dancer-3">
-            <span class="dancer-head"><span class="dancer-grin"></span></span>
-            <span class="dancer-body"></span>
-            <span class="dancer-arm dancer-arm-left"></span>
-            <span class="dancer-arm dancer-arm-right"></span>
-            <span class="dancer-leg dancer-leg-left"></span>
-            <span class="dancer-leg dancer-leg-right"></span>
+          <div class="dancer ggbond dancer-3">
+            <span class="ggbond-helmet"></span>
+            <span class="ggbond-head">
+              <span class="ggbond-ear ggbond-ear-left"></span>
+              <span class="ggbond-ear ggbond-ear-right"></span>
+              <span class="ggbond-eye ggbond-eye-left"></span>
+              <span class="ggbond-eye ggbond-eye-right"></span>
+              <span class="ggbond-snout"></span>
+            </span>
+            <span class="ggbond-cape"></span>
+            <span class="ggbond-body"></span>
+            <span class="ggbond-arm ggbond-arm-left"></span>
+            <span class="ggbond-arm ggbond-arm-right"></span>
+            <span class="ggbond-leg ggbond-leg-left"></span>
+            <span class="ggbond-leg ggbond-leg-right"></span>
           </div>
         </div>
         <p>{{ generatingLabel }}</p>

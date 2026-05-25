@@ -3,113 +3,124 @@
   "outline": {
     "protocolVersion": "ppt-narrative-outline.v1",
     "language": "zh-CN",
-    "presentationTitle": "计算机原理学术汇报",
+    "presentationTitle": "猪猪侠：计算机系统核心概念学术汇报",
     "targetSlideCount": 10,
     "sections": [
       {
         "sectionId": "sec-01",
-        "sectionTitle": "引言与基本概念",
-        "sectionObjective": "介绍计算机系统的基本概念、层次结构和核心原理，为后续内容奠定基础。",
+        "sectionTitle": "引言与背景",
+        "sectionObjective": "引入猪猪侠主题，说明汇报目的与计算机系统基本概念",
         "slideRange": {
           "start": 1,
-          "end": 3
+          "end": 2
         },
         "slides": [
           {
             "slideId": "slide-001",
             "slideNumber": 1,
             "slideRole": "cover",
-            "slideTitle": "计算机原理学术汇报",
+            "slideTitle": "猪猪侠：计算机系统核心概念学术汇报",
             "keyPoints": [
-              "计算机系统层次结构",
-              "存储程序与冯·诺依曼结构",
-              "性能评价与加速比"
+              "汇报主题：计算机系统核心概念",
+              "学术场景：计算机体系结构课程",
+              "猪猪侠形象贯穿，增强趣味性"
             ],
-            "notes": "封面页，展示汇报主题与核心议题。"
+            "notes": "封面页，使用猪猪侠元素吸引注意力"
           },
           {
             "slideId": "slide-002",
             "slideNumber": 2,
             "slideRole": "toc",
-            "slideTitle": "汇报提纲",
+            "slideTitle": "汇报大纲",
             "keyPoints": [
               "计算机系统基本概念",
-              "存储系统与Cache设计",
-              "流水线与向量处理",
-              "多处理机与机群系统"
+              "指令集结构",
+              "存储系统",
+              "多处理机与机群",
+              "总结与展望"
             ],
-            "notes": "目录页，概述汇报结构。"
-          },
-          {
-            "slideId": "slide-003",
-            "slideNumber": 3,
-            "slideRole": "content",
-            "slideTitle": "计算机系统层次结构与核心概念",
-            "keyPoints": [
-              "层次结构：微程序级、传统机器级、汇编级、高级语言级、应用语言级",
-              "翻译与解释：两种程序执行方式",
-              "虚拟机与透明性：软件实现机器与属性隐藏",
-              "计算机系统结构、组成与实现：从概念到物理实现",
-              "系列机与兼容性：软件可移植性与向上/向下兼容"
-            ],
-            "notes": "基于参考资料1，介绍层次结构、虚拟机、透明性、系统结构/组成/实现、系列机等核心概念。"
+            "notes": "目录页，列出主要章节"
           }
         ]
       },
       {
         "sectionId": "sec-02",
-        "sectionTitle": "性能评价与存储系统",
-        "sectionObjective": "阐述计算机性能评价的关键指标和存储系统的层次结构、Cache设计及优化。",
+        "sectionTitle": "计算机系统基本概念",
+        "sectionObjective": "介绍层次结构、虚拟机、翻译与解释、系统结构、透明性、Amdahl定律等核心概念",
         "slideRange": {
-          "start": 4,
-          "end": 6
+          "start": 3,
+          "end": 4
         },
         "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "计算机系统层次结构与虚拟机",
+            "keyPoints": [
+              "层次结构：微程序机器级到应用语言机器级",
+              "虚拟机：用软件实现的机器",
+              "翻译与解释：程序执行的不同方式",
+              "计算机系统结构：程序员视角的属性"
+            ],
+            "notes": "结合猪猪侠冒险比喻层次结构"
+          },
           {
             "slideId": "slide-004",
             "slideNumber": 4,
             "slideRole": "content",
-            "slideTitle": "性能评价：Amdahl定律与局部性原理",
+            "slideTitle": "透明性与性能定律",
             "keyPoints": [
-              "Amdahl定律：系统加速比受限于可改进部分占比",
-              "CPI与测试程序套件：衡量指令执行效率",
-              "程序的局部性原理：时间局部性与空间局部性",
-              "并行性：时间重叠与资源重复"
+              "透明性：存在但不可见的属性",
+              "Amdahl定律：改进受限于部件占比",
+              "程序局部性原理：时间与空间局部性",
+              "CPI与测试程序套件"
             ],
-            "notes": "基于参考资料1，介绍Amdahl定律、CPI、局部性原理和并行性概念。"
-          },
-          {
-            "slideId": "slide-005",
-            "slideNumber": 5,
-            "slideRole": "content",
-            "slideTitle": "存储系统层次与Cache映象策略",
-            "keyPoints": [
-              "多级存储层次：速度与容量的权衡",
-              "全相联、直接映象与组相联映象",
-              "替换算法：LRU及其近似实现",
-              "写策略：写直达、写回、按写分配与不按写分配"
-            ],
-            "notes": "基于参考资料4，介绍存储层次、Cache映象、替换算法和写策略。"
-          },
-          {
-            "slideId": "slide-006",
-            "slideNumber": 6,
-            "slideRole": "content",
-            "slideTitle": "Cache性能优化与失效分析",
-            "keyPoints": [
-              "命中时间、失效率与失效开销",
-              "三种失效类型：强制性、容量和冲突失效",
-              "2:1 Cache经验规则与相联度影响",
-              "Victim Cache与预取技术"
-            ],
-            "notes": "基于参考资料4，深入Cache性能指标、失效分类和优化技术。"
+            "notes": "用猪猪侠技能比喻局部性"
           }
         ]
       },
       {
         "sectionId": "sec-03",
-        "sectionTitle": "流水线与向量处理",
-        "sectionObjective": "分析流水线中的数据与控制冲突，以及向量处理机的关键技术。",
+        "sectionTitle": "指令集结构与存储系统",
+        "sectionObjective": "讲解指令集分类、寻址方式、存储层次、Cache映射与替换算法",
+        "slideRange": {
+          "start": 5,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "指令集结构类型与寻址方式",
+            "keyPoints": [
+              "堆栈型、累加器型、通用寄存器型机器",
+              "CISC与RISC对比",
+              "寻址方式：常数、寄存器、存储器操作数",
+              "数据表示：硬件直接识别的数据结构"
+            ],
+            "notes": "猪猪侠选择装备比喻指令集选择"
+          },
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "content",
+            "slideTitle": "存储系统层次与Cache设计",
+            "keyPoints": [
+              "多级存储层次：速度与容量的权衡",
+              "Cache映射：全相联、直接、组相联",
+              "替换算法：LRU等",
+              "写策略：写直达、写回、按写分配"
+            ],
+            "notes": "猪猪侠记忆宫殿比喻存储层次"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "多处理机与机群系统",
+        "sectionObjective": "介绍多处理机架构、Cache一致性、同步机制、机群系统与单一系统映象",
         "slideRange": {
           "start": 7,
           "end": 8
@@ -119,34 +130,34 @@
             "slideId": "slide-007",
             "slideNumber": 7,
             "slideRole": "content",
-            "slideTitle": "流水线冲突与定向技术",
+            "slideTitle": "多处理机架构与一致性",
             "keyPoints": [
-              "数据冲突：写后读、读后写、写后写",
-              "控制冲突：分支指令引起的流水线停顿",
-              "定向技术：解决写后读冲突的数据旁路",
-              "流水线效率与吞吐率"
+              "集中式共享与分布式共享多处理机",
+              "多Cache一致性：监听协议与目录协议",
+              "写作废与写更新协议",
+              "栅栏同步与旋转锁"
             ],
-            "notes": "基于参考资料5，介绍流水线冲突类型和定向技术。"
+            "notes": "猪猪侠团队协作比喻多处理机"
           },
           {
             "slideId": "slide-008",
             "slideNumber": 8,
             "slideRole": "content",
-            "slideTitle": "向量处理机与链接技术",
+            "slideTitle": "机群系统与单一系统映象",
             "keyPoints": [
-              "向量处理与标量处理的区别",
-              "链接技术：功能部件流水化",
-              "分段开采：处理长向量",
-              "半性能向量长度与向量长度临界值"
+              "机群定义：同构/异构计算机协同",
+              "单一系统映象：单一控制、对称、位置透明",
+              "高可用性、负载均衡、高性能机群",
+              "Beowulf机群：普通硬件+Linux"
             ],
-            "notes": "基于参考资料5，介绍向量处理机特性、链接技术和性能指标。"
+            "notes": "猪猪侠联盟比喻机群"
           }
         ]
       },
       {
-        "sectionId": "sec-04",
-        "sectionTitle": "多处理机与机群系统",
-        "sectionObjective": "探讨多处理机架构、Cache一致性、同步机制，以及机群系统的特点与应用。",
+        "sectionId": "sec-05",
+        "sectionTitle": "总结与展望",
+        "sectionObjective": "总结核心概念，展望未来趋势，结束汇报",
         "slideRange": {
           "start": 9,
           "end": 10
@@ -155,29 +166,27 @@
           {
             "slideId": "slide-009",
             "slideNumber": 9,
-            "slideRole": "content",
-            "slideTitle": "多处理机架构与Cache一致性",
+            "slideRole": "summary",
+            "slideTitle": "核心概念回顾",
             "keyPoints": [
-              "集中式共享与分布式共享多处理机",
-              "多Cache一致性问题与监听/目录协议",
-              "写作废与写更新协议",
-              "同步机制：栅栏同步与旋转锁",
-              "多线程技术：细粒度、粗粒度与同时多线程"
+              "层次结构与虚拟机",
+              "指令集与存储系统",
+              "多处理机与机群",
+              "性能定律与局部性"
             ],
-            "notes": "基于参考资料2，介绍多处理机分类、Cache一致性协议和同步技术。"
+            "notes": "猪猪侠成长历程比喻学习过程"
           },
           {
             "slideId": "slide-010",
             "slideNumber": 10,
-            "slideRole": "summary",
-            "slideTitle": "总结与展望",
+            "slideRole": "qa",
+            "slideTitle": "问答与讨论",
             "keyPoints": [
-              "计算机系统层次化设计思想贯穿始终",
-              "存储层次与Cache优化是性能关键",
-              "并行处理从指令级到线程级、机群级不断扩展",
-              "未来趋势：异构计算与智能加速"
+              "欢迎提问",
+              "感谢聆听",
+              "猪猪侠与你同行"
             ],
-            "notes": "总结汇报要点，展望计算机体系结构发展方向。"
+            "notes": "结束页，保持猪猪侠主题"
           }
         ]
       }
