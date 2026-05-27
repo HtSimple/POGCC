@@ -210,7 +210,7 @@ JSON 必须遵循 protocolVersion "ppt-page-content.v1"。
 researchPolicy 必须包含：
 - triggerReason: 取 user_requested, insufficient_input, fact_verification 之一
 - depthLevel: 取 light, standard, deep 之一
-- sourcePriority: 从 official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 5 个值
+- sourcePriority: 从 local_document, official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 5 个值
 - maxSourcesPerSlide: 可选，1 到 8 的整数
 
 slide 必须包含：
@@ -220,16 +220,31 @@ slide 必须包含：
 - pageGoal
 - slideTitle
 - coreMessage
-- displayBullets: 3 到 5 个字符串（每条建议 8～20 字）
-- keyData: 数组，可为空
-- evidencePack: 数组，若无可靠来源可为空
+- displayBullets: 3 到 5 个字符串
+- keyData: 数组，可为空；若不为空，每项必须包含 label, value, unit, year, sourceRefId
+- evidencePack: 数组，若无可靠来源可为空；若不为空，每项必须严格包含 sourceRefId, claim, sourceTitle, sourceType, url, publishDate, credibility, quote
 - actionableTakeaway
 - speakerNotes
 
-规则补充：
-- coreMessage 建议 40～80 字，突出核心结论。
-- evidencePack 为空时，keyData 必须为空，且正文避免具体数字/年份/比例。
+正文内容规则：
+- coreMessage、displayBullets、actionableTakeaway 三者不得重复表达同一句话。
+- displayBullets 必须是页面上可展示的具体要点，不要写“学术汇报”“课程讲师”“受众对象”等任务元信息。
+- displayBullets 不要直接复制 coreMessage 或 actionableTakeaway。
+- actionableTakeaway 应是一个简短结论或行动启示，不要重复 coreMessage。
+- speakerNotes 必须是演讲者可直接朗读的口播稿，不是“本页应该怎么讲”的说明。
+- speakerNotes 不要使用“本页可以先说明”“讲解时可...”等建议式表达；应直接写成汇报现场会说的话。
 
+evidencePack 每项字段规则：
+- sourceRefId: "src-001", "src-002", ...
+- claim: 该来源支持的具体事实主张
+- sourceTitle: 来源标题；本地上传资料可写文件名或“本地参考资料”
+- sourceType: 取 local_document, official_sites, government_reports, academic_sources, authoritative_media, industry_reports 之一
+- url: 若是本地资料且没有 URL，使用空字符串 ""
+- publishDate: YYYY-MM-DD；若本地资料没有发布日期，使用当前生成日期或检索日期
+- credibility: 取 high 或 medium
+- quote: 可为空字符串，但字段必须存在
+
+不要使用 sourceDescription、keyClaim、retrievedAt 等非协议字段。
 不要编造虚假来源。若 context 中没有可靠来源，请使用 evidencePack: [] 和 keyData: []。
 将 audience/target audience 视为演示的接收者，而非汇报人身份。
 除非用户明确提供了汇报人身份，否则不要写「汇报人」「我是...」「由课程讲师进行」等类似汇报人身份的表述。
@@ -259,9 +274,11 @@ SPEAKER_NOTES_JSON_TEMPLATE = """
 - 仅以 slide content 和提供的 knowledge evidence 作为事实依据。
 - 不要引入无来源的事实、虚假数字、虚假引用或虚假来源名称。
 - 将目标受众视为听众，而非演讲者。不要说「我是课程讲师」或声称演讲者就是受众，除非已明确提供。
-- 优先使用「本页可以先说明...」等中性开场，不要虚构演讲者身份。
+- 备注必须是演讲者可直接朗读的口播稿，不是讲解建议。
+- 不要使用「本页可以先说明」「讲解时可」「这一页要」等建议式表达。
+- 可以使用「各位老师好，接下来我们看到...」「这里想强调的是...」「这也引出了后面的...」等自然口播表达，但不要虚构具体姓名或身份。
 - 若 evidence 较弱或为空，备注应谨慎，仅围绕 slide content 进行解释性表述。
-- 除非 style requirement 另有说明，备注长度控制在 120 到 260 个汉字之间。
+- 除非 style requirement 另有说明，备注长度控制在 160 到 360 个汉字之间。
 - 不要输出 Markdown、注释、代码围栏或 bullet 列表。
 
 项目 id：

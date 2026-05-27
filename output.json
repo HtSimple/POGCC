@@ -1,8 +1,196 @@
 {
-  "success": false,
-  "source": "raw_llm_output",
-  "message": "model output failed JSON protocol validation; fallback was returned to API caller",
-  "schema_error": null,
-  "validation_error": "1 validation error for NarrativeOutline\n  Value error, outline slides must be continuous from 1 to targetSlideCount; expected [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], got [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] [type=value_error, input_value={'protocolVersion': 'ppt-...大数据处理']}]}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error",
-  "raw_llm_output": "{\n  \"protocolVersion\": \"ppt-narrative-outline.v1\",\n  \"language\": \"zh-CN\",\n  \"presentationTitle\": \"计算机系统体系结构关键技术解析\",\n  \"targetSlideCount\": 20,\n  \"sections\": [\n    {\n      \"sectionId\": \"sec-01\",\n      \"sectionTitle\": \"计算机系统基本概念\",\n      \"sectionObjective\": \"介绍计算机系统层次结构、核心概念及性能评价指标\",\n      \"slideRange\": {\n        \"start\": 3,\n        \"end\": 5\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-003\",\n          \"slideNumber\": 3,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"系统层次结构与虚拟机\",\n          \"keyPoints\": [\n            \"计算机五级层次结构：微程序→机器语言→汇编→高级语言→应用语言\",\n            \"虚拟机概念：通过软件实现的机器功能抽象\",\n            \"翻译与解释机制的区别与实现原理\"\n          ],\n          \"notes\": \"重点对比翻译（整体转换）与解释（逐条执行）的差异\"\n        },\n        {\n          \"slideId\": \"slide-004\",\n          \"slideNumber\": 4,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"系统结构、组成与实现\",\n          \"keyPoints\": [\n            \"计算机系统结构定义：程序员可见的功能特性\",\n            \"透明性概念：客观存在但不可见的系统特性\",\n            \"Amdahl定律：系统优化性能提升的理论极限\"\n          ],\n          \"notes\": \"结合实例说明透明性在硬件设计中的体现\"\n        },\n        {\n          \"slideId\": \"slide-005\",\n          \"slideNumber\": 5,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"存储程序与兼容性\",\n          \"keyPoints\": [\n            \"冯·诺依曼架构核心：指令驱动与程序存储\",\n            \"系列机概念：相同系统结构的硬件演进\",\n            \"软件兼容类型：向前/向后兼容的实现意义\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-02\",\n      \"sectionTitle\": \"指令级并行与流水线\",\n      \"sectionObjective\": \"解析流水线冲突类型及解决方案\",\n      \"slideRange\": {\n        \"start\": 6,\n        \"end\": 8\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-006\",\n          \"slideNumber\": 6,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"流水线冲突类型\",\n          \"keyPoints\": [\n            \"数据冲突：写后读(RAW)、读后写(WAR)、写后写(WAW)\",\n            \"控制冲突：分支指令导致的流水线清空\",\n            \"结构冲突：硬件资源争用问题\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-007\",\n          \"slideNumber\": 7,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"冲突解决技术\",\n          \"keyPoints\": [\n            \"定向技术：数据旁路减少写后读停顿\",\n            \"分支预测：静态/动态预测控制流\",\n            \"指令调度：编译器重排指令序列\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-008\",\n          \"slideNumber\": 8,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"高级流水线技术\",\n          \"keyPoints\": [\n            \"多指令流出：超标量与超长指令字\",\n            \"动态调度：Tomasulo算法实现\",\n            \"链接技术：向量指令并行优化\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-03\",\n      \"sectionTitle\": \"向量处理技术\",\n      \"sectionObjective\": \"阐述向量处理原理与性能优化方法\",\n      \"slideRange\": {\n        \"start\": 9,\n        \"end\": 10\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-009\",\n          \"slideNumber\": 9,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"向量处理基础\",\n          \"keyPoints\": [\n            \"分段开采：长向量循环处理机制\",\n            \"半性能向量长度：评估向量机效率指标\",\n            \"向量长度临界值：流水优于标量的最小长度\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-010\",\n          \"slideNumber\": 10,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"向量处理机架构\",\n          \"keyPoints\": [\n            \"存储器-存储器结构：直接访问主存\",\n            \"寄存器-寄存器结构：降低访问延迟\",\n            \"并行处理单元：SIMD模式加速计算\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-04\",\n      \"sectionTitle\": \"多处理机系统\",\n      \"sectionObjective\": \"分析多处理机架构及并发控制机制\",\n      \"slideRange\": {\n        \"start\": 11,\n        \"end\": 14\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-011\",\n          \"slideNumber\": 11,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"多处理机分类\",\n          \"keyPoints\": [\n            \"耦合度：紧密耦合 vs 松散耦合系统\",\n            \"同构型：相同功能处理器集群\",\n            \"异构型：专用处理器协同工作\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-012\",\n          \"slideNumber\": 12,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"共享存储架构\",\n          \"keyPoints\": [\n            \"SMP：对称式共享存储器多处理机\",\n            \"DSM：分布式共享存储物理分布逻辑统一\",\n            \"通信延迟组成：发送开销+传输时间+接收开销\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-013\",\n          \"slideNumber\": 13,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"多Cache一致性\",\n          \"keyPoints\": [\n            \"监听协议：总线嗅探实现一致性\",\n            \"目录协议：集中记录数据块状态\",\n            \"写作废 vs 写更新策略对比\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-014\",\n          \"slideNumber\": 14,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"同步与多线程\",\n          \"keyPoints\": [\n            \"栅栏同步：全局进度协调机制\",\n            \"同时多线程(SMT)：开发线程级与指令级并行\",\n            \"粗粒度 vs 细粒度多线程切换策略\"\n          ]\n        }\n      ]\n    },\n    {\n      \"sectionId\": \"sec-05\",\n      \"sectionTitle\": \"机群系统\",\n      \"sectionObjective\": \"探讨机群架构及高可用解决方案\",\n      \"slideRange\": {\n        \"start\": 15,\n        \"end\": 17\n      },\n      \"slides\": [\n        {\n          \"slideId\": \"slide-015\",\n          \"slideNumber\": 15,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"机群系统概述\",\n          \"keyPoints\": [\n            \"定义：独立计算机通过高速网络互联\",\n            \"单一系统映像：透明访问的四种含义\",\n            \"可扩放性：线性增加计算能力\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-016\",\n          \"slideNumber\": 16,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"机群分类与应用\",\n          \"keyPoints\": [\n            \"高可用机群：故障转移与冗余机制\",\n            \"负载均衡机群：动态任务调度策略\",\n            \"高性能计算群：替代传统超级计算机\"\n          ]\n        },\n        {\n          \"slideId\": \"slide-017\",\n          \"slideNumber\": 17,\n          \"slideRole\": \"content\",\n          \"slideTitle\": \"Beowulf机群实践\",\n          \"keyPoints\": [\n            \"构建要素：普通硬件+Linux系统+GNU工具\",\n            \"性能价格比：千分之一成本实现同等算力\",\n            \"典型案例：科学计算与大数据处理\"\n          ]\n        }\n      ]\n    }\n  ]\n}"
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "猪猪侠：计算机系统核心概念学术汇报",
+    "targetSlideCount": 10,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "引言与背景",
+        "sectionObjective": "引入猪猪侠主题，说明汇报目的与计算机系统基本概念",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "猪猪侠：计算机系统核心概念学术汇报",
+            "keyPoints": [
+              "汇报主题：计算机系统核心概念",
+              "学术场景：计算机体系结构课程",
+              "猪猪侠形象贯穿，增强趣味性"
+            ],
+            "notes": "封面页，使用猪猪侠元素吸引注意力"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "toc",
+            "slideTitle": "汇报大纲",
+            "keyPoints": [
+              "计算机系统基本概念",
+              "指令集结构",
+              "存储系统",
+              "多处理机与机群",
+              "总结与展望"
+            ],
+            "notes": "目录页，列出主要章节"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "计算机系统基本概念",
+        "sectionObjective": "介绍层次结构、虚拟机、翻译与解释、系统结构、透明性、Amdahl定律等核心概念",
+        "slideRange": {
+          "start": 3,
+          "end": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "计算机系统层次结构与虚拟机",
+            "keyPoints": [
+              "层次结构：微程序机器级到应用语言机器级",
+              "虚拟机：用软件实现的机器",
+              "翻译与解释：程序执行的不同方式",
+              "计算机系统结构：程序员视角的属性"
+            ],
+            "notes": "结合猪猪侠冒险比喻层次结构"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "透明性与性能定律",
+            "keyPoints": [
+              "透明性：存在但不可见的属性",
+              "Amdahl定律：改进受限于部件占比",
+              "程序局部性原理：时间与空间局部性",
+              "CPI与测试程序套件"
+            ],
+            "notes": "用猪猪侠技能比喻局部性"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "指令集结构与存储系统",
+        "sectionObjective": "讲解指令集分类、寻址方式、存储层次、Cache映射与替换算法",
+        "slideRange": {
+          "start": 5,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "指令集结构类型与寻址方式",
+            "keyPoints": [
+              "堆栈型、累加器型、通用寄存器型机器",
+              "CISC与RISC对比",
+              "寻址方式：常数、寄存器、存储器操作数",
+              "数据表示：硬件直接识别的数据结构"
+            ],
+            "notes": "猪猪侠选择装备比喻指令集选择"
+          },
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "content",
+            "slideTitle": "存储系统层次与Cache设计",
+            "keyPoints": [
+              "多级存储层次：速度与容量的权衡",
+              "Cache映射：全相联、直接、组相联",
+              "替换算法：LRU等",
+              "写策略：写直达、写回、按写分配"
+            ],
+            "notes": "猪猪侠记忆宫殿比喻存储层次"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "多处理机与机群系统",
+        "sectionObjective": "介绍多处理机架构、Cache一致性、同步机制、机群系统与单一系统映象",
+        "slideRange": {
+          "start": 7,
+          "end": 8
+        },
+        "slides": [
+          {
+            "slideId": "slide-007",
+            "slideNumber": 7,
+            "slideRole": "content",
+            "slideTitle": "多处理机架构与一致性",
+            "keyPoints": [
+              "集中式共享与分布式共享多处理机",
+              "多Cache一致性：监听协议与目录协议",
+              "写作废与写更新协议",
+              "栅栏同步与旋转锁"
+            ],
+            "notes": "猪猪侠团队协作比喻多处理机"
+          },
+          {
+            "slideId": "slide-008",
+            "slideNumber": 8,
+            "slideRole": "content",
+            "slideTitle": "机群系统与单一系统映象",
+            "keyPoints": [
+              "机群定义：同构/异构计算机协同",
+              "单一系统映象：单一控制、对称、位置透明",
+              "高可用性、负载均衡、高性能机群",
+              "Beowulf机群：普通硬件+Linux"
+            ],
+            "notes": "猪猪侠联盟比喻机群"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-05",
+        "sectionTitle": "总结与展望",
+        "sectionObjective": "总结核心概念，展望未来趋势，结束汇报",
+        "slideRange": {
+          "start": 9,
+          "end": 10
+        },
+        "slides": [
+          {
+            "slideId": "slide-009",
+            "slideNumber": 9,
+            "slideRole": "summary",
+            "slideTitle": "核心概念回顾",
+            "keyPoints": [
+              "层次结构与虚拟机",
+              "指令集与存储系统",
+              "多处理机与机群",
+              "性能定律与局部性"
+            ],
+            "notes": "猪猪侠成长历程比喻学习过程"
+          },
+          {
+            "slideId": "slide-010",
+            "slideNumber": 10,
+            "slideRole": "qa",
+            "slideTitle": "问答与讨论",
+            "keyPoints": [
+              "欢迎提问",
+              "感谢聆听",
+              "猪猪侠与你同行"
+            ],
+            "notes": "结束页，保持猪猪侠主题"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated with reference context"
 }

@@ -81,6 +81,7 @@ class ResearchPolicy(BaseModel):
     depthLevel: Literal["light", "standard", "deep"]
     sourcePriority: list[
         Literal[
+            "local_document",
             "official_sites",
             "government_reports",
             "academic_sources",
@@ -104,6 +105,7 @@ class EvidenceItem(BaseModel):
     claim: str = Field(..., min_length=2, max_length=180)
     sourceTitle: str = Field(..., min_length=2, max_length=120)
     sourceType: Literal[
+        "local_document",
         "official_sites",
         "government_reports",
         "academic_sources",
@@ -127,7 +129,7 @@ class PageContentSlide(BaseModel):
     keyData: list[KeyDataItem] = Field(default_factory=list, max_length=4)
     evidencePack: list[EvidenceItem] = Field(default_factory=list, max_length=5)
     actionableTakeaway: str = Field("", max_length=120)
-    speakerNotes: str = Field(..., min_length=10, max_length=300)
+    speakerNotes: str = Field(..., min_length=10, max_length=600)
 
 
 class PageContentProtocol(BaseModel):
