@@ -1,0 +1,42 @@
+[
+  {
+    "id": "rag_hallucination",
+    "query": "系统如何通过 RAG 降低事实幻觉？",
+    "must_contain_any": ["RAG", "事实幻觉", "检索"],
+    "must_contain_all": [],
+    "source_file": "rag_corpus.txt",
+    "top_k": 3
+  },
+  {
+    "id": "json_schema",
+    "query": "大纲和正文使用什么数据结构？",
+    "must_contain_any": ["JSON", "Schema", "结构化"],
+    "must_contain_all": [],
+    "source_file": "rag_corpus.txt",
+    "top_k": 3
+  },
+  {
+    "id": "generation_pipeline",
+    "query": "内容生成链路包含哪些步骤？",
+    "must_contain_any": ["大纲", "检索", "正文", "备注"],
+    "must_contain_all": [],
+    "source_file": "rag_corpus.txt",
+    "top_k": 5
+  },
+  {
+    "id": "quality_validation",
+    "query": "RAG 质量验证要测什么？",
+    "must_contain_any": ["Top-K", "命中率", "来源"],
+    "must_contain_all": [],
+    "source_file": "rag_corpus.txt",
+    "top_k": 3
+  },
+  {
+    "id": "markdown_export",
+    "query": "最终 Markdown 输出包含什么？",
+    "must_contain_any": ["Markdown", "标题", "备注"],
+    "must_contain_all": [],
+    "source_file": "rag_corpus.txt",
+    "top_k": 3
+  }
+]

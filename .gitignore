@@ -25,3 +25,5 @@ app/rag/data_index/
 
 # 本地 embedding 模型（体积大，勿提交）
 app/rag/bge-small-en-v1.5/
+
+docs/

@@ -25,8 +25,9 @@ def _expand_one(
     expander = ContentExpander(llm_service=llm)
     expanded = expander.expand_page_content(outline_node, context=context)
     content = expanded.get("content") or ""
-    success = bool(content) and not is_llm_error_content(content)
-    message = expanded.get("message") if success else (content[:200] if content else "no content returned")
+    page_content = expanded.get("page_content")
+    success = page_content is not None and bool(content) and not is_llm_error_content(content)
+    message = expanded.get("message") if success else (expanded.get("message") or content[:200] if content else "no content returned")
 
     return {
         "index": index,

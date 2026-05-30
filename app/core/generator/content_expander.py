@@ -62,6 +62,61 @@ def _is_duplicate_text(candidate: str, existing: list[str]) -> bool:
     return False
 
 
+def _normalize_key_data(items: Any) -> list[dict[str, Any]]:
+    if not isinstance(items, list):
+        return []
+
+    normalized: list[dict[str, Any]] = []
+    today = date.today().year
+    for index, item in enumerate(items, start=1):
+        if not isinstance(item, dict):
+            continue
+
+        label = _clean_text(item.get("label"))
+        if len(label) < 2:
+            continue
+
+        raw_value = item.get("value")
+        value: float | None = None
+        if isinstance(raw_value, (int, float)) and not isinstance(raw_value, bool):
+            value = float(raw_value)
+        elif isinstance(raw_value, str):
+            stripped = raw_value.strip()
+            if stripped.replace(".", "", 1).isdigit():
+                value = float(stripped)
+
+        if value is None:
+            continue
+
+        unit = _clean_text(item.get("unit"))
+        if not unit:
+            continue
+
+        year_raw = item.get("year")
+        year: int | None = None
+        if isinstance(year_raw, int) and not isinstance(year_raw, bool):
+            year = year_raw
+        elif isinstance(year_raw, str) and year_raw.strip().isdigit():
+            year = int(year_raw.strip())
+
+        if year is None or year < 1990 or year > 2100:
+            year = today
+
+        source_ref_id = _clean_text(item.get("sourceRefId"), f"src-{index:03d}")
+        if not source_ref_id.startswith("src-") or len(source_ref_id) != 7:
+            source_ref_id = f"src-{index:03d}"
+
+        normalized.append({
+            "label": label[:60],
+            "value": value,
+            "unit": unit[:20],
+            "year": year,
+            "sourceRefId": source_ref_id,
+        })
+
+    return normalized[:4]
+
+
 def _normalize_evidence_pack(items: Any) -> list[dict[str, Any]]:
     if not isinstance(items, list):
         return []
@@ -257,6 +312,7 @@ class ContentExpander:
             slide.setdefault("pageGoal", node["goal"])
             slide.setdefault("keyData", [])
             slide.setdefault("evidencePack", [])
+            slide["keyData"] = _normalize_key_data(slide.get("keyData"))
             slide["displayBullets"] = _normalize_display_bullets(slide.get("displayBullets"), node, slide)
             slide["evidencePack"] = _normalize_evidence_pack(slide.get("evidencePack"))
 

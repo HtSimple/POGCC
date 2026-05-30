@@ -221,7 +221,7 @@ slide 必须包含：
 - slideTitle
 - coreMessage
 - displayBullets: 3 到 5 个字符串
-- keyData: 数组，可为空；若不为空，每项必须包含 label, value, unit, year, sourceRefId
+- keyData: 数组，默认应为 []；仅当 context 中有明确、可量化的数字指标时才填写
 - evidencePack: 数组，若无可靠来源可为空；若不为空，每项必须严格包含 sourceRefId, claim, sourceTitle, sourceType, url, publishDate, credibility, quote
 - actionableTakeaway
 - speakerNotes
@@ -243,6 +243,27 @@ evidencePack 每项字段规则：
 - publishDate: YYYY-MM-DD；若本地资料没有发布日期，使用当前生成日期或检索日期
 - credibility: 取 high 或 medium
 - quote: 可为空字符串，但字段必须存在
+
+keyData 每项字段规则（非常重要，违反将导致 JSON 校验失败）：
+- keyData 只用于“有明确数字”的量化指标，例如市场份额、增长率、占比、数量级等。
+- 若没有可写入的具体数字，必须输出 keyData: []，不要勉强填写。
+- 经验规则、定性结论、概念解释、比例关系描述（如“2:1 Cache 经验规则”“约等于一半”）应写入 displayBullets、coreMessage 或 speakerNotes，禁止放入 keyData。
+- label: 指标名称，2 到 60 个字符
+- value: 必须是 JSON number（纯数字），不能是字符串；例如 2、0.5、35.6
+- unit: 非空字符串，例如 "%"、"倍"、"GB"、"ms"
+- year: 整数年份，例如 2020；若资料无年份，可使用 2025
+- sourceRefId: "src-001", "src-002", ...
+
+keyData 正确示例：
+"keyData": [
+  {"label": "Cache命中率", "value": 92.5, "unit": "%", "year": 2025, "sourceRefId": "src-001"}
+]
+
+keyData 错误示例（禁止）：
+- 把整句中文说明放进 value
+- value 写成 "大小为N的直接映象Cache失效率约等于..."
+- unit 或 year 写成空字符串 ""
+- 没有数字却为了“看起来完整”而填写 keyData
 
 不要使用 sourceDescription、keyClaim、retrievedAt 等非协议字段。
 不要编造虚假来源。若 context 中没有可靠来源，请使用 evidencePack: [] 和 keyData: []。

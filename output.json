@@ -3,190 +3,170 @@
   "outline": {
     "protocolVersion": "ppt-narrative-outline.v1",
     "language": "zh-CN",
-    "presentationTitle": "猪猪侠：计算机系统核心概念学术汇报",
+    "presentationTitle": "计算机原理学术汇报",
     "targetSlideCount": 10,
     "sections": [
       {
         "sectionId": "sec-01",
-        "sectionTitle": "引言与背景",
-        "sectionObjective": "引入猪猪侠主题，说明汇报目的与计算机系统基本概念",
+        "sectionTitle": "引言与计算机系统层次结构",
+        "sectionObjective": "介绍计算机系统的基本概念、层次结构及透明性，为后续内容奠定基础。",
         "slideRange": {
           "start": 1,
-          "end": 2
+          "end": 3
         },
         "slides": [
           {
             "slideId": "slide-001",
             "slideNumber": 1,
             "slideRole": "cover",
-            "slideTitle": "猪猪侠：计算机系统核心概念学术汇报",
+            "slideTitle": "计算机原理学术汇报",
             "keyPoints": [
-              "汇报主题：计算机系统核心概念",
-              "学术场景：计算机体系结构课程",
-              "猪猪侠形象贯穿，增强趣味性"
+              "计算机系统层次结构",
+              "虚拟机与透明性",
+              "存储程序计算机"
             ],
-            "notes": "封面页，使用猪猪侠元素吸引注意力"
+            "notes": "封面页，包含标题、汇报人（不生成身份）及日期。"
           },
           {
             "slideId": "slide-002",
             "slideNumber": 2,
             "slideRole": "toc",
-            "slideTitle": "汇报大纲",
+            "slideTitle": "汇报提纲",
             "keyPoints": [
               "计算机系统基本概念",
-              "指令集结构",
-              "存储系统",
-              "多处理机与机群",
-              "总结与展望"
+              "存储系统与流水线技术",
+              "多处理机与机群系统"
             ],
-            "notes": "目录页，列出主要章节"
+            "notes": "目录页，概括三大主题。"
+          },
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "计算机系统层次结构与透明性",
+            "keyPoints": [
+              "从微程序机器级到应用语言机器级的多级层次",
+              "翻译与解释：两种程序执行方式",
+              "透明性：不同层次对程序员隐藏的实现细节"
+            ],
+            "notes": "基于参考资料1，解释层次结构、虚拟机、翻译与解释、透明性。"
           }
         ]
       },
       {
         "sectionId": "sec-02",
-        "sectionTitle": "计算机系统基本概念",
-        "sectionObjective": "介绍层次结构、虚拟机、翻译与解释、系统结构、透明性、Amdahl定律等核心概念",
+        "sectionTitle": "存储系统与流水线技术",
+        "sectionObjective": "阐述多级存储层次、Cache设计及流水线中的冲突与优化技术。",
         "slideRange": {
-          "start": 3,
-          "end": 4
-        },
-        "slides": [
-          {
-            "slideId": "slide-003",
-            "slideNumber": 3,
-            "slideRole": "content",
-            "slideTitle": "计算机系统层次结构与虚拟机",
-            "keyPoints": [
-              "层次结构：微程序机器级到应用语言机器级",
-              "虚拟机：用软件实现的机器",
-              "翻译与解释：程序执行的不同方式",
-              "计算机系统结构：程序员视角的属性"
-            ],
-            "notes": "结合猪猪侠冒险比喻层次结构"
-          },
-          {
-            "slideId": "slide-004",
-            "slideNumber": 4,
-            "slideRole": "content",
-            "slideTitle": "透明性与性能定律",
-            "keyPoints": [
-              "透明性：存在但不可见的属性",
-              "Amdahl定律：改进受限于部件占比",
-              "程序局部性原理：时间与空间局部性",
-              "CPI与测试程序套件"
-            ],
-            "notes": "用猪猪侠技能比喻局部性"
-          }
-        ]
-      },
-      {
-        "sectionId": "sec-03",
-        "sectionTitle": "指令集结构与存储系统",
-        "sectionObjective": "讲解指令集分类、寻址方式、存储层次、Cache映射与替换算法",
-        "slideRange": {
-          "start": 5,
+          "start": 4,
           "end": 6
         },
         "slides": [
           {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "多级存储层次与Cache设计",
+            "keyPoints": [
+              "多级存储层次：速度与容量的权衡",
+              "Cache映象方式：全相联、直接映象、组相联",
+              "替换算法与写策略：LRU、写直达/写回法"
+            ],
+            "notes": "基于参考资料4，介绍存储层次、Cache映象、替换算法、写策略及失效分类。"
+          },
+          {
             "slideId": "slide-005",
             "slideNumber": 5,
             "slideRole": "content",
-            "slideTitle": "指令集结构类型与寻址方式",
+            "slideTitle": "Cache性能优化与失效分析",
             "keyPoints": [
-              "堆栈型、累加器型、通用寄存器型机器",
-              "CISC与RISC对比",
-              "寻址方式：常数、寄存器、存储器操作数",
-              "数据表示：硬件直接识别的数据结构"
+              "三种失效类型：强制性、容量、冲突失效",
+              "2:1 Cache经验规则与相联度的影响",
+              "Victim Cache与预取技术"
             ],
-            "notes": "猪猪侠选择装备比喻指令集选择"
+            "notes": "继续参考资料4，深入失效分析、经验规则、Victim Cache和预取。"
           },
           {
             "slideId": "slide-006",
             "slideNumber": 6,
             "slideRole": "content",
-            "slideTitle": "存储系统层次与Cache设计",
+            "slideTitle": "流水线冲突与向量处理技术",
             "keyPoints": [
-              "多级存储层次：速度与容量的权衡",
-              "Cache映射：全相联、直接、组相联",
-              "替换算法：LRU等",
-              "写策略：写直达、写回、按写分配"
+              "数据冲突：写后读、读后写、写后写",
+              "控制冲突与定向技术",
+              "向量处理：链接技术、分段开采、半性能向量长度"
             ],
-            "notes": "猪猪侠记忆宫殿比喻存储层次"
+            "notes": "基于参考资料5，解释流水线冲突类型、定向、链接技术及向量处理概念。"
           }
         ]
       },
       {
-        "sectionId": "sec-04",
-        "sectionTitle": "多处理机与机群系统",
-        "sectionObjective": "介绍多处理机架构、Cache一致性、同步机制、机群系统与单一系统映象",
+        "sectionId": "sec-03",
+        "sectionTitle": "并行处理与机群系统",
+        "sectionObjective": "介绍多处理机架构、Cache一致性、同步机制及机群系统的特点与应用。",
         "slideRange": {
           "start": 7,
-          "end": 8
+          "end": 9
         },
         "slides": [
           {
             "slideId": "slide-007",
             "slideNumber": 7,
             "slideRole": "content",
-            "slideTitle": "多处理机架构与一致性",
+            "slideTitle": "多处理机架构与Cache一致性",
             "keyPoints": [
               "集中式共享与分布式共享多处理机",
-              "多Cache一致性：监听协议与目录协议",
-              "写作废与写更新协议",
-              "栅栏同步与旋转锁"
+              "多Cache一致性问题与监听协议、目录协议",
+              "写作废与写更新协议"
             ],
-            "notes": "猪猪侠团队协作比喻多处理机"
+            "notes": "基于参考资料2，介绍SMP、分布式共享、Cache一致性协议。"
           },
           {
             "slideId": "slide-008",
             "slideNumber": 8,
             "slideRole": "content",
+            "slideTitle": "同步机制与多线程技术",
+            "keyPoints": [
+              "栅栏同步与旋转锁",
+              "同时多线程、细粒度与粗粒度多线程",
+              "通信延迟与计算/通信比"
+            ],
+            "notes": "继续参考资料2，阐述同步、多线程技术及性能度量。"
+          },
+          {
+            "slideId": "slide-009",
+            "slideNumber": 9,
+            "slideRole": "content",
             "slideTitle": "机群系统与单一系统映象",
             "keyPoints": [
-              "机群定义：同构/异构计算机协同",
-              "单一系统映象：单一控制、对称、位置透明",
-              "高可用性、负载均衡、高性能机群",
-              "Beowulf机群：普通硬件+Linux"
+              "机群定义与Beowulf机群",
+              "单一系统映象的四重含义",
+              "高可用性、负载均衡与高性能机群"
             ],
-            "notes": "猪猪侠联盟比喻机群"
+            "notes": "基于参考资料3，介绍机群概念、单一系统映象及分类。"
           }
         ]
       },
       {
-        "sectionId": "sec-05",
+        "sectionId": "sec-04",
         "sectionTitle": "总结与展望",
-        "sectionObjective": "总结核心概念，展望未来趋势，结束汇报",
+        "sectionObjective": "总结计算机原理的核心概念，并展望未来发展趋势。",
         "slideRange": {
-          "start": 9,
+          "start": 10,
           "end": 10
         },
         "slides": [
           {
-            "slideId": "slide-009",
-            "slideNumber": 9,
-            "slideRole": "summary",
-            "slideTitle": "核心概念回顾",
-            "keyPoints": [
-              "层次结构与虚拟机",
-              "指令集与存储系统",
-              "多处理机与机群",
-              "性能定律与局部性"
-            ],
-            "notes": "猪猪侠成长历程比喻学习过程"
-          },
-          {
             "slideId": "slide-010",
             "slideNumber": 10,
-            "slideRole": "qa",
-            "slideTitle": "问答与讨论",
+            "slideRole": "summary",
+            "slideTitle": "总结与展望",
             "keyPoints": [
-              "欢迎提问",
-              "感谢聆听",
-              "猪猪侠与你同行"
+              "计算机系统层次结构与透明性",
+              "存储层次与流水线优化",
+              "并行处理与机群系统的演进"
             ],
-            "notes": "结束页，保持猪猪侠主题"
+            "notes": "总结汇报要点，可提及Amdahl定律、程序局部性原理等贯穿性概念，并展望未来。"
           }
         ]
       }

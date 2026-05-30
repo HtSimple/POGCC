@@ -142,10 +142,23 @@
                 <h3>结构化大纲编辑</h3>
               </div>
               <div class="button-row">
-                <button class="primary-button" type="button" :disabled="outlineLoading || !form.topic"
-                  @click="handleGenerateOutline">
+                <button
+                  class="primary-button"
+                  type="button"
+                  :disabled="isGenerating || !form.topic.trim()"
+                  @click="handleOneClickPipelineFromOutline"
+                >
+                  <FileText :size="18" />
+                  {{ pipelineLoading ? '流程执行中' : '一键生成正文' }}
+                </button>
+                <button
+                  class="secondary-button"
+                  type="button"
+                  :disabled="outlineLoading || isGenerating || !form.topic.trim()"
+                  @click="handleGenerateOutline"
+                >
                   <WandSparkles :size="18" />
-                  {{ outlineLoading ? '生成中' : '生成大纲' }}
+                  {{ outlineLoading ? '生成中' : '仅生成大纲' }}
                 </button>
               </div>
             </div>
@@ -169,7 +182,7 @@
               </div>
             </div>
 
-            <div v-if="slides.length === 0" class="empty-state">完成任务信息后点击“生成大纲”</div>
+            <div v-if="slides.length === 0" class="empty-state">填写主题后点击「一键生成正文」，或仅生成大纲后再编辑</div>
             <div v-else class="outline-protocol-board">
               <section v-for="section in outlineSectionGroups" :key="section.key" class="outline-section-block">
                 <div class="outline-section-head">
@@ -331,8 +344,8 @@
               </div>
 
               <p v-if="allKnowledgeLoading || allContentLoading" class="batch-hint">
-                <template v-if="allKnowledgeLoading">正在并行检索全部页面，请稍候…</template>
-                <template v-else>正在并行生成全部页面正文，请稍候…</template>
+                <template v-if="allKnowledgeLoading">正在一键检索，请稍候…</template>
+                <template v-else>正在一键生成正文，请稍候…</template>
               </p>
 
               <div class="button-grid batch-actions">
@@ -343,7 +356,7 @@
                   @click="fillAllKnowledge"
                 >
                   <Search :size="18" />
-                  {{ allKnowledgeLoading ? '全部检索中' : '全部检索' }}
+                  {{ allKnowledgeLoading ? '一键检索中' : '一键检索' }}
                 </button>
                 <button
                   class="secondary-button"
@@ -352,7 +365,7 @@
                   @click="fillAllContent"
                 >
                   <Files :size="18" />
-                  {{ allContentLoading ? '全部生成中' : '全部生成' }}
+                  {{ allContentLoading ? '一键生成中' : '一键生成' }}
                 </button>
               </div>
 
@@ -730,10 +743,12 @@ const pageLoading = reactive({
 })
 const allContentLoading = ref(false)
 const allKnowledgeLoading = ref(false)
+const pipelineLoading = ref(false)
 
 const isGenerating = computed(
   () =>
     outlineLoading.value ||
+    pipelineLoading.value ||
     allContentLoading.value ||
     allKnowledgeLoading.value ||
     pageLoading.knowledge ||
@@ -743,9 +758,13 @@ const isGenerating = computed(
 )
 
 const generatingLabel = computed(() => {
+  if (pipelineLoading.value && outlineLoading.value) return '正在生成大纲…'
   if (outlineLoading.value) return '正在生成大纲，请稍候…'
-  if (allKnowledgeLoading.value) return '正在并行检索全部页面…'
-  if (allContentLoading.value) return '正在并行生成全部正文…'
+  if (pipelineLoading.value && allKnowledgeLoading.value) return '正在一键检索全部页面…'
+  if (pipelineLoading.value && allContentLoading.value) return '正在一键生成全部正文…'
+  if (pipelineLoading.value) return '正在执行一键生成流程…'
+  if (allKnowledgeLoading.value) return '正在一键检索…'
+  if (allContentLoading.value) return '正在一键生成…'
   if (pageLoading.knowledge) return '正在补充知识…'
   if (pageLoading.content) return '正在生成正文…'
   if (pageLoading.notes) return '正在生成演讲备注…'
@@ -948,17 +967,25 @@ async function uploadReference(doc: ReferenceDoc) {
   }
 }
 
+async function executeGenerateOutline(): Promise<boolean> {
+  const result = await generateOutline(form.topic, requirementsText.value)
+  if (!result.success) {
+    return false
+  }
+  slides.value = normalizeOutline(result.outline)
+  normalizeOutlineSlides()
+  activeSlideId.value = slides.value[0]?.id ?? ''
+  return slides.value.length > 0 && slides.value.every((slide) => Boolean(slide.title.trim()))
+}
+
 async function handleGenerateOutline() {
   outlineLoading.value = true
   try {
-    const result = await generateOutline(form.topic, requirementsText.value)
-    if (!result.success) {
-      showToast(result.message || '大纲生成失败', 'error')
+    const ok = await executeGenerateOutline()
+    if (!ok) {
+      showToast('大纲生成失败', 'error')
       return
     }
-    slides.value = normalizeOutline(result.outline)
-    normalizeOutlineSlides()
-    activeSlideId.value = slides.value[0]?.id ?? ''
     showToast('大纲生成成功，可以检查并修改页面结构', 'success')
   } catch (error) {
     showToast(getErrorMessage(error), 'error')
@@ -1284,6 +1311,66 @@ async function fillKnowledge(slide: SlidePage) {
   }
 }
 
+async function executeAllKnowledge() {
+  const items = slides.value.map((slide, index) => ({
+    index,
+    id: slide.id,
+    query: buildKnowledgeQuery(slide)
+  }))
+  const result = await searchKnowledgeBatch(items)
+  let okCount = 0
+  for (const row of result.results) {
+    const slide = slides.value.find((s) => s.id === row.id)
+    if (!slide) {
+      continue
+    }
+    if (row.success) {
+      slide.knowledge = row.knowledge
+      okCount += 1
+    }
+  }
+  return {
+    okCount,
+    failCount: slides.value.length - okCount,
+    elapsedHint: result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
+  }
+}
+
+async function executeAllContent() {
+  const items = slides.value.map((slide, index) => ({
+    index,
+    id: slide.id,
+    outline_node: {
+      id: slide.protocolSlideId || slide.id,
+      number: index + 1,
+      role: slide.slideRole || 'content',
+      title: slide.title,
+      section: slide.sectionTitle,
+      goal: slide.goal,
+      bullets: slide.bullets
+    },
+    context: buildSlideGenerationContext(slide)
+  }))
+  const result = await expandContentBatch(items, requirementsText.value)
+  let okCount = 0
+  for (const row of result.results) {
+    const slide = slides.value.find((s) => s.id === row.id)
+    if (!slide) {
+      continue
+    }
+    if (row.success) {
+      slide.content = pageContentToText(row.page_content) || row.content
+      slide.notes = pageContentToSpeakerNotes(row.page_content) || slide.notes
+      okCount += 1
+    }
+  }
+  return {
+    okCount,
+    failCount: slides.value.length - okCount,
+    elapsedHint: result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
+  }
+}
+
 async function fillAllKnowledge() {
   if (slides.value.length === 0) {
     showToast('请先完成大纲', 'warning')
@@ -1291,27 +1378,9 @@ async function fillAllKnowledge() {
   }
   allKnowledgeLoading.value = true
   try {
-    const items = slides.value.map((slide, index) => ({
-      index,
-      id: slide.id,
-      query: buildKnowledgeQuery(slide)
-    }))
-    const result = await searchKnowledgeBatch(items)
-    let okCount = 0
-    for (const row of result.results) {
-      const slide = slides.value.find((s) => s.id === row.id)
-      if (!slide) {
-        continue
-      }
-      if (row.success) {
-        slide.knowledge = row.knowledge
-        okCount += 1
-      }
-    }
-    const failCount = slides.value.length - okCount
-    const elapsedHint = result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
+    const { okCount, failCount, elapsedHint } = await executeAllKnowledge()
     if (failCount === 0) {
-      showToast(`全部检索完成（${okCount} 页${elapsedHint}）`, 'success')
+      showToast(`一键检索完成（${okCount} 页${elapsedHint}）`, 'success')
     } else {
       showToast(
         `检索完成 ${okCount} 页，失败 ${failCount} 页${elapsedHint}`,
@@ -1322,6 +1391,50 @@ async function fillAllKnowledge() {
     showToast(getErrorMessage(error), 'error')
   } finally {
     allKnowledgeLoading.value = false
+  }
+}
+
+async function handleOneClickPipelineFromOutline() {
+  if (!form.topic.trim()) {
+    showToast('请先填写主题', 'warning')
+    return
+  }
+
+  pipelineLoading.value = true
+  try {
+    outlineLoading.value = true
+    const outlineOk = await executeGenerateOutline()
+    outlineLoading.value = false
+    if (!outlineOk) {
+      showToast('大纲生成失败，流程已中止', 'error')
+      return
+    }
+
+    allKnowledgeLoading.value = true
+    const knowledgeStats = await executeAllKnowledge()
+    allKnowledgeLoading.value = false
+
+    allContentLoading.value = true
+    const contentStats = await executeAllContent()
+    allContentLoading.value = false
+
+    saveCurrentRecord(false)
+    generationStepIndex.value = generationSteps.length - 1
+
+    const totalFail = knowledgeStats.failCount + contentStats.failCount
+    const summary = `大纲已生成，检索 ${knowledgeStats.okCount}/${slides.value.length} 页，正文 ${contentStats.okCount}/${slides.value.length} 页`
+    if (totalFail === 0) {
+      showToast(`${summary}，已跳转至最终文本${contentStats.elapsedHint}`, 'success')
+    } else {
+      showToast(`${summary}，部分失败，已跳转至最终文本`, 'warning')
+    }
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+  } finally {
+    outlineLoading.value = false
+    allKnowledgeLoading.value = false
+    allContentLoading.value = false
+    pipelineLoading.value = false
   }
 }
 
@@ -1369,37 +1482,9 @@ async function fillAllContent() {
   }
   allContentLoading.value = true
   try {
-    const items = slides.value.map((slide, index) => ({
-      index,
-      id: slide.id,
-      outline_node: {
-        id: slide.protocolSlideId || slide.id,
-        number: index + 1,
-        role: slide.slideRole || 'content',
-        title: slide.title,
-        section: slide.sectionTitle,
-        goal: slide.goal,
-        bullets: slide.bullets
-      },
-      context: buildSlideGenerationContext(slide)
-    }))
-    const result = await expandContentBatch(items, requirementsText.value)
-    let okCount = 0
-    for (const row of result.results) {
-      const slide = slides.value.find((s) => s.id === row.id)
-      if (!slide) {
-        continue
-      }
-      if (row.success) {
-        slide.content = pageContentToText(row.page_content) || row.content
-        slide.notes = pageContentToSpeakerNotes(row.page_content) || slide.notes
-        okCount += 1
-      }
-    }
-    const failCount = slides.value.length - okCount
-    const elapsedHint = result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
+    const { okCount, failCount, elapsedHint } = await executeAllContent()
     if (failCount === 0) {
-      showToast(`全部正文已生成（${okCount} 页${elapsedHint}）`, 'success')
+      showToast(`一键生成完成（${okCount} 页${elapsedHint}）`, 'success')
     } else {
       showToast(
         `正文生成完成 ${okCount} 页，失败 ${failCount} 页${elapsedHint}`,
@@ -1506,12 +1591,6 @@ function buildMarkdownFromState(sourceForm: ProjectForm, sourceSlides: SlidePage
     lines.push('')
     lines.push('### 演讲备注')
     lines.push(slide.notes || '未生成')
-    lines.push('')
-    lines.push('### 来源')
-    lines.push(slide.knowledge || '未补充')
-    lines.push('')
-    lines.push('### 事实检查')
-    lines.push(`${factStatusText(slide.factCheckStatus)}：${slide.factCheckMessage || '未检查'}`)
     lines.push('')
   })
 
