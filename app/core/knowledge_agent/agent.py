@@ -5,6 +5,7 @@ from .result_generator import ResultGenerator
 
 
 class KnowledgeAgent:
+    """知识问答主 Agent，串联查询处理、知识检索与答案生成。"""
 
     def __init__(
         self,
@@ -14,6 +15,7 @@ class KnowledgeAgent:
         *,
         search_refine_knowledge: bool = False,
     ):
+        """注入 LLM、网络搜索和本地检索服务，并构建 LangGraph 主流程。"""
         self.query_processor = QueryProcessor()
         self.search_agent = SearchAgent(
             llm_service=llm_service,
@@ -25,6 +27,7 @@ class KnowledgeAgent:
         self.graph = self._build_graph()
 
     def _build_graph(self):
+        """构建 process_query -> retrieve_knowledge -> generate_answer 的状态图。"""
         graph = StateGraph(dict)
 
         graph.add_node("process_query", self._process_query_node)
@@ -40,6 +43,7 @@ class KnowledgeAgent:
         return graph.compile()
 
     def _process_query_node(self, state):
+        """LangGraph 节点：清洗并扩展用户查询，保留后续节点所需状态。"""
         print("=== 处理查询节点 ===")
         query = state["query"]
         processed_query = self.query_processor.process(query)
@@ -54,6 +58,7 @@ class KnowledgeAgent:
         }
 
     def _retrieve_knowledge_node(self, state):
+        """LangGraph 节点：调用 SearchAgent 获取本地 RAG 与网络搜索知识。"""
         print("=== 检索知识节点 ===")
         query = state["query"]
 
@@ -97,6 +102,7 @@ class KnowledgeAgent:
         }
 
     def _generate_answer_node(self, state):
+        """LangGraph 节点：基于处理后的查询和检索知识生成最终回答。"""
         print("=== 生成回答节点 ===")
         max_tokens = state.get("max_tokens", 4096)
         answer = self.result_generator.generate(
@@ -112,6 +118,7 @@ class KnowledgeAgent:
         }
 
     def process_query(self, query, max_tokens=4096):
+        """对外入口：执行完整知识问答流程，并返回最终答案文本。"""
         result = self.graph.invoke({
             "query": query,
             "max_tokens": max_tokens,

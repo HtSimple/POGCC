@@ -1,3 +1,5 @@
+"""手动端到端测试：依次切换模型，验证 KnowledgeAgent 的检索与回答流程。"""
+
 import sys
 from pathlib import Path
 
@@ -19,6 +21,7 @@ if __name__ == "__main__":
         from app.rag.service import RetrievalService
         from app.utils.config import config
 
+        # 本地 RAG 是可选增强；初始化失败时脚本仍可退化为网络检索测试。
         retrieval_service = RetrievalService(
             persist_dir="app/rag/data_index",
             embedding_model="app/rag/bge-small-en-v1.5",
@@ -43,6 +46,7 @@ if __name__ == "__main__":
 
     test_query = "分点介绍流水线技术"
 
+    # 复用同一个 LLMService，验证运行时模型切换是否能影响后续 Agent 调用。
     for i, (provider, label) in enumerate(test_steps):
         print(f"\n{'='*60}")
         print(f"测试 {i+1}: 使用 {label} 模型")

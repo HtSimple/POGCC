@@ -17,10 +17,12 @@ router = APIRouter(prefix="/api/search", tags=["search"])
 
 
 def _get_retrieval_service(request: Request):
+    """从 FastAPI app.state 中读取可选的本地 RAG 检索服务。"""
     return getattr(request.app.state, "retrieval_service", None)
 
 
 def _run_search(query: str, refine_knowledge: bool, retrieval_service) -> str:
+    """在线程中执行单次知识检索，避免阻塞异步路由事件循环。"""
     agent = SearchAgent(
         llm_service=LLMService(),
         web_search_service=WebSearchService(),
@@ -31,7 +33,9 @@ def _run_search(query: str, refine_knowledge: bool, retrieval_service) -> str:
 
 @router.post("/knowledge", response_model=SearchKnowledgeResponse)
 async def search_knowledge(request: Request, body: SearchKnowledgeRequest):
+    """处理单主题知识检索请求，返回知识文本和成功状态。"""
     try:
+        # SearchAgent 内部包含同步 LLM/搜索调用，放入线程避免阻塞 FastAPI。
         knowledge = await asyncio.to_thread(
             _run_search,
             body.topic,
@@ -59,8 +63,10 @@ async def search_knowledge(request: Request, body: SearchKnowledgeRequest):
 
 @router.post("/knowledge/batch", response_model=SearchKnowledgeBatchResponse)
 async def search_knowledge_batch(request: Request, body: SearchKnowledgeBatchRequest):
+    """处理批量知识检索请求，按输入项顺序返回每项检索结果。"""
     try:
         payload = [item.model_dump() for item in body.items]
+        # 批量检索本身会再开线程池，这里先把同步入口移出事件循环。
         report = await asyncio.to_thread(
             retrieve_knowledge_batch,
             payload,

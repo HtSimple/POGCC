@@ -3,8 +3,10 @@ from app.utils.config import Config
 
 
 class QwenService:
+    """阿里云百炼 Qwen 的 OpenAI 兼容接口适配器。"""
 
     def __init__(self, config=None):
+        """读取 DashScope API Key，并初始化 OpenAI 兼容客户端。"""
         if config is None:
             config = Config()
         self._config = config
@@ -19,6 +21,7 @@ class QwenService:
         )
 
     def generate(self, prompt, model="qwen3.6-plus", temperature=0.3, max_tokens=4096, response_format=None):
+        """调用 Qwen Chat Completions，返回文本内容或带前缀的错误信息。"""
         try:
             kwargs = {}
             if response_format is not None:

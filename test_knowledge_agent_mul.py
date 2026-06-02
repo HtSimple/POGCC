@@ -1,3 +1,5 @@
+"""手动并发测试：使用多个线程同时调用 KnowledgeAgent 检索并生成回答。"""
+
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -33,6 +35,7 @@ if __name__ == "__main__":
     try:
         from app.rag.service import RetrievalService
 
+        # 本地 RAG 初始化失败不会终止脚本，后续会仅依赖网络检索。
         retrieval_service = RetrievalService(
             persist_dir="app/rag/data_index",
             embedding_model="app/rag/bge-small-en-v1.5",
@@ -57,6 +60,7 @@ if __name__ == "__main__":
     ]
 
     results: dict[str, tuple[str, str]] = {}
+    # 每个任务在线程内创建独立 LLMService，避免并发共享模型客户端状态。
     with ThreadPoolExecutor(max_workers=4) as executor:
         future_map = {
             executor.submit(_run_query, label, query, retrieval_service): label

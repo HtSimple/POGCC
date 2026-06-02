@@ -3,8 +3,10 @@ from app.utils.config import Config
 
 
 class DeepSeekService:
+    """DeepSeek 的 OpenAI 兼容接口适配器。"""
 
     def __init__(self, config=None):
+        """读取 DeepSeek API Key，并初始化 OpenAI 兼容客户端。"""
         if config is None:
             config = Config()
         self._config = config
@@ -19,6 +21,7 @@ class DeepSeekService:
         )
 
     def generate(self, prompt, model="deepseek-v4-pro", temperature=0.3, max_tokens=4096, response_format=None):
+        """调用 DeepSeek Chat Completions，处理空回复和异常后返回字符串结果。"""
         try:
             kwargs = {}
             if response_format is not None:

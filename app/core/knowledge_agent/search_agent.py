@@ -23,6 +23,7 @@ class SearchAgent:
         return "【网络搜索】"
 
     def __init__(self, llm_service=None, web_search_service=None, retrieval_service=None):
+        """初始化 LLM、网络搜索和可选本地检索服务，并预编译两套检索图。"""
         self.llm_service = llm_service or LLMService()
         self.web_search_service = web_search_service or WebSearchService()
         self.retrieval_service = retrieval_service
@@ -66,6 +67,7 @@ class SearchAgent:
         return graph.compile()
 
     def _format_search_results_as_knowledge(self, search_results: list) -> str:
+        """把结构化检索结果拼成 RAG 可读的知识文本，并保留来源标签。"""
         knowledge_text = ""
         for i, r in enumerate(search_results):
             tag = self._source_tag(r)
@@ -75,6 +77,7 @@ class SearchAgent:
         return knowledge_text
 
     def _materialize_knowledge_from_results_node(self, state):
+        """快路径节点：跳过 LLM 总结，直接把检索结果转成知识文本。"""
         search_results = state.get("search_results", [])
         knowledge_text = self._format_search_results_as_knowledge(search_results)
         return {
@@ -87,11 +90,13 @@ class SearchAgent:
         }
 
     def _plan_searches_node(self, state):
+        """规划节点：让 LLM 根据主题生成多个搜索词，失败时退回原主题。"""
         print("=== 规划搜索节点 ===")
         topic = state["topic"]
         prompt = SEARCH_PLAN_PROMPT.format(topic=topic)
         response = self.llm_service.generate(prompt, max_tokens=4096)
 
+        # LLM 可能返回 Markdown 代码块或额外说明，统一交给解析器清洗。
         try:
             parsed = self._parse_json_response(response)
             search_queries = parsed.get("search_queries", [])
@@ -144,6 +149,7 @@ class SearchAgent:
         return rows
 
     def _merge_query_rows(self, rows: list[dict], seen_local_chunks: set[str]) -> list[dict]:
+        """合并单个搜索词的结果，并按本地 chunk_id 去除重复片段。"""
         merged: list[dict] = []
         for row in rows:
             cid = row.pop("chunk_id", None)
@@ -155,12 +161,14 @@ class SearchAgent:
         return merged
 
     def _execute_search_node(self, state):
+        """检索节点：对搜索词执行本地 RAG 与网络搜索，并合并到状态中。"""
         print("=== 执行搜索节点 ===")
         search_queries = state.get("search_queries", [])
         existing_results = state.get("search_results", [])
         search_round = state.get("search_round", 0) + 1
 
         new_results: list[dict] = []
+        # 仅对本轮本地检索 chunk 去重，避免同一资料片段被多个搜索词重复加入。
         seen_local_chunks: set[str] = set()
 
         if not search_queries:
@@ -174,6 +182,7 @@ class SearchAgent:
             max_q_workers = int(config.get("search_query_max_workers", 4) or 4)
             max_q_workers = max(1, min(max_q_workers, len(search_queries), 8))
             print(f"  并行执行 {len(search_queries)} 个搜索词 (workers={max_q_workers})")
+            # 每个搜索词独立执行，提升多关键词检索速度，同时在主线程合并结果。
             with ThreadPoolExecutor(max_workers=max_q_workers) as executor:
                 future_map = {
                     executor.submit(self._fetch_results_for_query, q): q
@@ -202,6 +211,7 @@ class SearchAgent:
         }
 
     def _evaluate_knowledge_node(self, state):
+        """评估节点：让 LLM 判断当前知识是否充分，并给出补充搜索词。"""
         print("=== 评估知识充分性节点 ===")
         topic = state["topic"]
         search_results = state.get("search_results", [])
@@ -215,6 +225,7 @@ class SearchAgent:
         )
         response = self.llm_service.generate(prompt, max_tokens=4096)
 
+        # 评估失败时走保守回退，避免检索链路因格式问题中断。
         try:
             parsed = self._parse_json_response(response)
             sufficient = parsed.get("sufficient", False)
@@ -242,6 +253,7 @@ class SearchAgent:
         }
 
     def _should_continue_search(self, state):
+        """根据充分性、轮次上限和补充搜索词决定是否继续检索。"""
         sufficient = state.get("sufficient", False)
         search_round = state.get("search_round", 0)
         has_more_queries = bool(state.get("search_queries", []))
@@ -254,6 +266,7 @@ class SearchAgent:
             return "continue"
 
     def _summarize_knowledge_node(self, state):
+        """整理节点：把多轮检索结果交给 LLM 生成面向回答的知识摘要。"""
         print("=== 整理知识节点 ===")
         topic = state["topic"]
         search_results = state.get("search_results", [])
@@ -280,6 +293,7 @@ class SearchAgent:
         }
 
     def _parse_json_response(self, response):
+        """从 LLM 回复中剥离代码块和额外文本，解析出 JSON 对象。"""
         text = response.strip()
 
         for marker in ["【最终回答】", "【最终答案】"]:

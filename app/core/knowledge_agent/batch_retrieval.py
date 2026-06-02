@@ -14,6 +14,7 @@ SOURCE_MARKERS = ("来源:", "【RAG本地库】", "【网络搜索】")
 
 
 def is_retrieval_error(text: str | None) -> bool:
+    """判断检索返回文本是否代表失败，空结果和错误前缀都视为失败。"""
     if not text:
         return True
     if text.strip() == "暂无收集到的知识":
@@ -22,6 +23,7 @@ def is_retrieval_error(text: str | None) -> bool:
 
 
 def has_source_structure(text: str) -> bool:
+    """检查知识文本中是否包含可追踪来源标记。"""
     return any(m in text for m in SOURCE_MARKERS)
 
 
@@ -32,6 +34,8 @@ def _retrieve_one(
     refine_knowledge: bool,
     retrieval_service,
 ) -> dict[str, Any]:
+    """在线程中检索单个查询，返回统一的批量结果项。"""
+    # 每个线程独立持有 LLM 和搜索 Agent，避免共享客户端状态导致并发串扰。
     llm = LLMService()
     agent = SearchAgent(
         llm_service=llm,
@@ -77,6 +81,7 @@ def retrieve_knowledge_batch(
     t0 = time.perf_counter()
     results: list[dict[str, Any]] = []
 
+    # 用线程池并发处理多个页面/主题，返回后再按原始 index 排序。
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {
             executor.submit(

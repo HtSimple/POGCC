@@ -7,6 +7,7 @@ router = APIRouter(prefix="/api/rag", tags=["rag"])
 
 
 def _get_knowledge_agent(request: Request) -> KnowledgeAgent:
+    """使用应用级 LLM 和本地检索服务创建一次请求级 KnowledgeAgent。"""
     return KnowledgeAgent(
         llm_service=request.app.state.llm_service,
         web_search_service=WebSearchService(),
@@ -16,6 +17,7 @@ def _get_knowledge_agent(request: Request) -> KnowledgeAgent:
 
 @router.post("/query", response_model=RAGQueryResponse)
 async def rag_query(request: Request, body: RAGQueryRequest):
+    """兼容旧 RAG 查询入口，执行完整 KnowledgeAgent 问答流程。"""
     try:
         agent = _get_knowledge_agent(request)
         answer = agent.process_query(body.query)
@@ -34,6 +36,7 @@ async def rag_query(request: Request, body: RAGQueryRequest):
 
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_document(request: Request, body: DocumentUploadRequest):
+    """把指定文档路径写入本地 RAG 索引，供后续知识检索使用。"""
     try:
         rs = getattr(request.app.state, "retrieval_service", None)
         if rs is None:
