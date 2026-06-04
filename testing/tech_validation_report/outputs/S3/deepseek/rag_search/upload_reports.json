@@ -1,0 +1,10 @@
+[
+  {
+    "file": "E:\\code\\project\\Software Engineering Management and Economics_project\\POGCC\\testing\\tech_validation_report\\data\\s3_industry_report.txt",
+    "response": {
+      "success": true,
+      "doc_id": "s3_industry_report_63cefea5",
+      "message": "Ingested 1 chunks from s3_industry_report.txt."
+    }
+  }
+]

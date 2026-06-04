@@ -1,0 +1,22 @@
+{
+  "scenario_id": "S3",
+  "topic": "基于资料的行业汇报",
+  "requirements": "仅基于上传文档生成6页内容，尽量引用文档信息，不引入外部事实。",
+  "slides": 6,
+  "documents": [
+    "data/s3_industry_report.txt"
+  ],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 23,
+    "upload_documents": 192,
+    "outline": 13581,
+    "knowledge_batch": 14015,
+    "content_batch": 50155,
+    "total": 106479
+  },
+  "errors": []
+}

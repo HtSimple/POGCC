@@ -1,0 +1,120 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "医疗AI应用行业汇报",
+    "targetSlideCount": 6,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "执行摘要与市场概览",
+        "sectionObjective": "概述医疗AI应用的核心领域、驱动因素与市场格局",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "医疗AI应用行业汇报",
+            "keyPoints": [
+              "基于2024年合成行业报告",
+              "聚焦诊断辅助、患者分诊与运营效率",
+              "探讨市场、场景、落地与风险"
+            ],
+            "notes": "封面页，标题与报告来源"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "执行摘要与市场概览",
+            "keyPoints": [
+              "AI应用集中在诊断辅助、患者分诊和运营效率提升",
+              "驱动因素：医护人手不足、成本压力、临床流程提速",
+              "采购方：医院、门诊机构、区域医疗集团管理层",
+              "供应方：影像AI厂商、临床决策支持平台、流程自动化工具",
+              "采购标准：准确性、合规性、集成成本、供应商稳定性"
+            ],
+            "notes": "合并执行摘要与市场概览，突出核心信息"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "典型场景与落地要点",
+        "sectionObjective": "介绍医疗AI的典型应用场景及实施关键",
+        "slideRange": {
+          "start": 3,
+          "end": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "典型应用场景",
+            "keyPoints": [
+              "影像分诊：优化放射科排队顺序",
+              "病历文书：结构化记录与编码辅助",
+              "患者沟通：非紧急问题的问答引导"
+            ],
+            "notes": "列举三个主要场景"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "落地实施要点",
+            "keyPoints": [
+              "数据治理：审计日志与权限控制",
+              "流程适配：避免增加医生操作负担",
+              "变更管理：需要培训和岗位协同"
+            ],
+            "notes": "强调数据、流程和人员三方面"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "证据、风险与建议",
+        "sectionObjective": "展示试点证据、关键风险及实施建议",
+        "slideRange": {
+          "start": 5,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "试点证据与关键指标",
+            "keyPoints": [
+              "内部试点通常从单一科室开始",
+              "关键指标：单病例耗时、排队积压下降",
+              "临床负责人参与能显著提升采纳率"
+            ],
+            "notes": "引用报告中的证据与指标"
+          },
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "summary",
+            "slideTitle": "风险对策与实施建议",
+            "keyPoints": [
+              "偏差风险：需用本地人群数据验证",
+              "安全风险：关键决策保留人工复核",
+              "合规风险：对齐本地监管要求",
+              "建议：先做低风险高频任务，3-6个月试点，流程稳定后规模化"
+            ],
+            "notes": "总结风险与建议，作为结尾页"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated with reference context"
+}
