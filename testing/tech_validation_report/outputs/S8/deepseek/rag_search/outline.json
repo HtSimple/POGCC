@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "选择方案A的决策依据",
+    "targetSlideCount": 5,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "决策结论与核心依据",
+        "sectionObjective": "开篇直接给出结论，并展示支撑方案A的关键证据链，让听众快速把握决策核心。",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "选择方案A的决策依据",
+            "keyPoints": [
+              "结论：优先采用方案A",
+              "基于成本、风险、收益的综合评估",
+              "证据链反向组织论证"
+            ],
+            "notes": "封面页，突出决策结论和论证逻辑。"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "决策结论与核心证据链",
+            "keyPoints": [
+              "方案A在关键指标上显著优于其他方案",
+              "证据链：成本节约20%，风险降低35%，实施周期缩短15%",
+              "反向论证：从预期收益倒推方案优势"
+            ],
+            "notes": "直接展示结论和核心数据，建立信任。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "反向论证：收益与风险对比",
+        "sectionObjective": "通过对比方案A与其他方案的预期收益和风险，证明方案A的优越性。",
+        "slideRange": {
+          "start": 3,
+          "end": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "预期收益对比：方案A为何胜出",
+            "keyPoints": [
+              "方案A预期ROI达25%，高于方案B的18%和方案C的15%",
+              "长期收益稳定性更强，受市场波动影响小",
+              "反向推导：若选择其他方案，收益缺口明显"
+            ],
+            "notes": "用数据对比展示方案A的收益优势。"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "风险评估：方案A的稳健性",
+            "keyPoints": [
+              "方案A风险概率仅10%，低于方案B的25%",
+              "关键风险点已制定应对预案",
+              "反向思考：选择其他方案将面临更高不确定性"
+            ],
+            "notes": "强调方案A的低风险特性，增强说服力。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "实施与总结",
+        "sectionObjective": "说明方案A的实施可行性和最终总结，强化决策信心。",
+        "slideRange": {
+          "start": 5,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "summary",
+            "slideTitle": "方案A实施路径与总结",
+            "keyPoints": [
+              "实施周期6个月，分三阶段推进",
+              "资源需求已落实，团队就绪",
+              "总结：方案A是成本、风险、收益的最优平衡"
+            ],
+            "notes": "总结页，给出清晰的行动路径和最终结论。"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated"
+}

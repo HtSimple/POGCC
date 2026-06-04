@@ -1,0 +1,19 @@
+{
+  "scenario_id": "S8",
+  "topic": "选择方案A的决策依据",
+  "requirements": "结论：优先采用方案A。生成5页，按证据链反向组织论证。",
+  "slides": 5,
+  "documents": [],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 3,
+    "outline": 15068,
+    "knowledge_batch": 15954,
+    "content_batch": 39425,
+    "total": 93490
+  },
+  "errors": []
+}
