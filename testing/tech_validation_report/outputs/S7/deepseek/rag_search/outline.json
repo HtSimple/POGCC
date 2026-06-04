@@ -1,0 +1,153 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "企业降本增效方案",
+    "targetSlideCount": 9,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "背景与挑战",
+        "sectionObjective": "阐述企业面临成本压力与效率瓶颈，明确降本增效的必要性。",
+        "slideRange": {
+          "start": 1,
+          "end": 3
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "企业降本增效方案",
+            "keyPoints": [
+              "应对市场挑战，提升核心竞争力",
+              "系统性成本优化与效率提升策略",
+              "汇报日期：2025年"
+            ],
+            "notes": "封面页，包含标题、副标题与日期。"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "当前经营环境与成本压力",
+            "keyPoints": [
+              "宏观经济增速放缓，行业竞争加剧",
+              "原材料、人力、合规成本持续上升",
+              "利润空间收窄，倒逼企业精细化管理"
+            ],
+            "notes": "分析外部环境与内部成本压力。"
+          },
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "效率瓶颈与转型需求",
+            "keyPoints": [
+              "流程冗余、部门协同不畅导致效率损失",
+              "数字化水平不足，数据驱动决策缺失",
+              "亟需系统性降本增效方案以保持竞争力"
+            ],
+            "notes": "指出效率问题，引出方案必要性。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "降本增效方案",
+        "sectionObjective": "提出具体可执行的降本增效措施，涵盖流程优化、技术赋能与组织调整。",
+        "slideRange": {
+          "start": 4,
+          "end": 7
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "transition",
+            "slideTitle": "降本增效总体框架",
+            "keyPoints": [
+              "三大支柱：流程优化、技术驱动、组织提效",
+              "短期速赢与长期变革相结合",
+              "量化目标：成本降低15%，效率提升20%"
+            ],
+            "notes": "过渡页，概述方案框架与目标。"
+          },
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "流程优化：消除浪费，提升效率",
+            "keyPoints": [
+              "端到端流程梳理，识别非增值环节",
+              "推行精益管理，减少等待与重复劳动",
+              "建立跨部门协作机制，缩短决策周期"
+            ],
+            "notes": "具体流程优化措施。"
+          },
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "content",
+            "slideTitle": "技术赋能：数字化与自动化",
+            "keyPoints": [
+              "引入RPA处理高频重复性事务",
+              "搭建数据中台，实现经营可视化",
+              "推动云计算与SaaS应用，降低IT固定成本"
+            ],
+            "notes": "技术手段降本增效。"
+          },
+          {
+            "slideId": "slide-007",
+            "slideNumber": 7,
+            "slideRole": "content",
+            "slideTitle": "组织提效：人才与绩效管理",
+            "keyPoints": [
+              "优化岗位设置，推行一岗多能",
+              "建立量化绩效考核体系，激励高产出",
+              "倡导节约文化，全员参与降本"
+            ],
+            "notes": "组织与人力方面的增效措施。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "风险与保障",
+        "sectionObjective": "识别方案实施中的潜在风险，并提出应对措施，确保方案平稳落地。",
+        "slideRange": {
+          "start": 8,
+          "end": 9
+        },
+        "slides": [
+          {
+            "slideId": "slide-008",
+            "slideNumber": 8,
+            "slideRole": "content",
+            "slideTitle": "实施风险与应对策略",
+            "keyPoints": [
+              "员工抵触风险：加强沟通与培训，设立过渡期",
+              "技术落地风险：分阶段实施，先试点后推广",
+              "业务中断风险：制定应急预案，关键业务双轨运行"
+            ],
+            "notes": "分析主要风险及应对。"
+          },
+          {
+            "slideId": "slide-009",
+            "slideNumber": 9,
+            "slideRole": "summary",
+            "slideTitle": "总结与下一步行动",
+            "keyPoints": [
+              "降本增效是系统性工程，需高层推动全员参与",
+              "建议成立专项小组，明确里程碑与责任人",
+              "首月启动流程诊断与试点项目，季度复盘优化"
+            ],
+            "notes": "总结方案，提出可执行的下一步计划。"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated"
+}

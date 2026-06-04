@@ -1,0 +1,19 @@
+{
+  "scenario_id": "S7",
+  "topic": "企业降本增效方案",
+  "requirements": "必须包含三章：背景-方案-风险，每章至少2页。语言正式，包含可执行建议。",
+  "slides": 6,
+  "documents": [],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 27,
+    "outline": 21021,
+    "knowledge_batch": 21816,
+    "content_batch": 70493,
+    "total": 155096
+  },
+  "errors": []
+}
