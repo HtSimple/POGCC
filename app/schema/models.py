@@ -150,6 +150,29 @@ class ExpandContentRequest(BaseModel):
     context: Optional[str] = Field(None, description="Reference context")
 
 
+class ReviseContentRequest(BaseModel):
+    outline_node: dict = Field(..., description="Outline node")
+    context: Optional[str] = Field(None, description="Reference context")
+    current_content: str = Field(..., min_length=1, max_length=3000, description="Current slide body text")
+    revision_suggestion: str = Field(
+        ..., min_length=1, max_length=1000, description="User revision instructions"
+    )
+
+
+class ReviseContentTextRequest(BaseModel):
+    outline_node: dict = Field(..., description="Minimal outline node (title and bullets)")
+    current_content: str = Field(..., min_length=1, max_length=3000, description="Current slide body text")
+    revision_suggestion: str = Field(
+        ..., min_length=1, max_length=1000, description="User revision instructions"
+    )
+
+
+class ReviseContentTextResponse(BaseModel):
+    success: bool = Field(..., description="Whether revision succeeded")
+    content: str = Field("", description="Revised plain-text slide body")
+    message: Optional[str] = Field(None, description="Result message")
+
+
 class GenerateNotesRequest(BaseModel):
     project_id: Optional[str] = Field(None, description="Project id")
     slide_id: str = Field(..., min_length=1, max_length=80, description="Slide id")

@@ -1,34 +1,101 @@
-POGCC 项目说明（测试语料）
+POGCC 项目说明（RAG 检索质量测试语料 v2）
 
-一、项目背景
-POGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。
-系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。
+一、项目背景与目标
+POGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报、课程答辩与软件工程展示场景。
+系统核心目标是解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题，让每一页内容有结构、有依据、可讲述。
+项目采用前后端分离架构，前端提供五步线性流程，后端提供生成、检索与协议校验能力。
 
-二、技术路线
-核心采用结构化 JSON Schema 协议描述大纲与页面正文。
-内容生成链路包括：大纲生成、逐页知识检索、正文扩展、演讲备注生成。
-本地 RAG 负责从用户上传资料中检索证据，必要时再触发外部网络搜索。
+二、结构化 JSON Schema 协议
+大纲与正文均遵循 JSON Schema 结构化协议：大纲协议版本为 ppt-narrative-outline.v1，正文协议为 ppt-page-content.v1。
+协议字段包括 presentationTitle、sections、slideId、keyPoints、displayBullets、speakerNotes、evidencePack 等。
+Pydantic 在后端校验 LLM 输出，前端 TypeScript 类型与后端 models.py 保持同步，避免字段漂移。
 
-三、RAG 与事实控制
-系统通过 RAG 检索降低事实幻觉：先查本地知识库，再融合检索摘要进入 Prompt。
-检索结果应包含来源文件名与文本片段，便于后续事实一致性检查。
-质量验证包括 Top-K 检索命中率、来源字段完整性、以及事实准确率评测。
+三、RAG 本地检索与事实控制
+系统通过 RAG 检索降低事实幻觉：先查本地知识库，再将检索摘要融合进 Prompt。
+RetrievalService 负责 ingest 入库、向量索引与 top_k 检索；检索结果应包含 source_file、chunk_id 与相似度 score。
+重复入库同一文件会被 manifest 跳过；文件内容变更时 update_file 会先删旧向量再写入新版本。
 
-四、性能与测试
-性能目标是万字级参考资料入库后，端到端生成流程在合理时间内完成。
-测试覆盖文档切分、向量检索、大纲 reference_context 注入、以及检索问答质量。
+四、外部搜索与 SearchAgent
+当本地 RAG 证据不足时，SearchAgent 触发 Tavily 网络搜索，并对结果做去重、摘要与来源拼接。
+知识补充接口返回格式包含【RAG本地库】与【网络搜索】段落，便于前端展示与用户核对。
+批量检索接口 knowledge_batch 支持多页并行，worker 数可通过 config.json 配置。
 
-五、输出形态
-最终可导出 Markdown，包含每页标题、要点、正文说明与演讲备注。
-历史任务应能回溯大纲、检索结果与生成内容（持久化方案待完善）。
+五、大纲生成与 reference_context
+OutlineMaker 根据 topic 与 requirements 生成结构化大纲；生成前可自动 search 本地库并注入 reference_context。
+reference_context 以【参考资料 N】分块写入 Prompt，帮助 LLM 引用用户上传资料而非凭空编造。
+用户可在 Step 3 编辑章节顺序、增删页面，并重排 sec-01、slide-001 等编号。
 
-六、扩展说明（用于切分测试）
-在大规模课程资料场景下，用户可能上传多章节讲义、实验报告摘要、以及项目答辩稿。
-系统需要将长文档按段落与字数上限切分为多个 TextChunk，并保留 source_file 与 chunk_index。
-切分后的每个片段应可独立检索，又在合并检索结果时保持主题连贯。
-当用户询问「如何降低幻觉」时，应优先召回第三节 RAG 与事实控制相关段落。
-当用户询问「JSON Schema」时，应召回第二节技术路线中的结构化协议描述。
-当用户询问「Markdown 导出」时，应召回第五节输出形态相关内容。
-上述规则用于 RAG 命中率评测：问题与语料段落一一对应，便于计算 Top-K 召回率。
-评测脚本读取 rag_queries.json，对每条 query 检查 must_contain_any 与 source_file 字段。
-若命中率低于 80%，应检查 embedding 模型、切分粒度或 query 与语料的语义差距。
+六、正文扩展与 ContentExpander
+ContentExpander 按页生成 page_content JSON，包含 coreMessage、displayBullets、keyData、actionableTakeaway。
+批量正文接口 content_batch 使用线程池并行，单页失败不影响其他页，可单独重试。
+若 LLM 输出 keyData 类型错误，content_expander 会在校验前过滤非法字段并尽量保留正文。
+
+七、演讲备注与 notes_generator
+NotesGenerator 提供独立备注接口 POST /api/generator/notes，生成比幻灯片正文更口语化的 SpeakerNotes。
+备注应补充背景与串联逻辑，不直接复制 bullets，也不添加无来源的新事实。
+正文 JSON 内亦含 speakerNotes 字段，前端可选择单独生成或沿用正文附带备注。
+
+八、质量验证与 fact_precision
+质量验证覆盖 RAG 检索质量、搜索相关性、LLM 问答质量与 fact_precision 事实准确率。
+testing/quality_validation 目录提供规则文档、跑测脚本与测试报告；Top-K 命中率与来源完整性是 RAG 核心指标。
+信息密度评测检查每页 bullets、数值与 evidence 是否足够支撑 PPT 展示。
+
+九、性能与并发目标
+性能目标是万字级参考资料入库后，端到端生成流程在合理时间内完成；大纲生成默认阈值不超过 300 秒。
+性能测试包含 latency 单请求耗时与 concurrency 三并发大纲请求稳定性验证。
+RAG 单次 search 在本地 bge-small-en-v1.5 embedding 模型上通常可在数十毫秒级返回。
+
+十、文档切分与 DocumentProcessor
+DocumentProcessor 支持 txt、pdf、docx 解析；txt 按段落与 max_chars 上限切分为多个 TextChunk。
+PDF 可按页切分并保留 start_page、end_page；chunk_index 与 chunk_id 用于溯源。
+短段落可 merge_short_paragraphs 合并，避免过多碎片化向量。
+
+十一、最终 Markdown 导出
+Step 5 可将大纲 goal/bullets 与生成正文、备注组装为 Markdown，支持复制与下载。
+Markdown 导出包含 PPT 标题、章节、每页要点、正文说明与演讲备注；用户可按需省略来源与事实检查段。
+buildMarkdownFromState 在前端实现，E2E 脚本有对应的 preview 组装逻辑。
+
+十二、历史记录与持久化
+当前历史记录主要存于浏览器 localStorage，通过 storage.ts 读写 ProjectRecord。
+任务分工要求后续引入 SQLite 数据库，以 project_id 贯穿任务、大纲、正文与历史步骤。
+统一验收清单要求后端重启后仍可查询任务历史，这是尚未完成的工程化目标。
+
+十三、模型 Provider 与 LLMService
+LLMService 支持 deepseek 与 qwen 切换，config.json 中 llm_provider 控制默认提供商。
+/api/model/info 与 /api/model/switch 提供模型信息查询与热切换；生成链路共享同一 llm_service 实例。
+DeepSeek 回复截断时会提示增加 max_tokens；Token 成本统计尚未纳入正式日志。
+
+十四、前端五步流程
+前端 App.vue 实现 Step 1 任务信息、Step 2 资料上传、Step 3 大纲编辑、Step 4 知识检索与正文、Step 5 Markdown。
+一键生成/一键检索按钮支持批量操作；Loading 动画在长时间 LLM 调用期间给出反馈。
+Step 3 支持本章内插入、本章后新章与章节下拉，自动重排 slide 编号。
+
+十五、E2E 与自动化测试
+tests/new/e2e/test_full_generation.py 串联 health、大纲、检索、正文与备注，输出分步耗时报告。
+tests/new/rag 目录专门测试 RetrievalService 检索命中率、来源字段与 reference_context 证据注入。
+tests/new/schema 校验 NarrativeOutline 与 PageContentProtocol 的 Pydantic 约束。
+
+十六、答辩演示与课程场景
+课程答辩建议准备 3 到 5 个标准演示主题，每个主题至少一份参考资料，展示 RAG 引用与结构化大纲。
+演示链路：上传资料 → 生成大纲 → 修改结构 → 逐页检索 → 生成正文与备注 → 导出 Markdown。
+常见问题包括 keyData 校验失败、embedding 路径配置错误与 API 429 并发限流。
+
+十七、证据包 evidencePack
+page_content 中 evidencePack 列出 sourceRefId、claim、sourceTitle、url 与 credibility。
+证据包用于支撑页面核心观点，事实检查可比对 evidence 与正文断言是否一致。
+credibility 枚举通常为 high 或 medium，无来源时应标记不确定而非硬编数据。
+
+十八、UAT 与用户评估
+UAT 使用 uat_results.csv 收集 structure_score、logic_score、fact_trust_score 等人工评分。
+analyze_uat.py 汇总平均分与 major_rewrite_rate，作为效果测试补充指标。
+盲测案例应覆盖不同主题长度与资料类型，避免只对单一 demo 过拟合。
+
+十九、部署与云服务器
+任务分工第 11 项要求 Nginx、systemd 或 Docker Compose 部署文档与线上可访问地址。
+部署前需配置 API Key、embedding 模型路径与 RAG persist_dir，并确保前后端 CORS 正确。
+云部署冒烟测试应至少验证 health 与一次完整 outline 请求。
+
+二十、扩展阅读与维护
+rag_queries.json 定义 query、must_contain_any 与 source_file，供 pytest 参数化执行。
+rag_corpus.txt 故意写长并分章，以便 DocumentProcessor 切分为多个 chunk，更真实测试 Top-K 召回。
+维护时请同步更新语料章节关键词与 query 用例，避免 embedding 升级后命中率漂移。

@@ -1,42 +1,32 @@
 [
-  {
-    "id": "rag_hallucination",
-    "query": "系统如何通过 RAG 降低事实幻觉？",
-    "must_contain_any": ["RAG", "事实幻觉", "检索"],
-    "must_contain_all": [],
-    "source_file": "rag_corpus.txt",
-    "top_k": 3
-  },
-  {
-    "id": "json_schema",
-    "query": "大纲和正文使用什么数据结构？",
-    "must_contain_any": ["JSON", "Schema", "结构化"],
-    "must_contain_all": [],
-    "source_file": "rag_corpus.txt",
-    "top_k": 3
-  },
-  {
-    "id": "generation_pipeline",
-    "query": "内容生成链路包含哪些步骤？",
-    "must_contain_any": ["大纲", "检索", "正文", "备注"],
-    "must_contain_all": [],
-    "source_file": "rag_corpus.txt",
-    "top_k": 5
-  },
-  {
-    "id": "quality_validation",
-    "query": "RAG 质量验证要测什么？",
-    "must_contain_any": ["Top-K", "命中率", "来源"],
-    "must_contain_all": [],
-    "source_file": "rag_corpus.txt",
-    "top_k": 3
-  },
-  {
-    "id": "markdown_export",
-    "query": "最终 Markdown 输出包含什么？",
-    "must_contain_any": ["Markdown", "标题", "备注"],
-    "must_contain_all": [],
-    "source_file": "rag_corpus.txt",
-    "top_k": 3
-  }
+  {"id": "q01_project_goal", "query": "这个系统主要想解决 AI 写 PPT 的什么痛点？", "must_contain_all": ["逻辑断层", "事实幻觉"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q02_json_schema", "query": "大纲协议版本号是什么？", "must_contain_all": ["ppt-narrative-outline", "JSON Schema"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q03_pydantic", "query": "谁在后端校验 LLM 输出的 JSON？", "must_contain_all": ["Pydantic", "models.py"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q04_rag_hallucination", "query": "本地知识库检索是为了解决什么问题？", "must_contain_all": ["RAG", "事实幻觉"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q05_retrieval_service", "query": "哪个类负责向量入库和检索？", "must_contain_all": ["RetrievalService", "ingest"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q06_duplicate_ingest", "query": "相同文件再次上传会如何处理？", "must_contain_all": ["重复入库", "manifest"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q07_update_file", "query": "资料改内容后索引怎么更新？", "must_contain_all": ["update_file", "删旧向量"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q08_tavily_search", "query": "联网搜索接的是哪个外部服务？", "must_contain_all": ["Tavily", "SearchAgent"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q09_knowledge_batch", "query": "多页一起检索Knowledge走什么接口？", "must_contain_all": ["knowledge_batch", "并行"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q10_reference_context", "query": "生成大纲前如何把资料塞进 Prompt？", "must_contain_all": ["reference_context", "参考资料"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q11_outline_maker", "query": "结构化大纲是哪个模块生成的？", "must_contain_all": ["OutlineMaker", "requirements"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q12_outline_edit", "query": "第三步编辑大纲时页码格式长什么样？", "must_contain_all": ["sec-01", "slide-001"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q13_content_expander", "query": "单页正文 JSON 是哪个扩展器生成的？", "must_contain_all": ["ContentExpander", "page_content"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q14_content_batch", "query": "多页正文并行生成用什么接口？", "must_contain_all": ["content_batch", "线程池"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q15_keydata_filter", "query": "正文里非法 keyData 字段怎么处理？", "must_contain_all": ["keyData", "过滤非法"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q16_speaker_notes", "query": "独立生成演讲备注的类叫什么？", "must_contain_all": ["NotesGenerator", "SpeakerNotes"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q17_quality_validation", "query": "RAG 评测报告里常看哪两个指标？", "must_contain_all": ["Top-K", "命中率"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q18_info_density", "query": "信息密度评测关注页面哪些元素？", "must_contain_all": ["信息密度", "bullets"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q19_performance", "query": "长文档端到端性能测试的超时阈值？", "must_contain_all": ["latency", "300 秒"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q20_concurrency", "query": "性能测试里并发大纲请求测几个？", "must_contain_all": ["concurrency", "三并发"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q21_document_processor", "query": "解析 txt pdf docx 的处理器叫什么？", "must_contain_all": ["DocumentProcessor", "docx"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q22_chunk_split", "query": "普通 txt 按什么上限切成 TextChunk？", "must_contain_all": ["TextChunk", "max_chars"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q23_pdf_page", "query": "PDF 切块会保留哪些页码字段？", "must_contain_all": ["start_page", "end_page"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q24_markdown_export", "query": "第五步 Markdown 在前端由哪个函数组装？", "must_contain_all": ["buildMarkdownFromState", "Markdown"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q25_localstorage", "query": "现在历史任务存在浏览器哪里？", "must_contain_all": ["localStorage", "storage.ts"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q26_sqlite_plan", "query": "后续持久化打算用什么数据库？", "must_contain_all": ["SQLite", "project_id"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q27_llm_provider", "query": "config 里切换 deepseek 和 qwen 的字段？", "must_contain_all": ["llm_provider", "deepseek"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q28_frontend_steps", "query": "前端主流程一共几个 Step？", "must_contain_all": ["Step 1", "五步"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q29_e2e_test", "query": "一键 E2E 脚本文件名是什么？", "must_contain_all": ["test_full_generation", "e2e"], "source_file": "rag_corpus.txt", "top_k": 3},
+  {"id": "q30_evidence_pack", "query": "正文协议里证据包需要哪些字段？", "must_contain_all": ["evidencePack", "sourceRefId"], "source_file": "rag_corpus.txt", "top_k": 3}
 ]

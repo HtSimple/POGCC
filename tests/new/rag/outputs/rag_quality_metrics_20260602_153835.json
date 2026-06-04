@@ -1,0 +1,503 @@
+{
+  "corpus_file": "rag_corpus.txt",
+  "num_chunks": 4,
+  "ingest_status": "success",
+  "embedding_model": "D:\\杂物\\大三下\\软件经济\\project\\POGCC\\app\\rag\\bge-small-en-v1.5",
+  "case_count": 30,
+  "hit_count": 27,
+  "miss_count": 3,
+  "hit_rate": 0.9,
+  "avg_search_ms": 9.4,
+  "min_top_k_hit_rate": 0.8,
+  "cases": [
+    {
+      "case_id": "q01_project_goal",
+      "query": "POGCC 要解决什么问题？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 11,
+      "result_count": 3,
+      "top_score": 0.7821723222732544,
+      "matched_keywords": [
+        "逻辑断层",
+        "事实幻觉",
+        "答辩"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q02_json_schema",
+      "query": "大纲和正文用什么协议？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.7016375660896301,
+      "matched_keywords": [
+        "JSON Schema",
+        "ppt-narrative-outline",
+        "ppt-page-content"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q03_pydantic",
+      "query": "后端如何校验 LLM JSON？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7722307443618774,
+      "matched_keywords": [
+        "Pydantic",
+        "models.py",
+        "校验"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q04_rag_hallucination",
+      "query": "RAG 如何降低事实幻觉？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.7162013649940491,
+      "matched_keywords": [
+        "RAG",
+        "事实幻觉",
+        "本地知识库"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q05_retrieval_service",
+      "query": "RetrievalService 负责什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7082805037498474,
+      "matched_keywords": [
+        "RetrievalService",
+        "ingest",
+        "top_k"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q06_duplicate_ingest",
+      "query": "重复上传同一文件会怎样？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.6687843799591064,
+      "matched_keywords": [
+        "重复入库",
+        "manifest"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q07_update_file",
+      "query": "文件内容变更后如何更新索引？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.71909099817276,
+      "matched_keywords": [
+        "update_file",
+        "删旧向量"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q08_tavily_search",
+      "query": "外部搜索用什么服务？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.6637786030769348,
+      "matched_keywords": [
+        "Tavily",
+        "SearchAgent",
+        "网络搜索"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q09_knowledge_batch",
+      "query": "批量知识检索接口叫什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 12,
+      "result_count": 3,
+      "top_score": 0.6897587776184082,
+      "matched_keywords": [
+        "knowledge_batch",
+        "并行"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q10_reference_context",
+      "query": "大纲生成如何引用上传资料？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.6737035512924194,
+      "matched_keywords": [
+        "reference_context",
+        "参考资料"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q11_outline_maker",
+      "query": "谁负责生成结构化大纲？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 12,
+      "result_count": 3,
+      "top_score": 0.6728295683860779,
+      "matched_keywords": [
+        "OutlineMaker",
+        "requirements"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q12_outline_edit",
+      "query": "Step 3 大纲编辑支持什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.6686045527458191,
+      "matched_keywords": [
+        "sec-01",
+        "slide-001",
+        "增删页面"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q13_content_expander",
+      "query": "正文扩展模块叫什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7141786813735962,
+      "matched_keywords": [
+        "ContentExpander",
+        "displayBullets",
+        "page_content"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q14_content_batch",
+      "query": "如何批量生成多页正文？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7329387664794922,
+      "matched_keywords": [
+        "content_batch",
+        "线程池"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q15_keydata_filter",
+      "query": "keyData 校验失败怎么处理？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 11,
+      "result_count": 3,
+      "top_score": 0.7093251347541809,
+      "matched_keywords": [
+        "keyData",
+        "过滤非法"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q16_speaker_notes",
+      "query": "演讲备注如何生成？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7011072039604187,
+      "matched_keywords": [
+        "NotesGenerator",
+        "SpeakerNotes",
+        "notes"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q17_quality_validation",
+      "query": "RAG 质量验证测哪些指标？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.7391344308853149,
+      "matched_keywords": [
+        "Top-K",
+        "命中率",
+        "fact_precision"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q18_info_density",
+      "query": "信息密度评测检查什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.6904751062393188,
+      "matched_keywords": [
+        "evidence"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q19_performance",
+      "query": "端到端性能目标是什么？",
+      "top_k": 3,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7054179906845093,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q20_concurrency",
+      "query": "并发测试要求几个同时请求？",
+      "top_k": 3,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.6814731955528259,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q21_document_processor",
+      "query": "文档解析支持哪些格式？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 11,
+      "result_count": 3,
+      "top_score": 0.7278149724006653,
+      "matched_keywords": [
+        "DocumentProcessor",
+        "pdf",
+        "docx"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q22_chunk_split",
+      "query": "txt 文档如何切分？",
+      "top_k": 3,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7029540538787842,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q23_pdf_page",
+      "query": "PDF 切分保留什么信息？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.7068628668785095,
+      "matched_keywords": [
+        "start_page",
+        "end_page",
+        "按页"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q24_markdown_export",
+      "query": "Markdown 导出包含什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.7010059356689453,
+      "matched_keywords": [
+        "Markdown",
+        "buildMarkdownFromState",
+        "下载"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q25_localstorage",
+      "query": "历史记录目前存在哪里？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.6882447600364685,
+      "matched_keywords": [
+        "localStorage",
+        "storage.ts",
+        "ProjectRecord"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q26_sqlite_plan",
+      "query": "数据库持久化计划用什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 3,
+      "top_score": 0.6805745959281921,
+      "matched_keywords": [
+        "SQLite",
+        "project_id",
+        "持久化"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q27_llm_provider",
+      "query": "如何切换 LLM 提供商？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.7369430065155029,
+      "matched_keywords": [
+        "llm_provider",
+        "deepseek",
+        "qwen"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q28_frontend_steps",
+      "query": "前端有几个主要步骤？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.6661238074302673,
+      "matched_keywords": [
+        "Step 1",
+        "Step 5",
+        "五步"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q29_e2e_test",
+      "query": "E2E 测试脚本路径在哪？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 3,
+      "top_score": 0.6768376231193542,
+      "matched_keywords": [
+        "test_full_generation",
+        "e2e",
+        "health"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q30_evidence_pack",
+      "query": "evidencePack 有哪些字段？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 3,
+      "top_score": 0.7224631905555725,
+      "matched_keywords": [
+        "evidencePack",
+        "sourceRefId",
+        "credibility"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    }
+  ]
+}
