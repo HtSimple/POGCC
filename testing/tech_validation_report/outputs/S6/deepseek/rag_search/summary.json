@@ -1,0 +1,19 @@
+{
+  "scenario_id": "S6",
+  "topic": "数字化转型",
+  "requirements": "面向企业内部汇报，生成5页，强调问题、路径与落地建议。",
+  "slides": 5,
+  "documents": [],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 5,
+    "outline": 15463,
+    "knowledge_batch": 18082,
+    "content_batch": 46185,
+    "total": 107883
+  },
+  "errors": []
+}

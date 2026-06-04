@@ -1,0 +1,101 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "数字化转型：问题、路径与落地建议",
+    "targetSlideCount": 5,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "引言与问题诊断",
+        "sectionObjective": "揭示数字化转型的紧迫性与当前面临的核心问题",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "数字化转型：问题、路径与落地建议",
+            "keyPoints": [
+              "企业内部汇报",
+              "聚焦问题诊断与实施路径",
+              "提供可落地的行动建议"
+            ],
+            "notes": "封面页，突出主题与汇报性质"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "当前数字化转型面临的挑战",
+            "keyPoints": [
+              "战略模糊：缺乏清晰的数字化愿景与路线图",
+              "组织僵化：部门壁垒与变革阻力",
+              "技术债务：老旧系统难以支撑敏捷创新",
+              "人才短缺：数字化技能与复合型人才不足",
+              "数据孤岛：数据质量与治理体系薄弱"
+            ],
+            "notes": "问题诊断页，列举五大核心痛点"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "转型路径与落地建议",
+        "sectionObjective": "提出系统化的转型路径和具体落地措施",
+        "slideRange": {
+          "start": 3,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "数字化转型的总体路径",
+            "keyPoints": [
+              "顶层设计：制定与业务对齐的数字化战略",
+              "架构先行：构建灵活、可扩展的技术平台",
+              "数据驱动：建立企业级数据治理与分析能力",
+              "敏捷迭代：以试点项目快速验证与推广",
+              "文化变革：培育数字化思维与创新氛围"
+            ],
+            "notes": "路径页，展示从战略到文化的五步转型框架"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "关键落地建议",
+            "keyPoints": [
+              "成立数字化转型委员会，明确一把手负责制",
+              "优先实施速赢项目，树立信心与标杆",
+              "投资于员工数字化技能重塑与招聘",
+              "建立KPI体系，量化转型进度与价值",
+              "引入外部合作伙伴，弥补能力短板"
+            ],
+            "notes": "落地建议页，提供具体可执行的行动项"
+          },
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "summary",
+            "slideTitle": "总结与下一步行动",
+            "keyPoints": [
+              "转型是系统性工程，需战略、组织、技术协同",
+              "立即启动诊断评估，明确优先领域",
+              "制定90天快速行动计划，启动首个试点",
+              "建立定期复盘机制，持续优化路径"
+            ],
+            "notes": "总结页，强调紧迫性与下一步具体行动"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated"
+}
