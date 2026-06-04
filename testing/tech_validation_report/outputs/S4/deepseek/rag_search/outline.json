@@ -1,0 +1,128 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "碳中和路线图解读",
+    "targetSlideCount": 6,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "政策目标与背景",
+        "sectionObjective": "概述碳中和路线图的核心目标与政策背景",
+        "slideRange": {
+          "start": 1,
+          "end": 1
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "碳中和路线图解读",
+            "keyPoints": [
+              "政策目标：能效提升、可再生能源占比提高、交通与制造业电气化",
+              "推进节奏：2025基线、2027试点、2030全国推广",
+              "重点行业：电力、钢铁与水泥、交通与物流"
+            ],
+            "notes": "封面页，概括政策核心目标与时间线"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "推进时间线与重点行业",
+        "sectionObjective": "展示碳中和路线图的时间节点与重点行业分布",
+        "slideRange": {
+          "start": 2,
+          "end": 3
+        },
+        "slides": [
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "推进节奏：从基线到全国推广",
+            "keyPoints": [
+              "2025年：建立行业排放基线",
+              "2027年：启动区域试点计划",
+              "2030年：推广成熟试点至全国"
+            ],
+            "notes": "时间线页，清晰展示三个关键节点"
+          },
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "重点行业：电力、钢铁水泥、交通物流",
+            "keyPoints": [
+              "电力行业：发电结构转型",
+              "钢铁与水泥：高排放工业改造",
+              "交通与物流：电气化推进"
+            ],
+            "notes": "重点行业页，对应参考资料中的三大行业"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "政策工具与风险分析",
+        "sectionObjective": "介绍碳中政策工具并识别主要风险",
+        "slideRange": {
+          "start": 4,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "政策工具：碳价、补贴与披露",
+            "keyPoints": [
+              "碳价机制与行业配额",
+              "清洁技术改造补贴",
+              "强制披露与第三方核查"
+            ],
+            "notes": "政策工具页，列举三种核心工具"
+          },
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "主要风险：能力差异、成本与数据",
+            "keyPoints": [
+              "区域能力差异导致推进不均衡",
+              "传统行业改造成本高",
+              "数据质量不足影响监测效果"
+            ],
+            "notes": "风险分析页，对应参考资料中的三大风险"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "建议与总结",
+        "sectionObjective": "提出针对性建议并总结路线图要点",
+        "slideRange": {
+          "start": 6,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "summary",
+            "slideTitle": "建议：数据平台、集群改造与激励挂钩",
+            "keyPoints": [
+              "建立统一的排放数据平台",
+              "优先支持高排放集群改造",
+              "将激励与减排成效挂钩"
+            ],
+            "notes": "总结与建议页，呼应参考资料中的三条建议"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated with reference context"
+}

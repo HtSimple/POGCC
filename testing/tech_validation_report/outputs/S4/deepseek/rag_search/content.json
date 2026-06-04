@@ -1,0 +1,492 @@
+{
+  "success": true,
+  "results": [
+    {
+      "index": 0,
+      "id": "slide-001",
+      "success": true,
+      "content": "碳中和路线图以能效提升、可再生能源发展和终端电气化为三大支柱，通过“2025基线—2027试点—2030全国推广”的节奏，在电力、钢铁水泥、交通物流等重点行业有序推进。\n\n- 政策目标：提升工业能效、提高可再生能源发电占比、推动交通与制造业电气化\n- 推进节奏：2025年建立行业排放基线，2027年启动区域试点，2030年推广至全国\n- 重点行业：电力系统脱碳、钢铁与水泥工艺革新、交通与物流电动化转型\n- 政策目标：能效提升、可再生能源占比提高、交通与制造业电气化\n- 推进节奏：2025基线、2027试点、2030全国推广\n\n碳中和不是单一部门的任务，而是一场以能源转型为核心、多行业协同的系统性变革。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "碳中和路线图解读",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "local_document",
+            "official_sites",
+            "government_reports",
+            "academic_sources",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "pageGoal": "展示碳中和路线图的整体框架，明确政策目标、推进节奏与重点行业，为后续详细解读奠定基础。",
+            "slideTitle": "碳中和路线图解读",
+            "coreMessage": "碳中和路线图以能效提升、可再生能源发展和终端电气化为三大支柱，通过“2025基线—2027试点—2030全国推广”的节奏，在电力、钢铁水泥、交通物流等重点行业有序推进。",
+            "displayBullets": [
+              "政策目标：提升工业能效、提高可再生能源发电占比、推动交通与制造业电气化",
+              "推进节奏：2025年建立行业排放基线，2027年启动区域试点，2030年推广至全国",
+              "重点行业：电力系统脱碳、钢铁与水泥工艺革新、交通与物流电动化转型",
+              "政策目标：能效提升、可再生能源占比提高、交通与制造业电气化",
+              "推进节奏：2025基线、2027试点、2030全国推广"
+            ],
+            "keyData": [],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "碳中和路线图的政策目标包括能效提升、可再生能源占比提高、交通与制造业电气化。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "通过能效提升降低工业排放。提高可再生能源在发电结构中的占比。推动交通与制造业电气化。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "推进节奏为2025年建立行业排放基线，2027年启动区域试点计划，2030年推广成熟试点至全国。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "2025：建立行业排放基线。2027：启动区域试点计划。2030：推广成熟试点至全国。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "重点行业包括电力、钢铁与水泥、交通与物流。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "重点行业：电力、钢铁与水泥、交通与物流。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "中国将碳达峰碳中和作为国家战略，构建了全球最系统完备的碳减排政策体系。",
+                "sourceTitle": "《碳达峰碳中和的中国行动》白皮书",
+                "sourceType": "official_sites",
+                "url": "https://www.gov.cn",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "中国将碳达峰碳中和作为国家战略，广泛深入开展碳达峰行动，加快经济社会发展全面绿色转型。"
+              },
+              {
+                "sourceRefId": "src-005",
+                "claim": "实现碳达峰碳中和需要能源绿色低碳转型，非化石能源消费比重由2020年的16.0%增至2024年的19.8%。",
+                "sourceTitle": "《碳达峰碳中和的中国行动》白皮书",
+                "sourceType": "official_sites",
+                "url": "https://www.gov.cn",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "非化石能源消费比重由2020年的16.0%增至2024年的19.8%，年均提高近1个百分点。"
+              }
+            ],
+            "actionableTakeaway": "碳中和不是单一部门的任务，而是一场以能源转型为核心、多行业协同的系统性变革。",
+            "speakerNotes": "大家好。今天我们来解读碳中和路线图。这份路线图的核心可以概括为三大政策目标：提升工业能效、提高可再生能源发电占比、推动交通与制造业电气化。在推进节奏上，我们设定了三个关键节点——2025年建立行业排放基线，2027年启动区域试点，到2030年将成熟试点推广至全国。这些工作将重点聚焦在电力、钢铁水泥、交通物流三大行业。接下来，我们将逐一展开这些内容。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "slide-002",
+      "success": true,
+      "content": "碳中和实施路径遵循“摸清家底—试点验证—规模推广”的递进逻辑，以2025、2027、2030年为三个关键节点，逐步将政策从顶层设计推向全国落地。\n\n- 2025年：完成重点行业碳排放统计核算标准发布，建立全国及省级排放年报、快报制度，形成行业排放基线\n- 2027年：在电力、钢铁、水泥等行业启动区域试点计划，开展碳监测评估与低碳技术示范\n- 2030年：系统完备的碳排放统计核算体系构建完成，成熟试点经验向全国范围推广\n- 2025年：建立行业排放基线\n- 2027年：启动区域试点计划\n\n当前至2025年是夯实数据基础的关键窗口期，应优先确保排放基线工作的资源投入与部门协同。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "碳中和路线图：推进节奏与重点行业",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "local_document",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "pageGoal": "阐明碳中和推进的三个关键时间节点及其阶段性任务，为后续行业部署提供时间框架。",
+            "slideTitle": "推进节奏：从基线到全国推广",
+            "coreMessage": "碳中和实施路径遵循“摸清家底—试点验证—规模推广”的递进逻辑，以2025、2027、2030年为三个关键节点，逐步将政策从顶层设计推向全国落地。",
+            "displayBullets": [
+              "2025年：完成重点行业碳排放统计核算标准发布，建立全国及省级排放年报、快报制度，形成行业排放基线",
+              "2027年：在电力、钢铁、水泥等行业启动区域试点计划，开展碳监测评估与低碳技术示范",
+              "2030年：系统完备的碳排放统计核算体系构建完成，成熟试点经验向全国范围推广",
+              "2025年：建立行业排放基线",
+              "2027年：启动区域试点计划"
+            ],
+            "keyData": [],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "到2025年，国家及省级地区碳排放年报、快报制度全面建立，一批行业企业碳排放核算标准和产品碳足迹核算标准发布实施。",
+                "sourceTitle": "完善碳排放统计核算体系工作方案",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2024-10-01",
+                "credibility": "high",
+                "quote": "到2025年，国家及省级地区碳排放年报、快报制度全面建立，一批行业企业碳排放核算标准和产品碳足迹核算标准发布实施。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "2025年建立行业排放基线，2027年启动区域试点计划，2030年推广成熟试点至全国。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "2025：建立行业排放基线。2027：启动区域试点计划。2030：推广成熟试点至全国。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "到2030年，系统完备的碳排放统计核算体系构建完成，重点行业领域碳排放核算标准和规则更加健全。",
+                "sourceTitle": "完善碳排放统计核算体系工作方案",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2024-10-01",
+                "credibility": "high",
+                "quote": "到2030年，系统完备的碳排放统计核算体系构建完成，国家、省级碳排放统计核算制度全面建立并有效运转，重点行业领域碳排放核算标准和规则更加健全。"
+              }
+            ],
+            "actionableTakeaway": "当前至2025年是夯实数据基础的关键窗口期，应优先确保排放基线工作的资源投入与部门协同。",
+            "speakerNotes": "各位好，这一页我们来看推进节奏。整个碳中和路径可以概括为三步走：第一步，到2025年，核心任务是摸清家底。根据国家发改委等八部门联合印发的《完善碳排放统计核算体系工作方案》，届时将全面建立国家及省级碳排放年报和快报制度，并发布一批行业核算标准，为后续工作打下数据基础。第二步，到2027年，进入试点验证阶段。我们会在电力、钢铁、水泥等重点行业启动区域试点，开展碳监测评估和低碳技术示范，检验政策工具和技术路线的实际效果。第三步，到2030年，系统完备的碳排放统计核算体系构建完成，成熟的试点经验将向全国推广。这三个节点环环相扣，缺一不可。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "slide-003",
+      "success": false,
+      "content": "{\n  \"protocolVersion\": \"ppt-page-content.v1\",\n  \"language\": \"zh-CN\",\n  \"presentationTitle\": \"碳中和路线图：重点行业转型路径\",\n  \"researchPolicy\": {\n    \"triggerReason\": \"user_requested\",\n    \"depthLevel\": \"standard\",\n    \"sourcePriority\": [\n      \"local_document\",\n      \"government_reports\",\n      \"academic_sources\",\n      \"industry_reports\",\n      \"authoritative_media\"\n    ],\n    \"maxSourcesPerSlide\": 6\n  },\n  \"slides\": [\n    {\n      \"slideId\": \"slide-003\",\n      \"slideNumber\": 3,\n      \"slideRole\": \"content\",\n      \"pageGoal\": \"阐明电力、钢铁水泥、交通物流三大重点行业的低碳转型核心路径与关键举措。\",\n      \"slideTitle\": \"重点行业：电力、钢铁水泥、交通物流\",\n      \"coreMessage\": \"实现碳中和目标，必须聚焦电力、钢铁水泥和交通物流三大行业，通过能源结构转型、工业深度脱碳和交通电气化，构建系统性减排格局。\",\n      \"displayBullets\": [\n        \"电力行业：以风电、光伏为核心加速发电结构转型，构建以可再生能源为主体的新型电力系统。\",\n        \"钢铁与水泥：推进超低排放改造与氢能、CCUS等深度脱碳技术应用，实现工业过程减排。\",\n        \"交通与物流：加快新能源汽车普及与重卡电动化，建设充换电走廊和零碳货运网络。\"\n      ],\n      \"keyData\": [\n        {\n          \"label\": \"2025年可再生能源发电量目标\",\n          \"value\": 3.3,\n          \"unit\": \"万亿千瓦时\",\n          \"year\": 2025,\n          \"sourceRefId\": \"src-002\"\n        },\n        {\n          \"label\": \"2060年建筑部门电气化率目标\",\n          \"value\": 90,\n          \"unit\": \"%\",\n          \"year\": 2060,\n          \"sourceRefId\": \"src-006\"\n        },\n        {\n          \"label\": \"2060年交通部门电气化率目标\",\n          \"value\": 84,\n          \"unit\": \"%\",\n          \"year\": 2060,\n          \"sourceRefId\": \"src-006\"\n        }\n      ],\n      \"evidencePack\": [\n        {\n          \"sourceRefId\": \"src-001\",\n          \"claim\": \"碳中和路线图将电力、钢铁与水泥、交通与物流列为重点行业，并规划了从建立基线到全国推广的推进节奏。\",\n          \"sourceTitle\": \"合成政策简报：碳中和路线图（2023）\",\n          \"sourceType\": \"local_document\",\n          \"url\": \"\",\n          \"publishDate\": \"2023-01-01\",\n          \"credibility\": \"medium\",\n          \"quote\": \"重点行业：电力、钢铁与水泥、交通与物流。\"\n        },\n        {\n          \"sourceRefId\": \"src-002\",\n          \"claim\": \"到2025年，可再生能源年发电量达到3.3万亿千瓦时左右，非化石能源消费占比达到20%左右。\",\n          \"sourceTitle\": \"“十四五”可再生能源发展规划\",\n          \"sourceType\": \"government_reports\",\n          \"url\": \"\",\n          \"publishDate\": \"2021-06-01\",\n          \"credibility\": \"high\",\n          \"quote\": \"2025年，可再生能源年发电量达到3.3万亿千瓦时左右。\"\n        },\n        {\n          \"sourceRefId\": \"src-003\",\n          \"claim\": \"钢铁行业超低排放需要多污染物协同控制技术，深度治理迫在眉睫。\",\n          \"sourceTitle\": \"中国钢铁行业超低排放之路\",\n          \"sourceType\": \"academic_sources\",\n          \"url\": \"\",\n          \"publishDate\": \"2023-01-01\",\n          \"credibility\": \"high\",\n          \"quote\": \"随着中国钢铁行业超低排放的不断深入，钢铁行业的深度治理迫在眉睫。\"\n        },\n        {\n          \"sourceRefId\": \"src-004\",\n          \"claim\": \"水泥行业短期依靠智能化与燃料替代，中长期需依靠CCUS等技术实现碳中和。\",\n          \"sourceTitle\": \"碳中和下水泥行业低碳发展技术路径及预测研究\",\n          \"sourceType\": \"academic_sources\",\n          \"url\": \"\",\n          \"publishDate\": \"2022-06-01\",\n          \"credibility\": \"high\",\n          \"quote\": \"短期控制CO2源排放，中期依靠低碳水泥制备技术，长期依靠CCUS、富氧燃烧等技术。\"\n        },\n        {\n          \"sourceRefId\": \"src-005\",\n          \"claim\": \"交通运输部推动电动重卡零碳货运走廊建设，开展重卡换电和大功率超充试点。\",\n          \"sourceTitle\": \"40条！2025年9月全国充换电政策汇总\",\n          \"sourceType\": \"authoritative_media\",\n          \"url\": \"\",\n          \"publishDate\": \"2025-10-04\",\n          \"credibility\": \"medium\",\n          \"quote\": \"推动电动重卡零碳货运走廊建设，开展重卡换电和大功率超充试点建设。\"\n        },\n        {\n          \"sourceRefId\": \"src-006\",\n          \"claim\": \"交通部门电气化率需在2060年达到84%，建筑部门需达到90%。\",\n          \"sourceTitle\": \"中国碳达峰碳中和时间表与路线图研究\",\n          \"sourceType\": \"academic_sources\",\n          \"url\": \"\",\n          \"publishDate\": \"2022-01-01\",\n          \"credibility\": \"high\",\n          \"quote\": \"2060年建筑部门电气化水平需达到90%，交通部门达到84%。\"\n        }\n      ],\n      \"actionableTakeaway\": \"三大行业的转型路径已清晰：电力重在结构调整，工业重在技术突破，交通重在电气化网络覆盖，需协同推进才能锁定减排成果。\",\n      \"speakerNotes\": \"各位好，这一页我们聚焦三个实现碳中和最关键的行业：电力、钢铁水泥和交通物流。首先看电力行业，核心任务是发电结构转型。根据“十四五”规划，到2025年可再生能源发电量要达到3.3万亿千瓦时，这意味着风电和光伏将成为绝对主力，煤电角色将逐步从基荷电源转向调峰电源。其次，钢铁和水泥行业是工业碳排放的大户。钢铁行业正在推进超低排放改造，多污染物协同治理技术已经取得进展；水泥行业短期靠替代燃料和智能化，中长期必须依靠氢能和碳捕集等深度脱碳技术。最后是交通物流，这是电气化推进最快的领域之一。目前国家正在推动电动重卡零碳货运走廊建设，目标是在2060年将交通部门电气化率提升到84%。这三个行业的转型不是孤立的，它们共同构成了一个系统性的减排格局，任何一个环节滞后都会影响整体碳中和目标的实现。\"\n    }\n  ]\n}",
+      "page_content": null,
+      "message": "structured content validation failed: 1 validation error for PageContentProtocol\nslides.0.evidencePack\n  List should have at most 5 items after validation, not 6 [type=too_long, input_value=[{'sourceRefId': 'src-001...通部门达到84%。'}], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long"
+    },
+    {
+      "index": 3,
+      "id": "slide-004",
+      "success": true,
+      "content": "碳价机制、清洁技术补贴与强制披露构成推动碳中和的三大政策支柱，三者协同才能平衡减排效率、经济成本与市场透明度。\n\n- 碳价机制通过配额交易与价格信号引导企业以最低成本实现减排，全国碳市场碳价已从每吨40–60元稳步上升至2024年底的97.49元。\n- 清洁技术改造补贴通过财政资金降低企业低碳转型的前期投入门槛，覆盖能效提升、绿色制造与可再生能源应用等关键领域。\n- 强制披露与第三方核查要求企业公开碳排放数据及气候风险，准则明确治理架构、战略融入与风险管理三大披露主线。\n- 三类工具面临共同挑战：区域能力差异导致推进不均衡，传统行业改造成本高，数据质量不足影响监测与执法效果。\n- 碳价机制与行业配额\n\n企业应立即启动碳基线盘查与披露能力建设，将碳价信号纳入投资决策，并主动对接清洁技术补贴窗口，以在1-2年的政策窗口期内建立先发优势。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "碳中和政策工具与风险分析",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "local_document",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "pageGoal": "系统阐述碳价、补贴与强制披露三类政策工具的核心机制、实施现状与关键风险，帮助听众理解政策组合如何驱动企业低碳转型。",
+            "slideTitle": "政策工具：碳价、补贴与披露",
+            "coreMessage": "碳价机制、清洁技术补贴与强制披露构成推动碳中和的三大政策支柱，三者协同才能平衡减排效率、经济成本与市场透明度。",
+            "displayBullets": [
+              "碳价机制通过配额交易与价格信号引导企业以最低成本实现减排，全国碳市场碳价已从每吨40–60元稳步上升至2024年底的97.49元。",
+              "清洁技术改造补贴通过财政资金降低企业低碳转型的前期投入门槛，覆盖能效提升、绿色制造与可再生能源应用等关键领域。",
+              "强制披露与第三方核查要求企业公开碳排放数据及气候风险，准则明确治理架构、战略融入与风险管理三大披露主线。",
+              "三类工具面临共同挑战：区域能力差异导致推进不均衡，传统行业改造成本高，数据质量不足影响监测与执法效果。",
+              "碳价机制与行业配额"
+            ],
+            "keyData": [
+              {
+                "label": "全国碳市场2024年底碳价",
+                "value": 97.49,
+                "unit": "元/吨",
+                "year": 2024,
+                "sourceRefId": "src-003"
+              },
+              {
+                "label": "第三方核查年度费用区间",
+                "value": 15.0,
+                "unit": "万元",
+                "year": 2025,
+                "sourceRefId": "src-002"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "碳中和路线图明确将碳价机制与行业配额、清洁技术改造补贴、强制披露与第三方核查列为核心政策工具。",
+                "sourceTitle": "合成政策简报：碳中和路线图（2023）",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "政策工具：碳价机制与行业配额；清洁技术改造补贴；强制披露与第三方核查。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "企业气候披露的第三方核查费用为15-50万元/年，咨询服务50-300万元（一次性），信息系统100-500万元。",
+                "sourceTitle": "中国《企业可持续披露准则之第一号：气候》及其解读",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "直接成本：第三方核查15-50万元/年，咨询服务50-300万元（一次性），信息系统100-500万元。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "全国碳排放权交易市场碳价在2024年底综合价格收盘价为97.49元/吨，较前两个履约周期显著上涨。",
+                "sourceTitle": "中国碳排放权交易体系：过去、现状和展望",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "到2024年底，综合价格收盘价为97.49元/吨（约14美元/吨）。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "强制气候信息披露已成为全球趋势，欧盟、日本、英国等已建立基于TCFD框架的强制披露体系，中国也在加速推进。",
+                "sourceTitle": "分行业碳信息披露框架建议",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "high",
+                "quote": "欧盟、日本等国家和地区已经基于TCFD框架建立了各自的强制气候信息披露体系。"
+              }
+            ],
+            "actionableTakeaway": "企业应立即启动碳基线盘查与披露能力建设，将碳价信号纳入投资决策，并主动对接清洁技术补贴窗口，以在1-2年的政策窗口期内建立先发优势。",
+            "speakerNotes": "接下来我们看政策工具这一页。碳中和目标的落地，离不开三类核心工具的协同发力。第一是碳价机制，它通过全国碳排放权交易市场给碳排放贴上价格标签。大家可以看到，碳价已经从早期的每吨四五十元，稳步上涨到2024年底的97.49元，这个价格信号正在真实地进入企业的生产成本。第二是清洁技术改造补贴，政府通过财政资金帮助企业降低低碳转型的前期投入，覆盖能效提升、绿色制造和可再生能源应用。第三是强制披露与第三方核查，要求企业把碳排放数据和气候风险摆到桌面上，接受市场和公众的监督。这三类工具并不是各自孤立的，碳价提供经济激励，补贴降低转型门槛，披露保障信息透明，三者缺一不可。但我们也必须看到，区域能力差异、传统行业的高改造成本，以及数据质量不足，仍然是当前面临的主要风险。所以，对于在座各位所在的企业来说，现在就应该着手建立碳数据管理能力，把碳价纳入投资决策模型，同时密切关注各级政府的补贴申报窗口。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "slide-005",
+      "success": true,
+      "content": "碳中和进程面临区域发展不均衡、高碳行业改造成本高昂以及碳排放数据质量不足三重制约，直接影响政策落地效果。\n\n- 区域能力差异：东部省份碳中和发展绩效领先，西部能源大省在能源强度与碳强度方面存在明显短板。\n- 改造成本压力：钢铁、水泥等行业低碳技术初期投资巨大，例如氢冶金面临绿氢制备成本高达15~30元/kg的瓶颈。\n- 数据质量短板：部分企业在线监测数据缺失严重，仅少数企业数据可用于碳排放精准核算。\n- 煤电转型风险：若延后减排，煤电资产搁浅成本最高可达1583亿元，并影响约45万至50万人就业。\n- 区域能力差异导致推进不均衡\n\n政策制定需配套差异化支持方案，对高成本地区和技术给予资金倾斜，并优先建立统一、强监管的碳排放数据平台。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "碳中和政策工具与风险分析",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "local_document",
+            "government_reports",
+            "academic_sources",
+            "industry_reports",
+            "authoritative_media"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "pageGoal": "阐述碳中和推进过程中面临的三大核心风险：区域能力差异、改造成本与数据质量问题。",
+            "slideTitle": "主要风险：能力差异、成本与数据",
+            "coreMessage": "碳中和进程面临区域发展不均衡、高碳行业改造成本高昂以及碳排放数据质量不足三重制约，直接影响政策落地效果。",
+            "displayBullets": [
+              "区域能力差异：东部省份碳中和发展绩效领先，西部能源大省在能源强度与碳强度方面存在明显短板。",
+              "改造成本压力：钢铁、水泥等行业低碳技术初期投资巨大，例如氢冶金面临绿氢制备成本高达15~30元/kg的瓶颈。",
+              "数据质量短板：部分企业在线监测数据缺失严重，仅少数企业数据可用于碳排放精准核算。",
+              "煤电转型风险：若延后减排，煤电资产搁浅成本最高可达1583亿元，并影响约45万至50万人就业。",
+              "区域能力差异导致推进不均衡"
+            ],
+            "keyData": [
+              {
+                "label": "绿氢制备成本区间",
+                "value": 15.0,
+                "unit": "元/kg",
+                "year": 2025,
+                "sourceRefId": "src-002"
+              },
+              {
+                "label": "煤电资产搁浅成本（延后减排路径）",
+                "value": 1583.0,
+                "unit": "亿元",
+                "year": 2022,
+                "sourceRefId": "src-004"
+              },
+              {
+                "label": "煤电退役影响就业人口",
+                "value": 45.0,
+                "unit": "万人",
+                "year": 2022,
+                "sourceRefId": "src-004"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "区域能力差异导致推进不均衡，传统行业改造成本高，数据质量不足影响监测效果。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "区域能力差异导致推进不均衡。传统行业改造成本高。数据质量不足影响监测效果。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "现阶段可再生能源电解水制氢的成本在15~30元/kg，是氢冶金技术推广的主要经济瓶颈。",
+                "sourceTitle": "中国碳中和目标下的工业低碳技术展望",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "氢气的制备成本较高，现阶段可再生能源电解水制氢的成本在15~30元/kg。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "包钢200万吨CCUS全产业链示范工程一期投资6.14亿元，预计每年可减排二氧化碳36.53万吨。",
+                "sourceTitle": "高碳排行业可持续发展的三大趋势亮点| 安永中国",
+                "sourceType": "authoritative_media",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "一期50万吨投资6.14亿元人民币...建成后，预计每年可减排二氧化碳36.53万吨。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "延后减排路径下煤电资产搁浅成本最高为1583亿元，煤电退役将影响约45万-50万人就业。",
+                "sourceTitle": "债务工具支持电力行业低碳转型2022",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2022-01-01",
+                "credibility": "high",
+                "quote": "延后减排路径下煤电资产搁浅成本最高，为1583亿元...煤电在退役的过程中将影响约45万人-50万人的就业。"
+              },
+              {
+                "sourceRefId": "src-005",
+                "claim": "基于北京部分工业企业数据，仅3家企业在线监测数据较为准确完备，可用于碳排放差距分析。",
+                "sourceTitle": "在线监测应用于中国碳排放监测的相关问题和制度建议",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "数据较为准确、完备的企业仅余3家，共计9个排口。"
+              }
+            ],
+            "actionableTakeaway": "政策制定需配套差异化支持方案，对高成本地区和技术给予资金倾斜，并优先建立统一、强监管的碳排放数据平台。",
+            "speakerNotes": "各位好，这一页我们聚焦碳中和落地过程中的三个主要风险点。第一是区域能力差异。从绩效数据看，东部省份如北京、广东表现优秀，但山西、内蒙古等能源大省在能源强度和碳强度上明显落后，这种不均衡会拖慢全国整体进度。第二是改造成本。以钢铁行业氢冶金为例，目前绿氢制备成本每公斤15到30元，经济性不足；CCUS项目动辄数亿元投资，对传统行业压力很大。第三是数据质量问题。清华大学的一项研究发现，北京部分工业企业中，只有3家企业的在线监测数据能满足碳排放精准核算的要求，大量数据缺失或异常。此外，电力转型中煤电如果延后减排，资产搁浅成本可能高达1583亿元，还会影响约45万到50万人的就业。这些风险提醒我们，光有目标不够，必须配套差异化的区域政策、有力的资金支持，以及一个统一、强监管的数据基础设施，否则政策效果会大打折扣。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 5,
+      "id": "slide-006",
+      "success": true,
+      "content": "实现碳中和需要构建“数据—行动—激励”三位一体的政策闭环：以统一数据平台夯实监测基础，以高排放集群改造作为优先突破口，并将激励与减排成效直接挂钩，形成正向反馈。\n\n- 建立统一的排放数据平台，实现跨行业、跨区域的碳排放精准监测与信息共享。\n- 优先支持高排放产业集群开展低碳改造，集中资源突破钢铁、水泥、化工等重点行业。\n- 将财政补贴、碳配额分配等激励措施与可核证的减排成效直接挂钩，杜绝“撒胡椒面”式支持。\n- 建立统一的排放数据平台\n- 优先支持高排放集群改造\n\n下一步应同步启动数据平台建设与高排放集群改造试点，并在年度预算中明确将30%以上的产业补贴与减排绩效直接挂钩。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "碳中和路线图：政策建议与行动路径",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "local_document",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "summary",
+            "pageGoal": "总结面向碳中和目标的三项核心政策建议，并说明其内在逻辑与预期效果。",
+            "slideTitle": "建议：数据平台、集群改造与激励挂钩",
+            "coreMessage": "实现碳中和需要构建“数据—行动—激励”三位一体的政策闭环：以统一数据平台夯实监测基础，以高排放集群改造作为优先突破口，并将激励与减排成效直接挂钩，形成正向反馈。",
+            "displayBullets": [
+              "建立统一的排放数据平台，实现跨行业、跨区域的碳排放精准监测与信息共享。",
+              "优先支持高排放产业集群开展低碳改造，集中资源突破钢铁、水泥、化工等重点行业。",
+              "将财政补贴、碳配额分配等激励措施与可核证的减排成效直接挂钩，杜绝“撒胡椒面”式支持。",
+              "建立统一的排放数据平台",
+              "优先支持高排放集群改造"
+            ],
+            "keyData": [],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "建立统一的排放数据平台是碳中和路线图的核心建议之一，旨在解决数据质量不足影响监测效果的问题。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "建立统一的排放数据平台。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "政策建议优先支持高排放集群改造，并将激励与减排成效挂钩。",
+                "sourceTitle": "s4_policy_brief.txt",
+                "sourceType": "local_document",
+                "url": "",
+                "publishDate": "2023-01-01",
+                "credibility": "medium",
+                "quote": "优先支持高排放集群改造。将激励与减排成效挂钩。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "中国全国碳排放权交易市场已覆盖电力、钢铁、水泥和铝冶炼等行业，每年管控约80亿吨排放，占全国二氧化碳排放量的60%以上。",
+                "sourceTitle": "中国碳排放权交易体系：过去、现状和展望",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2025-04-01",
+                "credibility": "high",
+                "quote": "中国全国碳排放权交易市场每年覆盖约80亿吨排放，占中国二氧化碳排放量的60%以上。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "数字化平台可通过对数万份排放报告进行分析，实现更精细化的碳管理，并应用智能能源管理系统对集群基础设施进行实时监测与动态优化。",
+                "sourceTitle": "中国产业集群如何促进增长、竞争与可持续发展",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "通过对数万份排放报告进行分析，可以实现更精细化的碳管理，而应用智能能源管理系统则可对集群基础设施进行实时监测与动态优化。"
+              }
+            ],
+            "actionableTakeaway": "下一步应同步启动数据平台建设与高排放集群改造试点，并在年度预算中明确将30%以上的产业补贴与减排绩效直接挂钩。",
+            "speakerNotes": "各位好。基于前面的分析，我们提出三项核心建议。第一，建立统一的排放数据平台。目前数据质量不足是制约政策效果的关键瓶颈，只有摸清家底，才能精准施策。第二，优先支持高排放集群改造。与其分散用力，不如集中资源，在钢铁、水泥、化工等排放最集中的产业集群率先突破。第三，将激励与减排成效直接挂钩。无论是财政补贴还是碳配额分配，都必须与可核证的减排量挂钩，形成“谁减排、谁受益”的正向循环。这三项建议构成了“数据—行动—激励”的闭环，缺一不可。"
+          }
+        ]
+      },
+      "message": null
+    }
+  ],
+  "message": "batch content generated: 5/6",
+  "elapsed_sec": 55.29
+}

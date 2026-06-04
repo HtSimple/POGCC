@@ -1,0 +1,22 @@
+{
+  "scenario_id": "S4",
+  "topic": "碳中和路线图解读",
+  "requirements": "生成6页政策解读PPT，必须体现时间线、重点行业、风险与建议。",
+  "slides": 6,
+  "documents": [
+    "data/s4_policy_brief.txt"
+  ],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 22,
+    "upload_documents": 80,
+    "outline": 13688,
+    "knowledge_batch": 17166,
+    "content_batch": 55343,
+    "total": 117514
+  },
+  "errors": []
+}

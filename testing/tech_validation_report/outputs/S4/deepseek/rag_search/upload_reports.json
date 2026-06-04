@@ -1,0 +1,10 @@
+[
+  {
+    "file": "E:\\code\\project\\Software Engineering Management and Economics_project\\POGCC\\testing\\tech_validation_report\\data\\s4_policy_brief.txt",
+    "response": {
+      "success": true,
+      "doc_id": "s4_policy_brief_07b57c87",
+      "message": "Ingested 1 chunks from s4_policy_brief.txt."
+    }
+  }
+]
