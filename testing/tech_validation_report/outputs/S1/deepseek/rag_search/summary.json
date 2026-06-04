@@ -1,0 +1,19 @@
+{
+  "scenario_id": "S1",
+  "topic": "人工智能在医疗行业的应用",
+  "requirements": "生成5页PPT，包含背景、应用场景、价值与风险、实施建议、总结。语言中文，结构清晰。",
+  "slides": 5,
+  "documents": [],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 23,
+    "outline": 18675,
+    "knowledge_batch": 12711,
+    "content_batch": 50929,
+    "total": 108730
+  },
+  "errors": []
+}

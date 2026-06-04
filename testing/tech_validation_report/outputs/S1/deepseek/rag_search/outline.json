@@ -1,0 +1,134 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "人工智能在医疗行业的应用",
+    "targetSlideCount": 5,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "背景介绍",
+        "sectionObjective": "阐述人工智能在医疗行业兴起的背景与驱动力",
+        "slideRange": {
+          "start": 1,
+          "end": 1
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "content",
+            "slideTitle": "人工智能在医疗行业的兴起背景",
+            "keyPoints": [
+              "医疗数据爆发式增长，传统分析手段不足",
+              "计算能力提升与算法突破推动AI应用",
+              "政策支持与资本涌入加速行业落地",
+              "提升诊疗效率与精准度的迫切需求"
+            ],
+            "notes": "作为开篇，铺垫AI进入医疗的必然性"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "核心应用场景",
+        "sectionObjective": "展示AI在医疗领域的主要应用方向与实例",
+        "slideRange": {
+          "start": 2,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "人工智能在医疗中的典型应用场景",
+            "keyPoints": [
+              "医学影像辅助诊断：病灶识别与分割",
+              "药物研发：加速靶点发现与化合物筛选",
+              "临床决策支持：个性化治疗方案推荐",
+              "健康管理：可穿戴设备与慢病预测",
+              "医疗机器人：手术辅助与康复训练"
+            ],
+            "notes": "覆盖诊断、治疗、管理全流程，突出多样性"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "价值与风险分析",
+        "sectionObjective": "客观评估AI带来的效益与潜在挑战",
+        "slideRange": {
+          "start": 3,
+          "end": 3
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "人工智能带来的价值与面临的风险",
+            "keyPoints": [
+              "价值：提高诊断准确率、降低误诊率",
+              "价值：优化资源配置、缓解医疗供需矛盾",
+              "风险：数据隐私与安全伦理问题",
+              "风险：算法偏见与责任归属不清",
+              "风险：过度依赖可能导致医生技能退化"
+            ],
+            "notes": "平衡呈现两面性，为后续建议做铺垫"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "实施建议",
+        "sectionObjective": "提出推进AI医疗落地的策略与行动项",
+        "slideRange": {
+          "start": 4,
+          "end": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "推动人工智能医疗应用落地的建议",
+            "keyPoints": [
+              "加强数据治理与标准化建设",
+              "建立跨学科协作机制（医工结合）",
+              "完善法规与伦理审查体系",
+              "开展分阶段试点与效果评估",
+              "注重医生培训与人机协同模式"
+            ],
+            "notes": "给出可操作路径，强调循序渐进"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-05",
+        "sectionTitle": "总结与展望",
+        "sectionObjective": "归纳核心观点并展望未来趋势",
+        "slideRange": {
+          "start": 5,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "summary",
+            "slideTitle": "总结与未来展望",
+            "keyPoints": [
+              "AI正重塑医疗行业，机遇与挑战并存",
+              "需以患者为中心，平衡技术创新与伦理安全",
+              "未来趋势：多模态融合、主动健康管理、精准医疗深化"
+            ],
+            "notes": "收尾有力，传递积极而审慎的态度"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated"
+}

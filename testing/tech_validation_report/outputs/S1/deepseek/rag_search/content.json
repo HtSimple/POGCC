@@ -1,0 +1,531 @@
+{
+  "success": true,
+  "results": [
+    {
+      "index": 0,
+      "id": "slide-001",
+      "success": true,
+      "content": "医疗数据爆发、算法算力突破与政策资本共振，共同推动AI医疗从概念走向规模化落地。\n\n- 医疗数据量激增，传统人工分析在效率与精度上已无法满足临床和科研需求。\n- 深度学习等算法突破与GPU算力提升，使AI能够处理复杂的医学影像和基因组数据。\n- 国家层面连续出台专项政策，将AI医疗纳入战略布局，并加速审批通道建设。\n- 资本持续涌入，2021年AI医疗领域融资金额达到974.1亿元的历史高点。\n- 医疗数据爆发式增长，传统分析手段不足\n\nAI医疗已跨越技术萌芽期，正进入由政策、资本与技术三方驱动的规模化应用阶段。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "人工智能在医疗行业的兴起背景",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "government_reports",
+            "industry_reports",
+            "academic_sources",
+            "authoritative_media"
+          ],
+          "maxSourcesPerSlide": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "content",
+            "pageGoal": "阐述人工智能在医疗行业快速兴起的核心驱动因素与宏观背景。",
+            "slideTitle": "人工智能在医疗行业的兴起背景",
+            "coreMessage": "医疗数据爆发、算法算力突破与政策资本共振，共同推动AI医疗从概念走向规模化落地。",
+            "displayBullets": [
+              "医疗数据量激增，传统人工分析在效率与精度上已无法满足临床和科研需求。",
+              "深度学习等算法突破与GPU算力提升，使AI能够处理复杂的医学影像和基因组数据。",
+              "国家层面连续出台专项政策，将AI医疗纳入战略布局，并加速审批通道建设。",
+              "资本持续涌入，2021年AI医疗领域融资金额达到974.1亿元的历史高点。",
+              "医疗数据爆发式增长，传统分析手段不足"
+            ],
+            "keyData": [
+              {
+                "label": "AI医疗领域年度融资金额峰值",
+                "value": 974.1,
+                "unit": "亿元",
+                "year": 2021,
+                "sourceRefId": "src-004"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "2025年2月，国产大模型DeepSeek-R1全面开源，通过强化学习与混合专家架构，为医疗场景提供精准、低成本且本土化的解决方案。",
+                "sourceTitle": "从DEEPSEEK的崛起看AI医疗发展方向及投资机会",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-02-01",
+                "credibility": "high",
+                "quote": "2025年2月，国产大模型DeepSeek-R1的全面开源与多领域适配，标志着AI医疗迈入技术融合与行业重构的新阶段。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "人工智能有望将医疗效果提高30%-40%，并减少多达50%的医疗成本。",
+                "sourceTitle": "人工智能和机器学习引领智慧医疗发展",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2018-07-01",
+                "credibility": "medium",
+                "quote": "有人甚至预言，“人工智能可将医疗效果提高30%-40%，减少多达50%的医疗成本”。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "2017年以来，中国、美国和欧盟先后发布国家级人工智能战略发展规划，推动检验医学从自动化向智能化发展。",
+                "sourceTitle": "Artificial intelligence empowers laboratory medicine in Industry 4.0",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2020-02-17",
+                "credibility": "high",
+                "quote": "2017年以来，中国、美国和欧盟先后发布了国家级人工智能（AI）战略发展规划，人类历史即将迎来以“智能化”为主旋律的第四次工业革命。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "2021年AI医疗融资达历史高潮，融资金额974.1亿元，融资数量380起。",
+                "sourceTitle": "中国AI医疗行业白皮书",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-02-01",
+                "credibility": "high",
+                "quote": "AI医疗搭乘时代机遇，投融资热情高涨，其中于2021年走向新高潮，该年融资金额达974.1亿元，融资数量达380起。"
+              }
+            ],
+            "actionableTakeaway": "AI医疗已跨越技术萌芽期，正进入由政策、资本与技术三方驱动的规模化应用阶段。",
+            "speakerNotes": "各位好，我们首先来看人工智能在医疗行业兴起的宏观背景。这一轮AI医疗的爆发并非偶然，而是由三个核心引擎共同驱动。第一是数据引擎，医疗领域每天都在产生海量的影像、病历和基因组数据，传统的人工分析已经完全跟不上这个速度。第二是技术引擎，以DeepSeek-R1为代表的大模型，通过混合专家架构，在极低的标注成本下实现了强大的推理能力，让AI处理复杂医疗任务成为可能。第三是政策和资本的双轮驱动，从2017年起，中美欧相继发布国家级AI战略，而资本市场在2021年将AI医疗的年度融资额推高到了974.1亿元的历史峰值。正是这三股力量的共振，把AI医疗从实验室推向了真实的诊疗场景。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 1,
+      "id": "slide-002",
+      "success": true,
+      "content": "人工智能已深度渗透医疗核心环节，从影像诊断、药物研发到临床决策、健康管理和医疗机器人，正在重塑医疗服务模式与效率。\n\n- 医学影像辅助诊断：利用深度学习实现病灶自动识别、分割与良恶性风险评估，提升诊断效率与准确率\n- 药物研发加速：通过AI预测靶点、虚拟筛选先导化合物，将研发周期从传统12-15年大幅缩短\n- 临床决策支持：整合多模态数据生成个性化治疗方案，辅助医生进行循证决策\n- 健康管理：依托可穿戴设备与AI算法，实现慢病预测、用药提醒和个性化健康干预\n- 医疗机器人：覆盖手术辅助、康复训练与院内服务，提升手术精准度并降低医生工作负荷\n\nAI正从辅助工具演变为医疗全流程的智能伙伴，医疗机构应优先在影像诊断和药物研发等高价值场景布局AI能力，以抢占效率与精准度双提升的先机。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "人工智能在医疗中的典型应用场景",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "government_reports",
+            "industry_reports",
+            "academic_sources",
+            "authoritative_media"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "pageGoal": "系统阐述人工智能在医疗领域的五大典型应用场景及其核心价值，帮助听众建立对AI医疗应用版图的整体认知。",
+            "slideTitle": "人工智能在医疗中的典型应用场景",
+            "coreMessage": "人工智能已深度渗透医疗核心环节，从影像诊断、药物研发到临床决策、健康管理和医疗机器人，正在重塑医疗服务模式与效率。",
+            "displayBullets": [
+              "医学影像辅助诊断：利用深度学习实现病灶自动识别、分割与良恶性风险评估，提升诊断效率与准确率",
+              "药物研发加速：通过AI预测靶点、虚拟筛选先导化合物，将研发周期从传统12-15年大幅缩短",
+              "临床决策支持：整合多模态数据生成个性化治疗方案，辅助医生进行循证决策",
+              "健康管理：依托可穿戴设备与AI算法，实现慢病预测、用药提醒和个性化健康干预",
+              "医疗机器人：覆盖手术辅助、康复训练与院内服务，提升手术精准度并降低医生工作负荷"
+            ],
+            "keyData": [
+              {
+                "label": "中国AI医疗器械市场规模（2022年）",
+                "value": 1155.6,
+                "unit": "百万元",
+                "year": 2022,
+                "sourceRefId": "src-001"
+              },
+              {
+                "label": "中国AI医疗器械市场规模预测（2030年）",
+                "value": 75568.8,
+                "unit": "百万元",
+                "year": 2030,
+                "sourceRefId": "src-001"
+              },
+              {
+                "label": "全球医疗机器人系统市场规模（2025年）",
+                "value": 355.6,
+                "unit": "亿美元",
+                "year": 2025,
+                "sourceRefId": "src-003"
+              },
+              {
+                "label": "全球医疗机器人系统市场预测复合年增长率",
+                "value": 17.95,
+                "unit": "%",
+                "year": 2034,
+                "sourceRefId": "src-003"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "中国AI医疗领域2022年市场规模为1,155.6百万元，预计到2030年将达75,568.8百万元，年复合增速39.2%。",
+                "sourceTitle": "2024年中国医疗大健康产业发展白皮书",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2024-07-01",
+                "credibility": "high",
+                "quote": "中国AI医疗领域较全球市场发展较慢，但整体呈高速发展态势，2022年市场规模为1,155.6百万元，预计到2030年将达75,568.8百万元。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "AI可将药物研发周期缩短至1-3年，成本降低50%以上，靶点预测准确率达80%-90%。",
+                "sourceTitle": "基于人工智能的药物靶点预测与先导化合物筛选技术研究进展",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "medium",
+                "quote": "AI凭借海量数据整合、复杂模式识别等优势，正重构药物研发全流程，尤其在靶点预测与先导化合物筛选中价值突出，可将研发周期缩短至1-3年，成本降低50%以上。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "2025年全球医疗机器人系统市场规模为355.6亿美元，预计2034年达1571.2亿美元，复合年增长率17.95%。",
+                "sourceTitle": "医疗机器人系统市场规模、份额和增长，2034年",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2026-05-11",
+                "credibility": "high",
+                "quote": "2025年，全球医疗机器人系统市场规模为355.6亿美元。预计该市场将从2026年的419.4亿美元增长到2034年的1571.2亿美元，预测期内复合年增长率为17.95%。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "AI辅助诊断可使影像分析时间缩短60%，医生诊断效率提升40%，肺结节检出敏感度提升至95%。",
+                "sourceTitle": "医学影像AI辅助诊断系统开发解决方案与技术实现案例",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-06-01",
+                "credibility": "medium",
+                "quote": "影像分析时间缩短60%。医生诊断效率提升40%。肺结节检出敏感度提升至95%。"
+              },
+              {
+                "sourceRefId": "src-005",
+                "claim": "AI医疗已广泛应用于影像诊断、辅助诊疗、健康管理、基因检测等领域，在提高精准度与效率、个性化治疗等方面具备显著优势。",
+                "sourceTitle": "2024年中国医疗大健康产业发展白皮书",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2024-07-01",
+                "credibility": "high",
+                "quote": "AI医疗已广泛应用于多种领域，包括影像诊断、辅助诊疗、健康管理、基因检测等，在提高精准度与效率、个性化治疗、数据处理等方面具备显著优势。"
+              }
+            ],
+            "actionableTakeaway": "AI正从辅助工具演变为医疗全流程的智能伙伴，医疗机构应优先在影像诊断和药物研发等高价值场景布局AI能力，以抢占效率与精准度双提升的先机。",
+            "speakerNotes": "各位好，这一页我们来看人工智能在医疗中的典型应用场景。当前，AI已经渗透到医疗的多个核心环节。第一，在医学影像辅助诊断方面，AI能够自动识别病灶、进行分割和风险评估，大幅提升诊断效率。第二，在药物研发领域，AI通过预测靶点和虚拟筛选，将传统需要十几年的研发周期显著缩短。第三，临床决策支持系统可以整合多模态数据，为医生提供个性化的治疗方案建议。第四，健康管理场景中，可穿戴设备结合AI算法，实现了慢病预测和个性化干预。第五，医疗机器人覆盖了手术辅助、康复训练等多个方向，提升了手术精准度。从数据上看，中国AI医疗器械市场正高速增长，预计到2030年将超过750亿元；全球医疗机器人市场也将以接近18%的年复合增长率持续扩容。这些场景共同表明，AI正在从辅助工具转变为医疗全流程的智能伙伴。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 2,
+      "id": "slide-003",
+      "success": true,
+      "content": "AI在提升医疗诊断效率与基层服务能力的同时，也引发了数据隐私、算法偏见、责任归属及医生技能退化等深层风险。\n\n- 价值：AI辅助诊断可显著提高早期病灶识别率，降低漏诊与误诊概率\n- 价值：智能随访与临床决策支持系统有效优化医疗资源配置，缓解基层供需矛盾\n- 风险：训练数据偏见与算法设计缺陷可能导致不公平的诊疗建议\n- 风险：AI自动生成处方与辅助决策的边界模糊，引发医疗责任归属争议\n- 风险：长期过度依赖AI可能削弱医生独立诊断能力，造成核心技能退化\n\n推进AI医疗应用时，必须同步建立算法审计、责任界定与医生持续培训机制，确保技术始终处于辅助而非替代地位。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "人工智能在医疗领域的价值与风险",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "official_sites",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "pageGoal": "系统阐述人工智能在医疗领域带来的核心价值与面临的主要风险，帮助听众建立对AI医疗应用的双面认知。",
+            "slideTitle": "人工智能带来的价值与面临的风险",
+            "coreMessage": "AI在提升医疗诊断效率与基层服务能力的同时，也引发了数据隐私、算法偏见、责任归属及医生技能退化等深层风险。",
+            "displayBullets": [
+              "价值：AI辅助诊断可显著提高早期病灶识别率，降低漏诊与误诊概率",
+              "价值：智能随访与临床决策支持系统有效优化医疗资源配置，缓解基层供需矛盾",
+              "风险：训练数据偏见与算法设计缺陷可能导致不公平的诊疗建议",
+              "风险：AI自动生成处方与辅助决策的边界模糊，引发医疗责任归属争议",
+              "风险：长期过度依赖AI可能削弱医生独立诊断能力，造成核心技能退化"
+            ],
+            "keyData": [
+              {
+                "label": "基层病历规范率提升",
+                "value": 38.87,
+                "unit": "个百分点",
+                "year": 2024,
+                "sourceRefId": "src-004"
+              },
+              {
+                "label": "结肠镜癌前病变检测率降幅",
+                "value": 6.0,
+                "unit": "个百分点",
+                "year": 2025,
+                "sourceRefId": "src-010"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "算法偏见和患者隐私保护是AI医疗面临的核心伦理挑战，我国已出台监管要求。",
+                "sourceTitle": "“AI+医药健康”涉及的伦理问题及我国的法律实践",
+                "sourceType": "authoritative_media",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "我们在《人工智能与医疗健康产业系列研究之二》一文中，针对算法偏见和患者隐私和数据保护问题及监管要求进行了全面分析。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "训练数据隐含偏见、数据标注不统一以及算法开发者主观偏好，是医疗AI产生偏见的主要原因。",
+                "sourceTitle": "健康公平：医疗人工智能中的偏见与治理",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2024-04-01",
+                "credibility": "high",
+                "quote": "如果训练集隐含偏见，所构建的算法便会出现偏见……数据标注往往带有数据标注者的主观判断和个人偏见。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "AI辅助诊断在基层落地后，病历规范率、诊断符合率和用药合理率均大幅提升。",
+                "sourceTitle": "人工智能助力医疗健康数据融合应用全面提升基层医疗服务能力",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2024-09-30",
+                "credibility": "high",
+                "quote": "病历规范率达98.87%、诊断符合率达97.79%、用药合理率达94.4%，分别提升38.87、17.79、9.4个百分点。"
+              },
+              {
+                "sourceRefId": "src-010",
+                "claim": "习惯使用AI辅助结肠镜检查的医生，在失去AI支持后，癌前病变检测率显著下降。",
+                "sourceTitle": "过度依赖AI，人类核心技能会丧失吗",
+                "sourceType": "authoritative_media",
+                "url": "",
+                "publishDate": "2025-12-02",
+                "credibility": "high",
+                "quote": "习惯使用AI辅助结肠镜检查的医生，在失去AI支持后表现更差：癌前病变检测率从28.4%降至22.4%。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "世界卫生组织强调，在卫生健康领域，人类应继续掌控医疗体系和医疗决策，AI应处于辅助地位。",
+                "sourceTitle": "卫生健康领域人工智能伦理与治理",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "high",
+                "quote": "任何机器自主性的延伸都不得损害人类自主性。在卫生健康方面，这意味着人类应继续掌控医疗体系和医疗决策。"
+              }
+            ],
+            "actionableTakeaway": "推进AI医疗应用时，必须同步建立算法审计、责任界定与医生持续培训机制，确保技术始终处于辅助而非替代地位。",
+            "speakerNotes": "各位好，这一页我们聚焦人工智能在医疗领域的两面性。先说价值侧：AI辅助诊断已经在实际落地中证明，它可以显著提高早期病灶的识别率，降低漏诊和误诊的概率。同时，像智能随访和临床决策支持系统，正在帮助基层医疗机构优化资源配置，缓解供需矛盾。但风险同样不容忽视。第一，训练数据的偏见和算法设计缺陷，可能导致不公平的诊疗建议，甚至放大健康差距。第二，当AI开始自动生成处方或深度参与决策时，一旦出现诊疗事故，责任到底归医生、医院还是算法开发者？这在法律上仍是一个灰色地带。第三，也是最容易被忽视的一点，长期过度依赖AI，医生的独立诊断能力可能会退化。有研究显示，习惯使用AI辅助结肠镜检查的医生，在失去AI支持后，癌前病变检出率从28.4%降到了22.4%。所以，世界卫生组织也明确强调，任何机器自主性的延伸都不能损害人类自主性，人类必须始终掌控医疗决策。我们需要在拥抱AI效率的同时，守住安全与责任的底线。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 3,
+      "id": "slide-004",
+      "success": true,
+      "content": "AI医疗落地需要从数据治理、跨学科协作、法规伦理、试点评估和人机协同五个维度系统推进，才能实现安全、高效、可持续的智能化转型。\n\n- 加强数据治理与标准化建设，打通异构系统间的数据高速通道\n- 建立医工结合的跨学科协作机制，推动临床需求与技术研发精准对接\n- 完善法规与伦理审查体系，确保AI应用符合科技伦理与数据合规要求\n- 开展分阶段试点与效果评估，以真实场景验证AI技术的临床价值\n- 注重医生培训与人机协同模式，提升临床人员对AI工具的信任与使用能力\n\nAI医疗的落地不是单纯的技术采购，而是一场涉及数据、人才、制度和流程的系统性变革，需要从顶层设计入手，分阶段扎实推进。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "推动人工智能医疗应用落地的建议",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "government_reports",
+            "official_sites",
+            "academic_sources",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "pageGoal": "提出推动人工智能在医疗领域安全、有效落地的系统性实施建议",
+            "slideTitle": "推动人工智能医疗应用落地的建议",
+            "coreMessage": "AI医疗落地需要从数据治理、跨学科协作、法规伦理、试点评估和人机协同五个维度系统推进，才能实现安全、高效、可持续的智能化转型。",
+            "displayBullets": [
+              "加强数据治理与标准化建设，打通异构系统间的数据高速通道",
+              "建立医工结合的跨学科协作机制，推动临床需求与技术研发精准对接",
+              "完善法规与伦理审查体系，确保AI应用符合科技伦理与数据合规要求",
+              "开展分阶段试点与效果评估，以真实场景验证AI技术的临床价值",
+              "注重医生培训与人机协同模式，提升临床人员对AI工具的信任与使用能力"
+            ],
+            "keyData": [],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "国家数据局等六部门提出到2026年底基本建成国家数据标准体系，制修订30多项数据领域基础通用国家标准",
+                "sourceTitle": "《国家数据标准体系建设指南》",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2024-10-08",
+                "credibility": "high",
+                "quote": "计划到2026年底，基本建成国家数据标准体系……制修订30多项数据领域基础通用国家标准，形成一批标准应用示范案例。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "诸暨市通过搭建医疗健康数据共享平台和三层治理体系，已采集健康数据610.7T，发布233个数据采集标准规范",
+                "sourceTitle": "人工智能助力医疗健康数据融合应用全面提升基层医疗服务能力",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "medium",
+                "quote": "目前采集健康数据610.7T，发布233个数据采集标准规范，形成496个值域目录，1600条数据元、2.3万条标准疾病代码。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "北医三院牵头成立医工交叉联盟，已举办84场学术沙龙，孕育出60余项学科交叉合作研发项目",
+                "sourceTitle": "探索医工结合成果转化新模式典型案例",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "medium",
+                "quote": "联盟共同举办了84场学术沙龙，各界学者1300余人次参加，孕育出60余项学科交叉的合作研发项目。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "《科技伦理审查办法（试行）》要求从事生命科学、医学、人工智能等活动的单位设立科技伦理委员会，并对涉及人的研究进行重点审查",
+                "sourceTitle": "AI原生应用相关法律问题研究：AI+医疗",
+                "sourceType": "official_sites",
+                "url": "",
+                "publishDate": "2024-01-01",
+                "credibility": "high",
+                "quote": "从事生命科学、医学、人工智能等科技活动的单位，研究内容涉及科技伦理敏感领域的，应按要求设立科技伦理（审查）委员会。"
+              },
+              {
+                "sourceRefId": "src-005",
+                "claim": "上海交通大学医学院开设《临床智能诊疗技术创新与实践》课程，以82%的高比例实践学时培养医工交叉复合型人才",
+                "sourceTitle": "医理工深度碰撞：临床智能诊疗教育模式破界之路",
+                "sourceType": "academic_sources",
+                "url": "",
+                "publishDate": "2025-01-01",
+                "credibility": "medium",
+                "quote": "以82%的高比例实践学时（41学时）为核心，覆盖手术机器人操作、超声智能规划等前沿技术实操。"
+              }
+            ],
+            "actionableTakeaway": "AI医疗的落地不是单纯的技术采购，而是一场涉及数据、人才、制度和流程的系统性变革，需要从顶层设计入手，分阶段扎实推进。",
+            "speakerNotes": "各位好，接下来我们进入实施建议部分。推动人工智能在医疗领域真正落地，不能只靠技术本身，需要从五个方面系统推进。第一，数据是AI的燃料，必须加强数据治理和标准化建设，打通医院内外部的数据孤岛。第二，要建立真正的医工结合机制，让临床医生和工程师坐在一起，从真实需求出发进行研发。第三，法规和伦理不能滞后，要依据最新的科技伦理审查办法，建立内部审查机制，确保患者数据隐私和安全。第四，不要急于全面铺开，应该选择重点场景进行分阶段试点，用真实数据评估效果后再推广。第五，再好的工具也需要人来用，要持续对医生进行培训，设计合理的人机协同流程，让AI真正成为医生的助手，而不是负担。这五个方面相辅相成，缺一不可。"
+          }
+        ]
+      },
+      "message": null
+    },
+    {
+      "index": 4,
+      "id": "slide-005",
+      "success": true,
+      "content": "AI正在深刻重塑医疗健康行业，但必须以患者为中心，在技术创新与伦理安全之间寻求平衡，才能实现可持续的智慧医疗生态。\n\n- AI应用覆盖影像诊断、药物研发、健康管理等多场景，显著提升效率与精准度\n- 数据隐私、算法偏见、责任归属及资源分配不均构成核心伦理挑战\n- WHO六大伦理原则为全球AI医疗治理提供关键框架\n- 未来趋势聚焦多模态融合、主动健康管理与精准医疗深化\n- AI正重塑医疗行业，机遇与挑战并存\n\n推动AI在医疗领域的健康发展，需要政策制定者、技术开发者和医疗机构协同构建以患者为中心的伦理治理体系，并优先投资于多模态数据融合与主动健康管理能力建设。",
+      "page_content": {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "AI在医疗健康领域的伦理治理与未来展望",
+        "researchPolicy": {
+          "triggerReason": "user_requested",
+          "depthLevel": "standard",
+          "sourcePriority": [
+            "official_sites",
+            "government_reports",
+            "academic_sources",
+            "authoritative_media",
+            "industry_reports"
+          ],
+          "maxSourcesPerSlide": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "summary",
+            "pageGoal": "总结AI在医疗健康领域的核心机遇、伦理挑战与未来发展趋势，为听众提供清晰的全局认知与行动方向。",
+            "slideTitle": "总结与未来展望",
+            "coreMessage": "AI正在深刻重塑医疗健康行业，但必须以患者为中心，在技术创新与伦理安全之间寻求平衡，才能实现可持续的智慧医疗生态。",
+            "displayBullets": [
+              "AI应用覆盖影像诊断、药物研发、健康管理等多场景，显著提升效率与精准度",
+              "数据隐私、算法偏见、责任归属及资源分配不均构成核心伦理挑战",
+              "WHO六大伦理原则为全球AI医疗治理提供关键框架",
+              "未来趋势聚焦多模态融合、主动健康管理与精准医疗深化",
+              "AI正重塑医疗行业，机遇与挑战并存"
+            ],
+            "keyData": [
+              {
+                "label": "全球AI医疗市场规模预测（2035年）",
+                "value": 5438.3,
+                "unit": "亿美元",
+                "year": 2035,
+                "sourceRefId": "src-001"
+              },
+              {
+                "label": "中国AI医疗影像市场规模预测（2025年）",
+                "value": 100.0,
+                "unit": "亿元",
+                "year": 2025,
+                "sourceRefId": "src-002"
+              }
+            ],
+            "evidencePack": [
+              {
+                "sourceRefId": "src-001",
+                "claim": "全球医疗保健人工智能市场规模预计将从2025年的280.7亿美元增长至2035年的5438.3亿美元，年复合增长率达34.5%。",
+                "sourceTitle": "医疗保健领域人工智能市场规模、增长及2035年预测",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-09-08",
+                "credibility": "medium",
+                "quote": "2025 年全球医疗保健人工智能市场规模约为 280.7 亿美元，预计年复合增长率将超过 34.5%，到 2035 年收入将超过 5438.3 亿美元。"
+              },
+              {
+                "sourceRefId": "src-002",
+                "claim": "2020年中国AI医疗影像市场规模为4亿元，预计到2025年可达100亿元，年复合增长率为87.5%。",
+                "sourceTitle": "中国人工智能+医疗与生命科学行业研究报告",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2021-11-01",
+                "credibility": "medium",
+                "quote": "据艾瑞建模测算，2020年，中国AI医疗影像市场规模为4亿元，而到2025年，市场规模可达100亿元，2020-2025年 CAGR=87.5%。"
+              },
+              {
+                "sourceRefId": "src-003",
+                "claim": "世界卫生组织提出AI在卫生健康领域的六大伦理原则：保护人类自主性、促进人类福祉安全与公共利益、确保透明度可解释性与可理解性、促进责任和问责、确保包容性和公平性、促进负责任和可持续的人工智能。",
+                "sourceTitle": "卫生健康领域人工智能伦理与治理",
+                "sourceType": "government_reports",
+                "url": "",
+                "publishDate": "2021-06-28",
+                "credibility": "high",
+                "quote": "报告提出了确保人工智能符合所有国家公共利益的六项原则：保护人类自主性；促进人类福祉、安全以及公共利益；确保透明度、可解释性和可理解性；促进责任和问责；确保包容性和公平性；促进负责任和可持续的人工智能。"
+              },
+              {
+                "sourceRefId": "src-004",
+                "claim": "AI技术有望将新药研发周期从传统的10-15年缩短至5-8年。",
+                "sourceTitle": "阿里云发布医疗健康行业AI应用白皮书",
+                "sourceType": "industry_reports",
+                "url": "",
+                "publishDate": "2025-06-25",
+                "credibility": "medium",
+                "quote": "行业普遍预期AI技术有望将新药研发周期从传统的10-15年缩短至5-8年，为制药企业创造显著的商业价值。"
+              }
+            ],
+            "actionableTakeaway": "推动AI在医疗领域的健康发展，需要政策制定者、技术开发者和医疗机构协同构建以患者为中心的伦理治理体系，并优先投资于多模态数据融合与主动健康管理能力建设。",
+            "speakerNotes": "最后，让我们快速回顾一下今天的核心内容。我们看到，人工智能正在从根本上改变医疗健康行业，从影像诊断到药物研发，再到个人健康管理，AI的应用场景正在全面铺开。全球市场规模预计到2035年将超过5400亿美元，中国的AI医疗影像市场也在以惊人的速度增长。然而，机遇总是与挑战并存。数据隐私泄露、算法偏见、责任归属不清，以及可能加剧的医疗资源分配不均，都是我们必须正视的伦理问题。为此，世界卫生组织提出了六项核心伦理原则，为全球AI医疗治理指明了方向。展望未来，多模态数据融合、主动健康管理以及精准医疗的持续深化，将是不可逆转的趋势。要实现这一愿景，我们不能仅仅依赖技术突破，更需要政府、企业和医疗机构携手，建立一个真正以患者为中心的伦理治理框架，确保技术向善，让AI的福祉惠及每一个人。"
+          }
+        ]
+      },
+      "message": null
+    }
+  ],
+  "message": "batch content generated: 5/5",
+  "elapsed_sec": 50.9
+}
