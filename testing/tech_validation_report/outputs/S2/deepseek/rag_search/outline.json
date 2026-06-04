@@ -1,0 +1,120 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "医疗AI项目可行性评估",
+    "targetSlideCount": 6,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "项目背景与目标",
+        "sectionObjective": "阐述医疗AI项目背景、目标及评估范围，为管理层提供决策基础。",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "医疗AI项目可行性评估",
+            "keyPoints": [
+              "项目名称与评估范围",
+              "评估目标：判断是否立项",
+              "汇报对象：医院管理层"
+            ],
+            "notes": "封面页，突出正式风格，包含项目名称、评估目的和受众。"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "项目背景与战略意义",
+            "keyPoints": [
+              "医疗AI行业趋势与政策支持",
+              "医院当前面临的挑战与机遇",
+              "项目对医院长期发展的战略价值"
+            ],
+            "notes": "介绍项目背景，强调AI在医疗领域的应用前景，以及本项目对医院提升竞争力、优化服务的重要性。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "风险与投资回报分析",
+        "sectionObjective": "深入分析项目主要风险及预期投资回报，辅助管理层权衡利弊。",
+        "slideRange": {
+          "start": 3,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "关键风险识别与评估",
+            "keyPoints": [
+              "技术风险：数据质量、算法准确性、系统集成",
+              "法规与合规风险：数据隐私、医疗器械认证",
+              "运营风险：人员培训、流程变革、用户接受度",
+              "财务风险：成本超支、回报周期长"
+            ],
+            "notes": "系统梳理项目可能面临的主要风险，为后续风险应对和决策提供依据。"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "风险应对策略",
+            "keyPoints": [
+              "建立跨部门风险管理团队",
+              "分阶段实施，先试点后推广",
+              "与成熟AI厂商合作降低技术风险",
+              "制定合规路线图，提前沟通监管机构"
+            ],
+            "notes": "针对已识别风险提出具体可行的应对措施，展示项目团队的风险管理能力。"
+          },
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "content",
+            "slideTitle": "投资回报分析（ROI）",
+            "keyPoints": [
+              "预期投入：初始投资与运营成本",
+              "直接收益：提高效率、减少错误、增加收入",
+              "间接收益：提升患者满意度、品牌效应",
+              "投资回收期与净现值估算"
+            ],
+            "notes": "量化分析项目的财务可行性，突出长期回报，帮助管理层做出投资决策。"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "结论与建议",
+        "sectionObjective": "总结评估结论，提出明确的立项建议和下一步行动。",
+        "slideRange": {
+          "start": 6,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "summary",
+            "slideTitle": "评估结论与立项建议",
+            "keyPoints": [
+              "项目可行性总体评估：风险可控，回报可观",
+              "建议立项，并成立专项筹备组",
+              "下一步：详细需求调研与供应商评估"
+            ],
+            "notes": "总结页，给出明确结论和行动建议，推动管理层决策。"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated"
+}

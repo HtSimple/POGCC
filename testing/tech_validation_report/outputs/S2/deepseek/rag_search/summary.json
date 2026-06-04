@@ -1,0 +1,19 @@
+{
+  "scenario_id": "S2",
+  "topic": "医疗AI项目可行性评估",
+  "requirements": "受众为医院管理层，目标是判断是否立项。生成6页，风格正式，突出风险与ROI。",
+  "slides": 6,
+  "documents": [],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 20,
+    "outline": 17757,
+    "knowledge_batch": 13886,
+    "content_batch": 50608,
+    "total": 112019
+  },
+  "errors": []
+}
