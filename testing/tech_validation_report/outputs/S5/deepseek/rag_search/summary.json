@@ -1,0 +1,24 @@
+{
+  "scenario_id": "S5",
+  "topic": "新能源汽车产业趋势与机会",
+  "requirements": "生成7页趋势分析PPT，需覆盖市场、技术、案例与风险。",
+  "slides": 7,
+  "documents": [
+    "data/s5_market_report.txt",
+    "data/s5_company_cases.txt",
+    "data/s5_technology_trends.txt"
+  ],
+  "model": "deepseek",
+  "mode": "rag_search",
+  "refine_knowledge": false,
+  "success": true,
+  "timing_ms": {
+    "clear_rag": 18,
+    "upload_documents": 131,
+    "outline": 18461,
+    "knowledge_batch": 18194,
+    "content_batch": 65641,
+    "total": 137510
+  },
+  "errors": []
+}

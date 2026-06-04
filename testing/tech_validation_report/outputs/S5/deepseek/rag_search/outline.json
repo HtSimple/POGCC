@@ -1,0 +1,151 @@
+{
+  "success": true,
+  "outline": {
+    "protocolVersion": "ppt-narrative-outline.v1",
+    "language": "zh-CN",
+    "presentationTitle": "新能源汽车产业趋势与机会",
+    "targetSlideCount": 7,
+    "sections": [
+      {
+        "sectionId": "sec-01",
+        "sectionTitle": "市场概览与需求驱动",
+        "sectionObjective": "建立新能源汽车市场整体认知，明确需求驱动力与关键指标",
+        "slideRange": {
+          "start": 1,
+          "end": 2
+        },
+        "slides": [
+          {
+            "slideId": "slide-001",
+            "slideNumber": 1,
+            "slideRole": "cover",
+            "slideTitle": "新能源汽车产业趋势与机会",
+            "keyPoints": [
+              "纯电动与插电式混合动力覆盖乘用车及轻型商用车",
+              "政策激励与充电基础设施扩张驱动需求",
+              "用户对低使用成本的关注持续上升"
+            ],
+            "notes": "封面页，点明主题与报告范围"
+          },
+          {
+            "slideId": "slide-002",
+            "slideNumber": 2,
+            "slideRole": "content",
+            "slideTitle": "市场现状与关键指标",
+            "keyPoints": [
+              "不同地区渗透率差异明显，部分城市由车队采购带动规模化",
+              "电池材料供给与价格波动构成主要供给约束",
+              "充电可靠性与电网容量限制成为潜在风险"
+            ],
+            "notes": "基于参考资料1，概述市场规模、渗透率差异及供给约束"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-02",
+        "sectionTitle": "技术趋势与创新",
+        "sectionObjective": "解析电池、功率电子、软件等关键技术栈的发展方向",
+        "slideRange": {
+          "start": 3,
+          "end": 4
+        },
+        "slides": [
+          {
+            "slideId": "slide-003",
+            "slideNumber": 3,
+            "slideRole": "content",
+            "slideTitle": "电池系统与功率电子演进",
+            "keyPoints": [
+              "磷酸铁锂在成本敏感车型中持续扩张",
+              "固态电池仍处于前商业化阶段",
+              "高端车型中碳化硅器件应用提升"
+            ],
+            "notes": "参考资料3：电池与功率电子趋势"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "软件定义与安全合规",
+            "keyPoints": [
+              "车端集中计算支撑OTA升级",
+              "能耗管理优化提升续航稳定性",
+              "热失控监测与隔离能力增强"
+            ],
+            "notes": "参考资料3：软件、控制与安全趋势"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-03",
+        "sectionTitle": "案例分析与实践洞察",
+        "sectionObjective": "通过真实案例展示电动化在不同场景下的成效与挑战",
+        "slideRange": {
+          "start": 5,
+          "end": 5
+        },
+        "slides": [
+          {
+            "slideId": "slide-005",
+            "slideNumber": 5,
+            "slideRole": "case-study",
+            "slideTitle": "典型案例：车队、制造商与充电网络",
+            "keyPoints": [
+              "城市车队电动化：维护停机时间下降，充电协调成本上升",
+              "中型车企快速推新：上市速度提升，电池供应链压力增大",
+              "充电网络扩展：与车队合作后快充利用率提升"
+            ],
+            "notes": "参考资料2：三个案例的核心发现"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-04",
+        "sectionTitle": "风险与机会展望",
+        "sectionObjective": "识别主要风险点，并提炼未来机会方向",
+        "slideRange": {
+          "start": 6,
+          "end": 6
+        },
+        "slides": [
+          {
+            "slideId": "slide-006",
+            "slideNumber": 6,
+            "slideRole": "content",
+            "slideTitle": "关键风险与应对策略",
+            "keyPoints": [
+              "充电可靠性与电网容量限制",
+              "二手车残值不确定性",
+              "电池材料价格波动与供应链瓶颈"
+            ],
+            "notes": "综合参考资料1和2，归纳风险并简要提及应对思路"
+          }
+        ]
+      },
+      {
+        "sectionId": "sec-05",
+        "sectionTitle": "总结与行动建议",
+        "sectionObjective": "总结核心趋势，提出可执行的战略建议",
+        "slideRange": {
+          "start": 7,
+          "end": 7
+        },
+        "slides": [
+          {
+            "slideId": "slide-007",
+            "slideNumber": 7,
+            "slideRole": "summary",
+            "slideTitle": "总结与下一步",
+            "keyPoints": [
+              "市场渗透加速但区域分化明显",
+              "技术迭代聚焦成本、效率与安全",
+              "建议关注供应链韧性、充电生态与软件能力"
+            ],
+            "notes": "总结页，提炼趋势并给出行动方向"
+          }
+        ]
+      }
+    ]
+  },
+  "message": "outline generated with reference context"
+}

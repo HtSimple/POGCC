@@ -1,0 +1,26 @@
+[
+  {
+    "file": "E:\\code\\project\\Software Engineering Management and Economics_project\\POGCC\\testing\\tech_validation_report\\data\\s5_market_report.txt",
+    "response": {
+      "success": true,
+      "doc_id": "s5_market_report_c9d56a26",
+      "message": "Ingested 1 chunks from s5_market_report.txt."
+    }
+  },
+  {
+    "file": "E:\\code\\project\\Software Engineering Management and Economics_project\\POGCC\\testing\\tech_validation_report\\data\\s5_company_cases.txt",
+    "response": {
+      "success": true,
+      "doc_id": "s5_company_cases_3ad45758",
+      "message": "Ingested 1 chunks from s5_company_cases.txt."
+    }
+  },
+  {
+    "file": "E:\\code\\project\\Software Engineering Management and Economics_project\\POGCC\\testing\\tech_validation_report\\data\\s5_technology_trends.txt",
+    "response": {
+      "success": true,
+      "doc_id": "s5_technology_trends_05f58584",
+      "message": "Ingested 1 chunks from s5_technology_trends.txt."
+    }
+  }
+]
