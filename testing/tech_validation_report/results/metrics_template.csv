@@ -1,0 +1,5 @@
+scenario_id,model,mode,slides,total_time_sec,time_per_slide_sec,content_quality_score,usability_score,supported_claims_ratio,unsupported_claims,error_count,notes
+S1,deepseek,rag_off,5,,,,,,,,
+S1,qwen,rag_off,5,,,,,,,,
+S2,deepseek,rag_on,6,,,,,,,,
+S2,qwen,rag_on,6,,,,,,,,
