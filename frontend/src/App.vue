@@ -292,7 +292,7 @@
             <div class="section-title with-action">
               <div>
                 <p class="eyebrow">Step 4</p>
-                <h3>逐页补充知识、正文、备注与事实检查</h3>
+                <h3>逐页补充检索、正文、备注与事实检查</h3>
               </div>
               <label class="select-shell">
                 <span>当前页</span>
@@ -320,7 +320,7 @@
                   :disabled="pageLoading.knowledge || allKnowledgeLoading || allContentLoading"
                   @click="fillKnowledge(activeSlide)">
                   <Search :size="18" />
-                  {{ pageLoading.knowledge ? '检索中' : '补充知识' }}
+                  {{ pageLoading.knowledge ? '检索中' : '补充检索' }}
                 </button>
                 <button
                   class="secondary-button"
@@ -371,7 +371,18 @@
 
               <div class="page-content-layout">
                 <label class="content-block content-block-primary">
-                  <span>正文内容</span>
+                  <div class="field-header">
+                    <span class="field-label">正文内容</span>
+                    <button
+                      class="secondary-button field-inline-action"
+                      type="button"
+                      :disabled="allContentLoading || allKnowledgeLoading || pageLoading.content || !activeSlide.content.trim()"
+                      @click="openReviseDialog"
+                    >
+                      <PencilLine :size="15" />
+                      按建议修改
+                    </button>
+                  </div>
                   <textarea v-model="activeSlide.content" rows="10" />
                 </label>
                 <div class="content-grid content-grid-secondary">
@@ -573,62 +584,41 @@
 
     <div v-if="isGenerating" class="generating-overlay" role="status" aria-live="polite" aria-busy="true">
       <div class="generating-overlay__panel">
-        <div class="generating-dancers" aria-hidden="true">
-          <span class="party-note party-note-1">♪</span>
-          <span class="party-note party-note-2">♫</span>
-          <span class="party-note party-note-3">♩</span>
-          <span class="party-spark party-spark-1">✦</span>
-          <span class="party-spark party-spark-2">✧</span>
-          <div class="dancer ggbond dancer-1">
-            <span class="ggbond-helmet"></span>
-            <span class="ggbond-head">
-              <span class="ggbond-ear ggbond-ear-left"></span>
-              <span class="ggbond-ear ggbond-ear-right"></span>
-              <span class="ggbond-eye ggbond-eye-left"></span>
-              <span class="ggbond-eye ggbond-eye-right"></span>
-              <span class="ggbond-snout"></span>
-            </span>
-            <span class="ggbond-cape"></span>
-            <span class="ggbond-body"></span>
-            <span class="ggbond-arm ggbond-arm-left"></span>
-            <span class="ggbond-arm ggbond-arm-right"></span>
-            <span class="ggbond-leg ggbond-leg-left"></span>
-            <span class="ggbond-leg ggbond-leg-right"></span>
-          </div>
-          <div class="dancer ggbond dancer-2">
-            <span class="ggbond-helmet"></span>
-            <span class="ggbond-head">
-              <span class="ggbond-ear ggbond-ear-left"></span>
-              <span class="ggbond-ear ggbond-ear-right"></span>
-              <span class="ggbond-eye ggbond-eye-left"></span>
-              <span class="ggbond-eye ggbond-eye-right"></span>
-              <span class="ggbond-snout"></span>
-            </span>
-            <span class="ggbond-cape"></span>
-            <span class="ggbond-body"></span>
-            <span class="ggbond-arm ggbond-arm-left"></span>
-            <span class="ggbond-arm ggbond-arm-right"></span>
-            <span class="ggbond-leg ggbond-leg-left"></span>
-            <span class="ggbond-leg ggbond-leg-right"></span>
-          </div>
-          <div class="dancer ggbond dancer-3">
-            <span class="ggbond-helmet"></span>
-            <span class="ggbond-head">
-              <span class="ggbond-ear ggbond-ear-left"></span>
-              <span class="ggbond-ear ggbond-ear-right"></span>
-              <span class="ggbond-eye ggbond-eye-left"></span>
-              <span class="ggbond-eye ggbond-eye-right"></span>
-              <span class="ggbond-snout"></span>
-            </span>
-            <span class="ggbond-cape"></span>
-            <span class="ggbond-body"></span>
-            <span class="ggbond-arm ggbond-arm-left"></span>
-            <span class="ggbond-arm ggbond-arm-right"></span>
-            <span class="ggbond-leg ggbond-leg-left"></span>
-            <span class="ggbond-leg ggbond-leg-right"></span>
-          </div>
-        </div>
+        <div class="generating-spinner" aria-hidden="true"></div>
         <p>{{ generatingLabel }}</p>
+      </div>
+    </div>
+
+    <div
+      v-if="reviseDialogOpen"
+      class="dialog-overlay"
+      role="presentation"
+      @click.self="closeReviseDialog"
+    >
+      <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="revise-dialog-title">
+        <h3 id="revise-dialog-title" class="dialog-panel__title">修改正文</h3>
+        <p class="dialog-hint">说明修改方向即可。系统将依据当前正文、页面标题与要点进行轻量修订，不附带检索摘要，速度更快。</p>
+        <label class="dialog-field">
+          <span>当前正文</span>
+          <textarea :value="activeSlide?.content || ''" rows="6" readonly />
+        </label>
+        <label class="dialog-field">
+          <span>修改建议</span>
+          <textarea
+            v-model="reviseSuggestion"
+            rows="5"
+            placeholder="例如：要点太多请压缩为 3 条；语气更口语化；删除无来源的数据；加强与本页大纲目标的对应。"
+            :disabled="reviseSubmitting"
+          />
+        </label>
+        <div class="dialog-actions">
+          <button class="secondary-button" type="button" :disabled="reviseSubmitting" @click="closeReviseDialog">
+            取消
+          </button>
+          <button class="primary-button" type="button" :disabled="reviseSubmitting" @click="submitReviseContent">
+            {{ reviseSubmitting ? '修订中…' : '应用修订' }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -650,6 +640,7 @@ import {
   FileText,
   History,
   NotebookPen,
+  PencilLine,
   Plus,
   RefreshCw,
   RotateCcw,
@@ -662,6 +653,7 @@ import {
 import {
   expandContent,
   expandContentBatch,
+  formatApiError,
   generateNotes,
   generateOutline,
   getApiBaseUrl,
@@ -669,6 +661,7 @@ import {
   getModelInfo,
   isUsingMockApi,
   queryRag,
+  reviseContent,
   searchKnowledge,
   searchKnowledgeBatch,
   switchModel,
@@ -744,6 +737,9 @@ const pageLoading = reactive({
 const allContentLoading = ref(false)
 const allKnowledgeLoading = ref(false)
 const pipelineLoading = ref(false)
+const reviseDialogOpen = ref(false)
+const reviseSuggestion = ref('')
+const reviseSubmitting = ref(false)
 
 const isGenerating = computed(
   () =>
@@ -754,7 +750,8 @@ const isGenerating = computed(
     pageLoading.knowledge ||
     pageLoading.content ||
     pageLoading.notes ||
-    pageLoading.fact
+    pageLoading.fact ||
+    reviseSubmitting.value
 )
 
 const generatingLabel = computed(() => {
@@ -765,7 +762,8 @@ const generatingLabel = computed(() => {
   if (pipelineLoading.value) return '正在执行一键生成流程…'
   if (allKnowledgeLoading.value) return '正在一键检索…'
   if (allContentLoading.value) return '正在一键生成…'
-  if (pageLoading.knowledge) return '正在补充知识…'
+  if (pageLoading.knowledge) return '正在补充检索…'
+  if (pageLoading.content && reviseSubmitting.value) return '正在按建议修改正文…'
   if (pageLoading.content) return '正在生成正文…'
   if (pageLoading.notes) return '正在生成演讲备注…'
   if (pageLoading.fact) return '正在进行事实检查…'
@@ -1300,9 +1298,9 @@ async function fillKnowledge(slide: SlidePage) {
     const result = await searchKnowledge(buildKnowledgeQuery(slide))
     if (result.success) {
       slide.knowledge = result.knowledge
-      showToast('知识补充完成', 'success')
+      showToast('补充检索完成', 'success')
     } else {
-      showToast(result.message || '知识补充失败', 'warning')
+      showToast(result.message || '补充检索失败', 'warning')
     }
   } catch (error) {
     showToast(getErrorMessage(error), 'error')
@@ -1471,6 +1469,65 @@ async function fillContent(slide: SlidePage) {
   } catch (error) {
     showToast(getErrorMessage(error), 'error')
   } finally {
+    pageLoading.content = false
+  }
+}
+
+function openReviseDialog() {
+  const slide = activeSlide.value
+  if (!slide?.content.trim()) {
+    showToast('请先生成或填写正文后再修改', 'warning')
+    return
+  }
+  reviseSuggestion.value = ''
+  reviseDialogOpen.value = true
+}
+
+function closeReviseDialog() {
+  if (reviseSubmitting.value) {
+    return
+  }
+  reviseDialogOpen.value = false
+}
+
+async function submitReviseContent() {
+  const slide = activeSlide.value
+  if (!slide) {
+    return
+  }
+  const suggestion = reviseSuggestion.value.trim()
+  if (!suggestion) {
+    showToast('请填写修改建议', 'warning')
+    return
+  }
+  if (!slide.content.trim()) {
+    showToast('当前正文为空，请先生成正文', 'warning')
+    return
+  }
+
+  reviseSubmitting.value = true
+  pageLoading.content = true
+  try {
+    const result = await reviseContent({
+      outline_node: {
+        title: slide.title,
+        bullets: slide.bullets.slice(0, 4)
+      },
+      current_content: slide.content,
+      revision_suggestion: suggestion
+    })
+    if (result.success) {
+      slide.content = result.content
+      saveCurrentRecord(false)
+      reviseDialogOpen.value = false
+      showToast('正文已按建议更新', 'success')
+    } else {
+      showToast(result.message || '正文修改失败', 'warning')
+    }
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+  } finally {
+    reviseSubmitting.value = false
     pageLoading.content = false
   }
 }
@@ -1816,9 +1873,6 @@ function showToast(message: string, type: 'success' | 'warning' | 'error' = 'suc
 }
 
 function getErrorMessage(error: unknown) {
-  if (error instanceof Error) {
-    return error.message
-  }
-  return '操作失败'
+  return formatApiError(error)
 }
 </script>

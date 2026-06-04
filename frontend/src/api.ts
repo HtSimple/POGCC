@@ -8,6 +8,7 @@ import {
   mockGetHealth,
   mockGetModelInfo,
   mockQueryRag,
+  mockReviseContent,
   mockSearchKnowledge,
   mockSearchKnowledgeBatch,
   mockSwitchModel,
@@ -141,6 +142,54 @@ export async function expandContent(outlineNode: Record<string, unknown>, contex
   return data as { success: boolean; content: string; page_content?: PageContentProtocol | null; message?: string }
 }
 
+function clipField(value: string | undefined, max: number) {
+  const text = (value ?? '').trim()
+  if (!text) {
+    return undefined
+  }
+  return text.length <= max ? text : text.slice(0, max)
+}
+
+export interface ReviseContentPayload {
+  outline_node: Record<string, unknown>
+  current_content: string
+  revision_suggestion: string
+}
+
+const REVISE_FIELD_LIMITS = {
+  current_content: 3000,
+  revision_suggestion: 1000
+} as const
+
+export function normalizeRevisePayload(payload: ReviseContentPayload): ReviseContentPayload | null {
+  const current_content = clipField(payload.current_content, REVISE_FIELD_LIMITS.current_content)
+  const revision_suggestion = clipField(payload.revision_suggestion, REVISE_FIELD_LIMITS.revision_suggestion)
+  if (!current_content || !revision_suggestion) {
+    return null
+  }
+  return {
+    outline_node: payload.outline_node,
+    current_content,
+    revision_suggestion
+  }
+}
+
+export async function reviseContent(payload: ReviseContentPayload) {
+  const body = normalizeRevisePayload(payload)
+  if (!body) {
+    return {
+      success: false,
+      content: '',
+      message: '正文或修改建议不能为空'
+    }
+  }
+  if (useMock) {
+    return mockReviseContent(body)
+  }
+  const { data } = await api.post('/api/generator/content/revise/text', body)
+  return data as { success: boolean; content: string; message?: string }
+}
+
 export interface GenerateNotesPayload {
   project_id?: string
   slide_id: string
@@ -150,11 +199,66 @@ export interface GenerateNotesPayload {
   style_requirement?: string
 }
 
-export async function generateNotes(payload: GenerateNotesPayload) {
-  if (useMock) {
-    return mockGenerateNotes(payload)
+/** 与后端 GenerateNotesRequest 字段长度一致，避免 422 */
+const NOTES_FIELD_LIMITS = {
+  slide_id: 80,
+  slide_title: 120,
+  slide_content: 3000,
+  knowledge_evidence: 6000,
+  style_requirement: 1000
+} as const
+
+export function normalizeNotesPayload(payload: GenerateNotesPayload): GenerateNotesPayload | null {
+  const slide_content = clipField(payload.slide_content, NOTES_FIELD_LIMITS.slide_content)
+  if (!slide_content) {
+    return null
   }
-  const { data } = await api.post('/api/generator/notes', payload)
+  const slide_id = clipField(payload.slide_id, NOTES_FIELD_LIMITS.slide_id)
+  const slide_title = clipField(payload.slide_title, NOTES_FIELD_LIMITS.slide_title)
+  if (!slide_id || !slide_title) {
+    return null
+  }
+  return {
+    project_id: clipField(payload.project_id, 80),
+    slide_id,
+    slide_title,
+    slide_content,
+    knowledge_evidence: clipField(payload.knowledge_evidence, NOTES_FIELD_LIMITS.knowledge_evidence),
+    style_requirement: clipField(payload.style_requirement, NOTES_FIELD_LIMITS.style_requirement)
+  }
+}
+
+export function formatApiError(error: unknown): string {
+  if (!axios.isAxiosError(error)) {
+    return error instanceof Error ? error.message : '操作失败'
+  }
+  const status = error.response?.status
+  const detail = error.response?.data?.detail
+  if (status === 422) {
+    if (Array.isArray(detail) && detail.length > 0) {
+      const item = detail[0] as { loc?: unknown[]; msg?: string }
+      const field = Array.isArray(item.loc) ? item.loc.filter((x) => x !== 'body').join('.') : ''
+      const msg = item.msg || '参数校验失败'
+      return field ? `请求无效（${field}）：${msg}` : `请求无效：${msg}`
+    }
+    return '请求参数无效：正文不能为空，或标题/正文/检索资料超出长度限制'
+  }
+  const message = error.response?.data?.message
+  if (typeof message === 'string' && message.trim()) {
+    return message
+  }
+  return error.message || '操作失败'
+}
+
+export async function generateNotes(payload: GenerateNotesPayload) {
+  const body = normalizeNotesPayload(payload)
+  if (!body) {
+    return { success: false, notes: '', message: '页面正文为空，请先生成或填写正文' }
+  }
+  if (useMock) {
+    return mockGenerateNotes(body)
+  }
+  const { data } = await api.post('/api/generator/notes', body)
   return data as { success: boolean; notes: string; message?: string }
 }
 

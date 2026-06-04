@@ -237,6 +237,26 @@ export async function mockExpandContent(outlineNode: Record<string, unknown>, co
   }
 }
 
+export async function mockReviseContent(payload: {
+  outline_node: Record<string, unknown>
+  current_content: string
+  revision_suggestion: string
+}) {
+  await delay(420)
+  const title = getTitleFromNode(payload.outline_node)
+  const suggestion = payload.revision_suggestion.trim()
+  return {
+    success: true,
+    content: [
+      `【已按建议修订：${suggestion.slice(0, 48)}${suggestion.length > 48 ? '…' : ''}】`,
+      `- ${title}：在保留原意基础上调整了表述。`,
+      '- 要点更精炼，语气更适合幻灯片展示。',
+      '- 未引入正文之外的新事实或数据。'
+    ].join('\n'),
+    message: 'Mock 模式：正文轻量修订完成'
+  }
+}
+
 export async function mockGenerateNotes(payload: {
   slide_title: string
   slide_content: string

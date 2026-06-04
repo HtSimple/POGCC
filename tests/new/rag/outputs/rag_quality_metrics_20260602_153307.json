@@ -1,0 +1,104 @@
+{
+  "corpus_file": "rag_corpus.txt",
+  "num_chunks": 1,
+  "ingest_status": "success",
+  "embedding_model": "D:\\杂物\\大三下\\软件经济\\project\\POGCC\\app\\rag\\bge-small-en-v1.5",
+  "case_count": 5,
+  "hit_count": 5,
+  "hit_rate": 1.0,
+  "avg_search_ms": 10.0,
+  "min_top_k_hit_rate": 0.8,
+  "cases": [
+    {
+      "case_id": "rag_hallucination",
+      "query": "系统如何通过 RAG 降低事实幻觉？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 1,
+      "top_score": 0.6994480490684509,
+      "matched_keywords": [
+        "RAG",
+        "事实幻觉",
+        "检索"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ],
+      "top_preview": "POGCC 项目说明（测试语料）\n一、项目背景\nPOGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。\n系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。\n二、技术路线\n核心采用结构化 JSON Sc..."
+    },
+    {
+      "case_id": "json_schema",
+      "query": "大纲和正文使用什么数据结构？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 1,
+      "top_score": 0.7172975540161133,
+      "matched_keywords": [
+        "JSON",
+        "Schema",
+        "结构化"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ],
+      "top_preview": "POGCC 项目说明（测试语料）\n一、项目背景\nPOGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。\n系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。\n二、技术路线\n核心采用结构化 JSON Sc..."
+    },
+    {
+      "case_id": "generation_pipeline",
+      "query": "内容生成链路包含哪些步骤？",
+      "top_k": 5,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 1,
+      "top_score": 0.7815338373184204,
+      "matched_keywords": [
+        "大纲",
+        "检索",
+        "正文",
+        "备注"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ],
+      "top_preview": "POGCC 项目说明（测试语料）\n一、项目背景\nPOGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。\n系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。\n二、技术路线\n核心采用结构化 JSON Sc..."
+    },
+    {
+      "case_id": "quality_validation",
+      "query": "RAG 质量验证要测什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 1,
+      "top_score": 0.7131660580635071,
+      "matched_keywords": [
+        "Top-K",
+        "命中率",
+        "来源"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ],
+      "top_preview": "POGCC 项目说明（测试语料）\n一、项目背景\nPOGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。\n系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。\n二、技术路线\n核心采用结构化 JSON Sc..."
+    },
+    {
+      "case_id": "markdown_export",
+      "query": "最终 Markdown 输出包含什么？",
+      "top_k": 3,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 1,
+      "top_score": 0.6994346976280212,
+      "matched_keywords": [
+        "Markdown",
+        "标题",
+        "备注"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ],
+      "top_preview": "POGCC 项目说明（测试语料）\n一、项目背景\nPOGCC 是 PPT 大纲智能生成与内容补全系统，面向学术汇报与课程答辩场景。\n系统要解决 AI 生成 PPT 时常见的逻辑断层与事实幻觉问题。\n二、技术路线\n核心采用结构化 JSON Sc..."
+    }
+  ]
+}

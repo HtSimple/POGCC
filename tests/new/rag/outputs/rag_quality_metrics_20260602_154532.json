@@ -1,0 +1,449 @@
+{
+  "corpus_file": "rag_corpus.txt",
+  "num_chunks": 4,
+  "ingest_status": "success",
+  "embedding_model": "D:\\杂物\\大三下\\软件经济\\project\\POGCC\\app\\rag\\bge-small-en-v1.5",
+  "case_count": 30,
+  "hit_count": 13,
+  "miss_count": 17,
+  "hit_rate": 0.4333,
+  "avg_search_ms": 10.0,
+  "min_top_k_hit_rate": 0.75,
+  "cases": [
+    {
+      "case_id": "q01_project_goal",
+      "query": "这个系统主要想解决 AI 写 PPT 的什么痛点？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 11,
+      "result_count": 2,
+      "top_score": 0.75533527135849,
+      "matched_keywords": [
+        "逻辑断层",
+        "事实幻觉"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q02_json_schema",
+      "query": "大纲协议版本号是什么？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 8,
+      "result_count": 2,
+      "top_score": 0.6985051035881042,
+      "matched_keywords": [
+        "ppt-narrative-outline",
+        "JSON Schema"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q03_pydantic",
+      "query": "谁在后端校验 LLM 输出的 JSON？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 8,
+      "result_count": 2,
+      "top_score": 0.7483825087547302,
+      "matched_keywords": [
+        "Pydantic"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q04_rag_hallucination",
+      "query": "本地知识库检索是为了解决什么问题？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.6816757321357727,
+      "matched_keywords": [
+        "RAG"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q05_retrieval_service",
+      "query": "哪个类负责向量入库和检索？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.6808875203132629,
+      "matched_keywords": [
+        "RetrievalService"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q06_duplicate_ingest",
+      "query": "相同文件再次上传会如何处理？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 8,
+      "result_count": 2,
+      "top_score": 0.7013283371925354,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q07_update_file",
+      "query": "资料改内容后索引怎么更新？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7023104429244995,
+      "matched_keywords": [
+        "update_file",
+        "删旧向量"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q08_tavily_search",
+      "query": "联网搜索接的是哪个外部服务？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.6715578436851501,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q09_knowledge_batch",
+      "query": "多页一起检索Knowledge走什么接口？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 11,
+      "result_count": 2,
+      "top_score": 0.6776508688926697,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q10_reference_context",
+      "query": "生成大纲前如何把资料塞进 Prompt？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.6601665019989014,
+      "matched_keywords": [
+        "reference_context",
+        "参考资料"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q11_outline_maker",
+      "query": "结构化大纲是哪个模块生成的？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.6839679479598999,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q12_outline_edit",
+      "query": "第三步编辑大纲时页码格式长什么样？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 12,
+      "result_count": 2,
+      "top_score": 0.6958480477333069,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q13_content_expander",
+      "query": "单页正文 JSON 是哪个扩展器生成的？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7326369881629944,
+      "matched_keywords": [
+        "ContentExpander",
+        "page_content"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q14_content_batch",
+      "query": "多页正文并行生成用什么接口？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7365108132362366,
+      "matched_keywords": [
+        "content_batch",
+        "线程池"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q15_keydata_filter",
+      "query": "正文里非法 keyData 字段怎么处理？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.7518035173416138,
+      "matched_keywords": [
+        "keyData",
+        "过滤非法"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q16_speaker_notes",
+      "query": "独立生成演讲备注的类叫什么？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.6923020482063293,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q17_quality_validation",
+      "query": "RAG 评测报告里常看哪两个指标？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.7381311058998108,
+      "matched_keywords": [
+        "Top-K",
+        "命中率"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q18_info_density",
+      "query": "信息密度评测关注页面哪些元素？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.6951620578765869,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q19_performance",
+      "query": "长文档端到端性能测试的超时阈值？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7306853532791138,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q20_concurrency",
+      "query": "性能测试里并发大纲请求测几个？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 11,
+      "result_count": 2,
+      "top_score": 0.6929783225059509,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q21_document_processor",
+      "query": "解析 txt pdf docx 的处理器叫什么？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.6954900622367859,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q22_chunk_split",
+      "query": "普通 txt 按什么上限切成 TextChunk？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 9,
+      "result_count": 2,
+      "top_score": 0.7035601139068604,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q23_pdf_page",
+      "query": "PDF 切块会保留哪些页码字段？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 11,
+      "result_count": 2,
+      "top_score": 0.7097460627555847,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q24_markdown_export",
+      "query": "第五步 Markdown 在前端由哪个函数组装？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.693946361541748,
+      "matched_keywords": [
+        "buildMarkdownFromState",
+        "Markdown"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q25_localstorage",
+      "query": "现在历史任务存在浏览器哪里？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7067736983299255,
+      "matched_keywords": [
+        "localStorage",
+        "storage.ts"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q26_sqlite_plan",
+      "query": "后续持久化打算用什么数据库？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.6853775382041931,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q27_llm_provider",
+      "query": "config 里切换 deepseek 和 qwen 的字段？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7316716909408569,
+      "matched_keywords": [
+        "llm_provider",
+        "deepseek"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q28_frontend_steps",
+      "query": "前端主流程一共几个 Step？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 13,
+      "result_count": 2,
+      "top_score": 0.6817420721054077,
+      "matched_keywords": [
+        "Step 1",
+        "五步"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q29_e2e_test",
+      "query": "一键 E2E 脚本文件名是什么？",
+      "top_k": 2,
+      "hit": true,
+      "elapsed_ms": 14,
+      "result_count": 2,
+      "top_score": 0.7039870619773865,
+      "matched_keywords": [
+        "test_full_generation",
+        "e2e"
+      ],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    },
+    {
+      "case_id": "q30_evidence_pack",
+      "query": "正文协议里证据包需要哪些字段？",
+      "top_k": 2,
+      "hit": false,
+      "elapsed_ms": 10,
+      "result_count": 2,
+      "top_score": 0.7239760160446167,
+      "matched_keywords": [],
+      "source_files": [
+        "rag_corpus.txt"
+      ]
+    }
+  ]
+}

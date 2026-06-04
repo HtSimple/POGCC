@@ -5,7 +5,8 @@ from types import SimpleNamespace
 import pytest
 from pydantic import ValidationError
 
-from app.api.routes.generator import expand_content, generate_notes, generate_outline
+from app.api.routes.generator import expand_content, generate_notes, generate_outline, revise_content, revise_content_text
+from app.core.generator.content_expander import ContentExpander
 from app.core.generator.notes_generator import NotesGenerator
 from app.core.generator.outline_maker import OutlineMaker
 from app.schema.models import (
@@ -14,6 +15,8 @@ from app.schema.models import (
     GenerateOutlineRequest,
     NarrativeOutline,
     PageContentProtocol,
+    ReviseContentRequest,
+    ReviseContentTextRequest,
 )
 from app.utils.json_protocol import parse_json_object
 
@@ -299,6 +302,117 @@ def test_generator_content_normalizes_short_or_meta_display_bullets():
     assert "学术汇报" not in bullets
     assert "课程讲师" not in bullets
     assert body["page_content"]["slides"][0]["speakerNotes"]
+
+
+def test_parse_page_content_normalizes_non_protocol_research_policy():
+    malformed = json.loads(json.dumps(VALID_PAGE_CONTENT))
+    malformed["researchPolicy"] = {
+        "preferLocal": True,
+        "allowedSources": ["test_text.pdf"],
+    }
+    expander = ContentExpander(llm_service=FakeLLM([]))
+    parsed = expander._parse_page_content(json.dumps(malformed, ensure_ascii=False), {"id": "slide-001", "title": "Test"})
+    policy = parsed.researchPolicy
+    assert policy.triggerReason == "user_requested"
+    assert policy.depthLevel == "standard"
+    assert "local_document" in policy.sourcePriority
+
+
+def test_parse_page_content_hoists_root_level_research_hints():
+    malformed = json.loads(json.dumps(VALID_PAGE_CONTENT))
+    malformed.pop("researchPolicy", None)
+    malformed["preferLocal"] = True
+    malformed["allowedSources"] = ["test_text.pdf"]
+    expander = ContentExpander(llm_service=FakeLLM([]))
+    parsed = expander._parse_page_content(
+        json.dumps(malformed, ensure_ascii=False),
+        {"id": "slide-001", "number": 1, "title": "Test", "bullets": ["a", "b", "c"]},
+    )
+    assert "local_document" in parsed.researchPolicy.sourcePriority
+
+
+def test_parse_page_content_builds_slide_when_slides_missing():
+    malformed = {
+        "protocolVersion": "ppt-page-content.v1",
+        "language": "zh-CN",
+        "presentationTitle": "计算机原理学术汇报",
+    }
+    expander = ContentExpander(llm_service=FakeLLM([]))
+    parsed = expander._parse_page_content(
+        json.dumps(malformed, ensure_ascii=False),
+        {
+            "id": "slide-001",
+            "number": 1,
+            "title": "存储系统",
+            "section": "第五章",
+            "goal": "说明多级存储层次的基本概念",
+            "bullets": ["Cache 原理", "映射方式", "替换算法"],
+        },
+        fallback_content="- Cache 采用组相联映射\n- 替换算法常用 LRU\n- 写策略分为写直达与写回",
+    )
+    assert len(parsed.slides) == 1
+    assert len(parsed.slides[0].displayBullets) >= 3
+    assert parsed.slides[0].speakerNotes
+
+
+def test_generator_content_revise_api_returns_revised_page_content():
+    revised_content = json.loads(json.dumps(VALID_PAGE_CONTENT))
+    revised_content["slides"][0]["coreMessage"] = "修订后的核心信息：强调低碳生活与资源节约。"
+    request = SimpleNamespace(
+        app=SimpleNamespace(
+            state=SimpleNamespace(llm_service=FakeLLM([json.dumps(revised_content, ensure_ascii=False)]))
+        )
+    )
+
+    response = asyncio.run(
+        revise_content(
+            request,
+            ReviseContentRequest(
+                outline_node={
+                    "id": "slide-001",
+                    "number": 1,
+                    "title": "环境保护与绿色生活",
+                    "section": "主题导入",
+                    "goal": "阐述环境保护的重要性与当前面临的主要问题",
+                    "bullets": ["城市发展", "公众健康", "资源安全"],
+                },
+                context="本地资料",
+                current_content="环境保护能够降低污染影响，并推动资源节约。",
+                revision_suggestion="语气更正式，并突出低碳生活。",
+            ),
+        )
+    )
+
+    body = response.model_dump()
+    assert body["success"] is True
+    assert "修订后的核心信息" in body["page_content"]["slides"][0]["coreMessage"]
+
+
+def test_generator_content_revise_text_api_returns_plain_body():
+    revised = "- 修订后的要点一\n- 修订后的要点二\n- 修订后的要点三"
+    request = SimpleNamespace(
+        app=SimpleNamespace(
+            state=SimpleNamespace(llm_service=FakeLLM([revised]))
+        )
+    )
+
+    response = asyncio.run(
+        revise_content_text(
+            request,
+            ReviseContentTextRequest(
+                outline_node={
+                    "title": "存储系统",
+                    "bullets": ["Cache 原理", "映射方式", "替换算法"],
+                },
+                current_content="- 原正文要点一\n- 原正文要点二",
+                revision_suggestion="压缩为 3 条，语气更口语化",
+            ),
+        )
+    )
+
+    body = response.model_dump()
+    assert body["success"] is True
+    assert "修订后的要点一" in body["content"]
 
 
 def test_generator_notes_api_returns_speaker_notes():

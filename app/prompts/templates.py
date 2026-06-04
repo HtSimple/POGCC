@@ -280,6 +280,67 @@ keyData 错误示例（禁止）：
 """.strip()
 
 
+PAGE_CONTENT_REVISE_JSON_TEMPLATE = """
+你正在根据用户的修改建议，修订一页 PPT 的结构化页面内容。仅返回一个合法的 JSON 对象。
+
+JSON 必须遵循 protocolVersion "ppt-page-content.v1"，字段与校验规则与首次扩写正文相同。
+
+researchPolicy 必须严格包含（禁止使用 preferLocal、allowedSources 等非协议字段名）：
+- triggerReason: 取 user_requested, insufficient_input, fact_verification 之一
+- depthLevel: 取 light, standard, deep 之一
+- sourcePriority: 从 local_document, official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 5 个值
+- maxSourcesPerSlide: 可选，1 到 8 的整数
+
+slide 须含 slideId、slideNumber、slideRole、pageGoal、slideTitle、coreMessage、displayBullets（3～5 条）、keyData、evidencePack、actionableTakeaway、speakerNotes。
+
+slides 必须是包含且仅包含 1 个 slide 对象的非空数组；禁止省略 slides 或把 slide 字段直接放在顶层。
+
+修订要求：
+- 以「当前正文」为基准，按「修改建议」调整；建议未提及且仍合理的部分尽量保留。
+- 修改 displayBullets、coreMessage、actionableTakeaway 时三者不得重复同一句话。
+- speakerNotes 须与修订后的页面要点一致，为可直接朗读的口播稿。
+- 仍以参考资料为事实依据，不编造无来源的数字或引用；无可靠来源时 evidencePack 与 keyData 可为空数组。
+- 不要输出 Markdown、注释或代码围栏。
+
+大纲节点：
+{outline_node}
+
+参考资料：
+{context}
+
+当前正文：
+{current_content}
+
+修改建议：
+{revision_suggestion}
+""".strip()
+
+
+CONTENT_REVISE_TEXT_TEMPLATE = """
+你正在修订一页 PPT 的正文（幻灯片上可见的文字）。只输出修订后的正文本身，不要 JSON，不要解释，不要演讲备注。
+
+页面标题：
+{slide_title}
+
+页面要点（修订时请保持与本页主题一致，可参照但不必逐字照搬）：
+{bullets}
+
+当前正文：
+{current_content}
+
+修改建议：
+{revision_suggestion}
+
+输出要求：
+- 使用中文，适合直接贴在幻灯片上
+- 以 3～6 条要点或短句为主，每条可用「- 」开头
+- 以「当前正文」为基础按「修改建议」调整；未要求改动的合理内容尽量保留
+- 不要输出「以下是修订后…」「设计说明」等元话语
+- 不要使用 Markdown 代码块围栏（不要 ```）
+- 不要添加当前正文中没有的新事实、新数字或新引用，除非修改建议明确要求
+""".strip()
+
+
 SPEAKER_NOTES_JSON_TEMPLATE = """
 你正在为一页 PPT 生成演讲备注。仅返回一个合法的 JSON 对象。
 

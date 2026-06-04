@@ -19,6 +19,9 @@ from app.schema.models import (
     GenerateNotesResponse,
     GenerateOutlineRequest,
     GenerateOutlineResponse,
+    ReviseContentRequest,
+    ReviseContentTextRequest,
+    ReviseContentTextResponse,
 )
 
 router = APIRouter(prefix="/api/generator", tags=["generator"])
@@ -181,6 +184,86 @@ async def expand_content(request: Request, body: ExpandContentRequest):
             content="",
             page_content=None,
             message=f"content generation failed: {exc}",
+        )
+
+
+@router.post("/content/revise", response_model=ExpandContentResponse)
+async def revise_content(request: Request, body: ReviseContentRequest):
+    try:
+        content_expander = _get_content_expander(request)
+        result = await asyncio.to_thread(
+            content_expander.revise_page_content,
+            body.outline_node,
+            body.context,
+            body.current_content,
+            body.revision_suggestion,
+        )
+        content = result.get("content") or ""
+
+        if result.get("page_content") is None:
+            return ExpandContentResponse(
+                success=False,
+                content="",
+                page_content=None,
+                message=result.get("message") or "structured content validation failed",
+            )
+
+        if is_llm_error_content(content):
+            return ExpandContentResponse(
+                success=False,
+                content=content,
+                page_content=result.get("page_content"),
+                message=content or "content revision failed",
+            )
+
+        return ExpandContentResponse(
+            success=True,
+            content=content,
+            page_content=result.get("page_content"),
+            message=result.get("message") or "content revised",
+        )
+    except Exception as exc:
+        return ExpandContentResponse(
+            success=False,
+            content="",
+            page_content=None,
+            message=f"content revision failed: {exc}",
+        )
+
+
+@router.post("/content/revise/text", response_model=ReviseContentTextResponse)
+async def revise_content_text(request: Request, body: ReviseContentTextRequest):
+    try:
+        content_expander = _get_content_expander(request)
+        result = await asyncio.to_thread(
+            content_expander.revise_page_content_text,
+            body.outline_node,
+            body.current_content,
+            body.revision_suggestion,
+        )
+        content = result.get("content") or ""
+        if not result.get("success"):
+            return ReviseContentTextResponse(
+                success=False,
+                content="",
+                message=result.get("message") or "content revision failed",
+            )
+        if is_llm_error_content(content):
+            return ReviseContentTextResponse(
+                success=False,
+                content=content,
+                message=content or "content revision failed",
+            )
+        return ReviseContentTextResponse(
+            success=True,
+            content=content,
+            message=result.get("message") or "content revised",
+        )
+    except Exception as exc:
+        return ReviseContentTextResponse(
+            success=False,
+            content="",
+            message=f"content revision failed: {exc}",
         )
 
 

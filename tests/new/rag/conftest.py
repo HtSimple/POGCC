@@ -91,7 +91,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config) -> None:
     if summary is None:
         return
 
-    terminalreporter.write_sep("=", "RAG Quality Metrics")
+    terminalreporter.write_sep("=", "RAG 检索质量报告")
     for line in format_summary_lines(summary):
         terminalreporter.write_line(line)
 
@@ -100,4 +100,4 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config) -> None:
     json_path = OUTPUT_DIR / f"rag_quality_metrics_{stamp}.json"
     save_json(json_path, summary.to_dict())
     terminalreporter.write_line("")
-    terminalreporter.write_line(f"Metrics saved: {json_path}")
+    terminalreporter.write_line(f"报告已保存: {json_path}")
