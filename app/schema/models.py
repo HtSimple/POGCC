@@ -88,7 +88,7 @@ class ResearchPolicy(BaseModel):
             "authoritative_media",
             "industry_reports",
         ]
-    ] = Field(..., min_length=1, max_length=5)
+    ] = Field(..., min_length=1, max_length=6)
     maxSourcesPerSlide: Optional[int] = Field(None, ge=1, le=8)
 
 
@@ -127,7 +127,7 @@ class PageContentSlide(BaseModel):
     coreMessage: str = Field(..., min_length=12, max_length=140)
     displayBullets: list[str] = Field(..., min_length=3, max_length=5)
     keyData: list[KeyDataItem] = Field(default_factory=list, max_length=4)
-    evidencePack: list[EvidenceItem] = Field(default_factory=list, max_length=5)
+    evidencePack: list[EvidenceItem] = Field(default_factory=list, max_length=6)
     actionableTakeaway: str = Field("", max_length=120)
     speakerNotes: str = Field(..., min_length=10, max_length=600)
 

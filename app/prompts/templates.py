@@ -210,8 +210,8 @@ JSON 必须遵循 protocolVersion "ppt-page-content.v1"。
 researchPolicy 必须包含：
 - triggerReason: 取 user_requested, insufficient_input, fact_verification 之一
 - depthLevel: 取 light, standard, deep 之一
-- sourcePriority: 从 local_document, official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 5 个值
-- maxSourcesPerSlide: 可选，1 到 8 的整数
+- sourcePriority: 从 local_document, official_sites, government_reports, academic_sources, authoritative_media, industry_reports 中取 1 到 6 个值
+- maxSourcesPerSlide: 可选，1 到 6 的整数
 
 slide 必须包含：
 - slideId: 若未提供 slide id，则使用 "slide-001"

@@ -1,8 +1,11 @@
 import json
+import logging
 from datetime import date
 from typing import Any
 
 from pydantic import ValidationError
+
+logger = logging.getLogger(__name__)
 
 from app.prompts.templates import CONTENT_TEMPLATE, PAGE_CONTENT_JSON_TEMPLATE
 from app.schema.models import PageContentProtocol
@@ -144,6 +147,15 @@ def _normalize_evidence_pack(items: Any) -> list[dict[str, Any]]:
             "credibility": _clean_text(item.get("credibility"), "medium"),
             "quote": _clean_text(item.get("quote"), ""),
         })
+
+    if len(normalized) > 6:
+        logger.warning(
+            "evidencePack truncated: LLM generated %d items, keeping first 6. "
+            "Dropped refs: %s",
+            len(normalized),
+            [item.get("sourceRefId", "?") for item in normalized[6:]],
+        )
+        normalized = normalized[:6]
 
     return normalized
 
@@ -301,6 +313,16 @@ class ContentExpander:
                 "maxSourcesPerSlide": 3,
             },
         )
+
+        # 截断超出上限的 sourcePriority，避免 Pydantic 校验拒绝整页
+        rp = data.get("researchPolicy") or {}
+        sp = rp.get("sourcePriority") if isinstance(rp, dict) else None
+        if isinstance(sp, list) and len(sp) > 6:
+            logger.warning(
+                "sourcePriority truncated: LLM generated %d items (%s), keeping first 6",
+                len(sp), sp,
+            )
+            rp["sourcePriority"] = sp[:6]
 
         slides = data.get("slides") or []
         if slides:
