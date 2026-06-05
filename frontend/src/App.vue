@@ -105,28 +105,25 @@
               <div>
                 <p class="eyebrow">Step 2</p>
                 <h3>参考资料入库</h3>
+                <p class="section-hint">支持 PDF、Word、TXT、Markdown。选择文件后自动解析入库，无需手动填写路径。</p>
               </div>
-              <button class="secondary-button" type="button" @click="addReference">
+              <button class="secondary-button" type="button" @click="openUploadDialog">
                 <Plus :size="18" />
-                添加路径
+                添加资料
               </button>
             </div>
 
-            <div class="doc-list">
-              <article v-for="doc in references" :key="doc.id" class="doc-row">
-                <div class="doc-input">
-                  <input v-model.trim="doc.filePath" type="text" placeholder="D:\\path\\to\\reference.pdf" />
+            <div v-if="references.length === 0" class="sub-empty">尚未添加参考资料，可跳过此步直接进入大纲生成。</div>
+            <div v-else class="doc-list">
+              <article v-for="doc in references" :key="doc.id" class="doc-row readonly-row">
+                <div class="doc-file-meta">
+                  <strong>{{ doc.filePath || '未命名文件' }}</strong>
+                  <p v-if="doc.message" class="row-message">{{ doc.message }}</p>
+                </div>
+                <div class="row-actions inline-row-actions">
                   <span class="status-pill small" :class="docStatusClass(doc.status)">
                     {{ docStatusText(doc.status) }}
                   </span>
-                </div>
-                <p v-if="doc.message" class="row-message">{{ doc.message }}</p>
-                <div class="row-actions">
-                  <button class="secondary-button" type="button" :disabled="doc.status === 'parsing'"
-                    @click="uploadReference(doc)">
-                    <Upload :size="18" />
-                    入库
-                  </button>
                   <button class="ghost-button danger" type="button" title="删除资料" @click="removeReference(doc.id)">
                     <Trash2 :size="18" />
                   </button>
@@ -590,6 +587,49 @@
     </div>
 
     <div
+      v-if="uploadDialogOpen"
+      class="dialog-overlay"
+      role="presentation"
+      @click.self="closeUploadDialog"
+    >
+      <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="upload-dialog-title">
+        <h3 id="upload-dialog-title" class="dialog-panel__title">选择参考资料</h3>
+        <p class="dialog-hint">从本机选择 PDF、Word、TXT 或 Markdown 文件，确认后将上传并写入本地知识库。</p>
+        <input
+          ref="uploadFileInputRef"
+          class="file-input-hidden"
+          type="file"
+          accept=".pdf,.doc,.docx,.txt,.md,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown"
+          @change="handleUploadFileChange"
+        />
+        <button
+          class="file-picker"
+          type="button"
+          :disabled="uploadSubmitting"
+          @click="triggerUploadFilePicker"
+        >
+          <Upload :size="20" />
+          <span>{{ pendingUploadFile ? '重新选择文件' : '点击选择文件' }}</span>
+        </button>
+        <p v-if="pendingUploadFile" class="file-picker__name">{{ pendingUploadFile.name }}</p>
+        <p v-if="uploadDialogError" class="dialog-error">{{ uploadDialogError }}</p>
+        <div class="dialog-actions">
+          <button class="secondary-button" type="button" :disabled="uploadSubmitting" @click="closeUploadDialog">
+            取消
+          </button>
+          <button
+            class="primary-button"
+            type="button"
+            :disabled="uploadSubmitting || !pendingUploadFile"
+            @click="submitUploadReference"
+          >
+            {{ uploadSubmitting ? '入库中…' : '确认入库' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
       v-if="reviseDialogOpen"
       class="dialog-overlay"
       role="presentation"
@@ -665,7 +705,7 @@ import {
   searchKnowledge,
   searchKnowledgeBatch,
   switchModel,
-  uploadDocument
+  uploadDocumentFile
 } from './api'
 import { deleteRecord, loadHistory, upsertRecord } from './storage'
 import type {
@@ -697,7 +737,7 @@ const NEW_SECTION_OPTION = '__new__'
 
 const generationSteps: Array<{ key: GenerationStep; label: string; summary: string }> = [
   { key: 'task', label: '任务信息', summary: '填写主题与要求' },
-  { key: 'references', label: '参考资料', summary: '路径入库与状态反馈' },
+  { key: 'references', label: '参考资料', summary: '选择文件入库与状态反馈' },
   { key: 'outline', label: '大纲编辑', summary: '生成、调整、增删页面' },
   { key: 'pages', label: '内容补充', summary: '检索、正文、备注、检查' },
   { key: 'markdown', label: '最终文本', summary: '预览、复制、下载' }
@@ -737,6 +777,12 @@ const pageLoading = reactive({
 const allContentLoading = ref(false)
 const allKnowledgeLoading = ref(false)
 const pipelineLoading = ref(false)
+const uploadDialogOpen = ref(false)
+const uploadFileInputRef = ref<HTMLInputElement | null>(null)
+const pendingUploadFile = ref<File | null>(null)
+const uploadSubmitting = ref(false)
+const uploadDialogError = ref('')
+
 const reviseDialogOpen = ref(false)
 const reviseSuggestion = ref('')
 const reviseSubmitting = ref(false)
@@ -829,7 +875,7 @@ const canGoNext = computed(() => {
     return Boolean(form.topic.trim()) && Number(form.pageCount) > 0
   }
   if (generationStep.value === 'references') {
-    return references.value.every((doc) => doc.status !== 'parsing' && (!doc.filePath || doc.status !== 'pending'))
+    return references.value.every((doc) => doc.status !== 'parsing')
   }
   if (generationStep.value === 'outline') {
     return slides.value.length > 0 && slides.value.every((slide) => Boolean(slide.title.trim()))
@@ -852,9 +898,15 @@ const nextStepLabel = computed(() => {
 })
 
 const currentStepHint = computed(() => {
+  if (generationStep.value === 'references') {
+    const parsingCount = references.value.filter((doc) => doc.status === 'parsing').length
+    if (parsingCount > 0) {
+      return `还有 ${parsingCount} 份资料正在入库，请稍候。`
+    }
+    return '没有资料时可以直接继续；已入库的资料会用于后续检索。'
+  }
   const hints: Record<GenerationStep, string> = {
     task: '填写主题后才能进入资料环节。',
-    references: '已填写路径的资料需要先入库或删除；没有资料时可以直接继续。',
     outline: '必须先生成或新增至少一页大纲，才能进入逐页内容补充。',
     pages: '每一页至少需要有正文内容，才能进入最终文本。',
     markdown: '最终文本已根据当前任务自动组装。'
@@ -873,7 +925,6 @@ watch(
 )
 
 onMounted(() => {
-  addReference()
   loadServiceState()
 })
 
@@ -932,37 +983,93 @@ function goNextStep() {
   }
 }
 
-function addReference() {
+function openUploadDialog() {
+  uploadDialogError.value = ''
+  pendingUploadFile.value = null
+  uploadDialogOpen.value = true
+  if (uploadFileInputRef.value) {
+    uploadFileInputRef.value.value = ''
+  }
+}
+
+function closeUploadDialog() {
+  if (uploadSubmitting.value) {
+    return
+  }
+  uploadDialogOpen.value = false
+  uploadDialogError.value = ''
+  pendingUploadFile.value = null
+  if (uploadFileInputRef.value) {
+    uploadFileInputRef.value.value = ''
+  }
+}
+
+function triggerUploadFilePicker() {
+  uploadFileInputRef.value?.click()
+}
+
+function handleUploadFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  pendingUploadFile.value = input.files?.[0] ?? null
+  uploadDialogError.value = ''
+}
+
+function patchReferenceDoc(docId: string, patch: Partial<ReferenceDoc>) {
+  references.value = references.value.map((item) => (item.id === docId ? { ...item, ...patch } : item))
+}
+
+async function submitUploadReference() {
+  if (uploadSubmitting.value) {
+    return
+  }
+  const file = pendingUploadFile.value
+  if (!file) {
+    uploadDialogError.value = '请先选择文件'
+    return
+  }
+
+  uploadSubmitting.value = true
+  uploadDialogError.value = ''
+
+  const docId = createId()
   references.value.push({
-    id: createId(),
-    filePath: '',
-    status: 'pending'
+    id: docId,
+    filePath: file.name,
+    status: 'parsing',
+    message: '解析中'
   })
+  uploadDialogOpen.value = false
+  pendingUploadFile.value = null
+  if (uploadFileInputRef.value) {
+    uploadFileInputRef.value.value = ''
+  }
+
+  try {
+    const result = await uploadDocumentFile(file)
+    patchReferenceDoc(docId, {
+      status: result.success ? 'stored' : 'failed',
+      docId: result.doc_id,
+      message: result.message || (result.success ? '已入库' : '解析失败')
+    })
+    if (result.success) {
+      showToast(`已入库：${file.name}`, 'success')
+    } else {
+      showToast(result.message || '入库失败', 'error')
+    }
+  } catch (error) {
+    const message = getErrorMessage(error)
+    patchReferenceDoc(docId, {
+      status: 'failed',
+      message
+    })
+    showToast(message, 'error')
+  } finally {
+    uploadSubmitting.value = false
+  }
 }
 
 function removeReference(docId: string) {
   references.value = references.value.filter((doc) => doc.id !== docId)
-  if (references.value.length === 0) {
-    addReference()
-  }
-}
-
-async function uploadReference(doc: ReferenceDoc) {
-  if (!doc.filePath) {
-    showToast('请先填写资料路径', 'warning')
-    return
-  }
-  doc.status = 'parsing'
-  doc.message = '解析中'
-  try {
-    const result = await uploadDocument(doc.filePath)
-    doc.status = result.success ? 'stored' : 'failed'
-    doc.docId = result.doc_id
-    doc.message = result.message || (result.success ? '已入库' : '解析失败')
-  } catch (error) {
-    doc.status = 'failed'
-    doc.message = getErrorMessage(error)
-  }
 }
 
 async function executeGenerateOutline(): Promise<boolean> {
@@ -1351,6 +1458,7 @@ async function executeAllContent() {
   }))
   const result = await expandContentBatch(items, requirementsText.value)
   let okCount = 0
+  const failedTitles: string[] = []
   for (const row of result.results) {
     const slide = slides.value.find((s) => s.id === row.id)
     if (!slide) {
@@ -1360,11 +1468,14 @@ async function executeAllContent() {
       slide.content = pageContentToText(row.page_content) || row.content
       slide.notes = pageContentToSpeakerNotes(row.page_content) || slide.notes
       okCount += 1
+    } else {
+      failedTitles.push(slide.title || `第 ${row.index + 1} 页`)
     }
   }
   return {
     okCount,
     failCount: slides.value.length - okCount,
+    failedTitles,
     elapsedHint: result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
   }
 }
@@ -1539,12 +1650,13 @@ async function fillAllContent() {
   }
   allContentLoading.value = true
   try {
-    const { okCount, failCount, elapsedHint } = await executeAllContent()
+    const { okCount, failCount, failedTitles, elapsedHint } = await executeAllContent()
     if (failCount === 0) {
       showToast(`一键生成完成（${okCount} 页${elapsedHint}）`, 'success')
     } else {
+      const failedHint = failedTitles.length > 0 ? `：${failedTitles.join('、')}` : ''
       showToast(
-        `正文生成完成 ${okCount} 页，失败 ${failCount} 页${elapsedHint}`,
+        `正文生成完成 ${okCount} 页，失败 ${failCount} 页${failedHint}${elapsedHint}`,
         failCount === slides.value.length ? 'error' : 'warning'
       )
     }
@@ -1581,16 +1693,20 @@ async function fillNotes(slide: SlidePage) {
 }
 
 async function checkFacts(slide: SlidePage) {
+  if (!slide.content.trim()) {
+    showToast('请先生成或填写正文后再做事实检查', 'warning')
+    return
+  }
   pageLoading.fact = true
   slide.factCheckStatus = 'review'
   try {
     const prompt = [
-      '请检查以下 PPT 页面内容是否被给定资料支持。',
-      '只返回简洁结论，并指出无来源断言或与材料不一致的内容。',
-      `页面标题：${slide.title}`,
+      '请仅对下方「正文内容」中的事实性陈述做核查，判断其是否被「检索资料」支持。',
+      '不要检查、评论或质疑页面标题、章节名、汇报主题等展示性文字。',
+      '不要检查演讲备注；只关注正文里的具体断言、数据、因果关系与结论。',
+      '只返回简洁结论，并指出正文中无来源或与材料不一致的表述。',
       `正文内容：${slide.content}`,
-      `演讲备注：${slide.notes}`,
-      `检索资料：${slide.knowledge}`
+      `检索资料：${slide.knowledge || '（无检索资料，仅标注正文里无法核实的断言）'}`
     ].join('\n')
     const result = await queryRag(prompt)
     if (!result.success) {
@@ -1728,7 +1844,6 @@ function startNewProject() {
   selectedHistoryId.value = null
   generationStepIndex.value = 0
   activeMode.value = 'generate'
-  addReference()
   showToast('已新建 PPT 任务', 'success')
 }
 
@@ -1742,11 +1857,19 @@ function hasCurrentProjectContent() {
   )
 }
 
+function normalizeReferences(docs: ReferenceDoc[]) {
+  return docs.map((doc) =>
+    doc.status === 'parsing'
+      ? { ...doc, status: 'pending' as const, message: '入库未完成，请重新添加' }
+      : { ...doc }
+  )
+}
+
 function restoreRecord(record: ProjectRecord) {
   currentRecordId.value = record.id
   createdAt.value = record.createdAt
   Object.assign(form, record.form)
-  references.value = record.references.map((doc) => ({ ...doc }))
+  references.value = normalizeReferences(record.references.map((doc) => ({ ...doc })))
   slides.value = record.slides.map((slide) => ({ ...slide, bullets: [...slide.bullets] }))
   normalizeOutlineSlides()
   activeSlideId.value = slides.value[0]?.id ?? ''

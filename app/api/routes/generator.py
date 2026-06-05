@@ -276,6 +276,7 @@ async def expand_content_batch_route(request: Request, body: ExpandContentBatchR
             payload,
             body.context,
             body.max_workers,
+            request.app.state.llm_service,
         )
 
         results = [BatchContentResultItem(**item) for item in report["results"]]

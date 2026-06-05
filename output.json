@@ -3,13 +3,13 @@
   "outline": {
     "protocolVersion": "ppt-narrative-outline.v1",
     "language": "zh-CN",
-    "presentationTitle": "英语学习经验学术汇报",
-    "targetSlideCount": 10,
+    "presentationTitle": "计算机原理学术汇报",
+    "targetSlideCount": 5,
     "sections": [
       {
         "sectionId": "sec-01",
-        "sectionTitle": "引言与背景",
-        "sectionObjective": "介绍汇报主题、个人英语学习历程背景及学术汇报目的",
+        "sectionTitle": "计算机系统基本概念",
+        "sectionObjective": "介绍计算机系统的层次结构、虚拟机、翻译与解释等核心概念，为后续内容奠定基础。",
         "slideRange": {
           "start": 1,
           "end": 2
@@ -19,178 +19,87 @@
             "slideId": "slide-001",
             "slideNumber": 1,
             "slideRole": "cover",
-            "slideTitle": "英语学习经验学术汇报",
+            "slideTitle": "计算机原理学术汇报",
             "keyPoints": [
-              "汇报主题：英语学习经验分享",
-              "学术汇报场景",
-              "个人学习历程概述"
+              "计算机系统层次结构概述",
+              "虚拟机与透明性概念",
+              "翻译与解释机制"
             ],
-            "notes": "封面页，包含标题、汇报人姓名（如适用）、日期等基本信息"
+            "notes": "封面页，列出汇报主题与核心议题。"
           },
           {
             "slideId": "slide-002",
             "slideNumber": 2,
-            "slideRole": "toc",
-            "slideTitle": "汇报大纲",
+            "slideRole": "content",
+            "slideTitle": "计算机系统层次结构与虚拟机",
             "keyPoints": [
-              "学习动机与目标设定",
-              "核心学习方法与策略",
-              "实践与应用场景",
-              "成果评估与反思",
-              "未来学习规划"
+              "从微程序机器级到应用语言机器级的层次划分",
+              "虚拟机：用软件实现的机器",
+              "翻译与解释：程序执行的不同方式",
+              "透明性：不同层次视角下的属性隐藏"
             ],
-            "notes": "目录页，列出汇报的主要章节"
+            "notes": "基于参考资料1，阐述层次结构、虚拟机、翻译、解释和透明性。"
           }
         ]
       },
       {
         "sectionId": "sec-02",
-        "sectionTitle": "学习动机与目标设定",
-        "sectionObjective": "阐述英语学习的初始动机、目标设定过程及学术需求",
+        "sectionTitle": "存储系统与性能优化",
+        "sectionObjective": "讲解多级存储层次、Cache映射与替换算法，以及性能评估指标，突出存储系统对计算机性能的影响。",
         "slideRange": {
           "start": 3,
-          "end": 3
+          "end": 4
         },
         "slides": [
           {
             "slideId": "slide-003",
             "slideNumber": 3,
             "slideRole": "content",
-            "slideTitle": "学习动机与目标设定",
+            "slideTitle": "多级存储层次与Cache设计",
             "keyPoints": [
-              "学术研究需求：文献阅读、国际会议",
-              "个人发展动机：跨文化交流、职业竞争力",
-              "SMART原则设定具体目标（如雅思7.0、流利学术写作）"
+              "多级存储层次：速度与容量的权衡",
+              "Cache映射方式：全相联、直接映象、组相联",
+              "替换算法：LRU等策略",
+              "写策略：写直达法与写回法"
             ],
-            "notes": "结合个人经历说明为何开始系统学习英语，以及如何制定可衡量的目标"
+            "notes": "基于参考资料5，介绍存储层次、Cache映射、替换算法和写策略。"
+          },
+          {
+            "slideId": "slide-004",
+            "slideNumber": 4,
+            "slideRole": "content",
+            "slideTitle": "存储性能评估与优化",
+            "keyPoints": [
+              "命中时间、失效率与失效开销",
+              "强制性失效、容量失效与冲突失效",
+              "2:1 Cache经验规则与相联度",
+              "Victim Cache与预取技术"
+            ],
+            "notes": "基于参考资料5，讲解Cache性能指标、失效类型和优化技术。"
           }
         ]
       },
       {
         "sectionId": "sec-03",
-        "sectionTitle": "核心学习方法与策略",
-        "sectionObjective": "详细介绍所采用的英语学习方法、工具及策略，突出学术英语特点",
+        "sectionTitle": "并行处理与机群系统",
+        "sectionObjective": "概述多处理机、机群系统及并行性概念，展示计算机系统向并行化发展的趋势。",
         "slideRange": {
-          "start": 4,
-          "end": 6
+          "start": 5,
+          "end": 5
         },
         "slides": [
-          {
-            "slideId": "slide-004",
-            "slideNumber": 4,
-            "slideRole": "content",
-            "slideTitle": "输入技能提升：阅读与听力",
-            "keyPoints": [
-              "学术文献精读与泛读结合",
-              "利用AI工具辅助理解长难句（如DeepSeek解释语法）",
-              "播客与学术讲座听力训练，笔记技巧"
-            ],
-            "notes": "强调输入技能的基础作用，提及使用AI工具提升效率"
-          },
           {
             "slideId": "slide-005",
             "slideNumber": 5,
-            "slideRole": "content",
-            "slideTitle": "输出技能强化：写作与口语",
-            "keyPoints": [
-              "学术写作结构训练（IMRaD）",
-              "语言反馈循环：AI批改+同伴互评",
-              "口语练习：影子跟读、学术汇报模拟"
-            ],
-            "notes": "展示如何通过结构化练习和反馈机制提升输出能力"
-          },
-          {
-            "slideId": "slide-006",
-            "slideNumber": 6,
-            "slideRole": "content",
-            "slideTitle": "技术工具与资源整合",
-            "keyPoints": [
-              "AI辅助学习：大语言模型用于语法纠错、表达润色",
-              "知识管理工具：Notion构建个人语料库",
-              "参考项目经验：PPT大纲智能生成系统的知识挂载思路"
-            ],
-            "notes": "结合参考资料中提到的AI工具和知识管理概念，说明如何整合技术资源"
-          }
-        ]
-      },
-      {
-        "sectionId": "sec-04",
-        "sectionTitle": "实践与应用场景",
-        "sectionObjective": "展示英语学习在实际学术场景中的应用案例与成效",
-        "slideRange": {
-          "start": 7,
-          "end": 7
-        },
-        "slides": [
-          {
-            "slideId": "slide-007",
-            "slideNumber": 7,
-            "slideRole": "case-study",
-            "slideTitle": "学术场景应用案例",
-            "keyPoints": [
-              "案例1：撰写英文论文并成功投稿",
-              "案例2：国际会议口头报告准备与呈现",
-              "应用效果：沟通效率提升、学术网络拓展"
-            ],
-            "notes": "通过具体案例说明学习成果的实际转化，体现学术汇报的实践价值"
-          }
-        ]
-      },
-      {
-        "sectionId": "sec-05",
-        "sectionTitle": "成果评估与反思",
-        "sectionObjective": "量化评估学习成果，反思过程中的挑战与应对策略",
-        "slideRange": {
-          "start": 8,
-          "end": 8
-        },
-        "slides": [
-          {
-            "slideId": "slide-008",
-            "slideNumber": 8,
-            "slideRole": "content",
-            "slideTitle": "成果评估与反思",
-            "keyPoints": [
-              "标准化考试成绩对比（如雅思从6.0到7.5）",
-              "自我评估：学术阅读速度、写作质量提升",
-              "主要挑战：持续性动力、母语干扰，应对策略"
-            ],
-            "notes": "使用数据展示进步，并诚实反思不足，增强汇报可信度"
-          }
-        ]
-      },
-      {
-        "sectionId": "sec-06",
-        "sectionTitle": "未来学习规划与总结",
-        "sectionObjective": "提出持续改进的英语学习计划，总结核心经验与启示",
-        "slideRange": {
-          "start": 9,
-          "end": 10
-        },
-        "slides": [
-          {
-            "slideId": "slide-009",
-            "slideNumber": 9,
-            "slideRole": "content",
-            "slideTitle": "未来学习规划",
-            "keyPoints": [
-              "深化专业领域英语（如学术写作高级技巧）",
-              "探索AI辅助学习新范式（参照Agentic RAG思路）",
-              "参与国际协作项目，以用促学"
-            ],
-            "notes": "结合参考资料中提到的技术趋势，规划未来学习方向"
-          },
-          {
-            "slideId": "slide-010",
-            "slideNumber": 10,
             "slideRole": "summary",
-            "slideTitle": "总结与启示",
+            "slideTitle": "并行处理与机群系统总结",
             "keyPoints": [
-              "核心经验：目标驱动、方法科学、技术赋能",
-              "对学术英语学习的建议",
-              "致谢与问答环节"
+              "多处理机：集中式共享与分布式共享",
+              "多Cache一致性与通信延迟",
+              "机群系统：单一系统映象与高可用性",
+              "并行性概念与未来展望"
             ],
-            "notes": "总结页，提炼关键信息，并过渡到问答环节"
+            "notes": "基于参考资料2、3，总结多处理机、机群和并行性，作为汇报收尾。"
           }
         ]
       }

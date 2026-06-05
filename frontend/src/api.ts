@@ -63,6 +63,18 @@ export async function uploadDocument(filePath: string) {
   return data as { success: boolean; doc_id: string; message?: string }
 }
 
+export async function uploadDocumentFile(file: File) {
+  if (useMock) {
+    return mockUploadDocument(file.name)
+  }
+  const formData = new FormData()
+  formData.append('file', file)
+  const { data } = await api.post('/api/rag/upload/file', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+  return data as { success: boolean; doc_id: string; message?: string }
+}
+
 export async function generateOutline(topic: string, requirements: string) {
   if (useMock) {
     return mockGenerateOutline(topic, requirements)
