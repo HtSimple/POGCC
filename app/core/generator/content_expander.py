@@ -597,7 +597,18 @@ class ContentExpander:
         *,
         prefer_json_object: bool = False,
     ) -> str:
-        if not prefer_json_object and hasattr(self.llm_service, "generate_json_schema"):
+        provider = getattr(
+            self.llm_service,
+            "provider_name",
+            getattr(self.llm_service, "provider", None),
+        )
+        supports_page_content_json_schema = provider != "deepseek"
+
+        if (
+            not prefer_json_object
+            and supports_page_content_json_schema
+            and hasattr(self.llm_service, "generate_json_schema")
+        ):
             raw = self.llm_service.generate_json_schema(
                 prompt,
                 schema_name="ppt_page_content",

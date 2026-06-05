@@ -1,37 +1,35 @@
 from openai import OpenAI
+
 from app.utils.config import Config
 
 
 class DeepSeekService:
-    """DeepSeek 的 OpenAI 兼容接口适配器。"""
+    """OpenAI-compatible DeepSeek API adapter."""
 
     def __init__(self, config=None):
-        """读取 DeepSeek API Key，并初始化 OpenAI 兼容客户端。"""
-        if config is None:
-            config = Config()
-        self._config = config
-
-        self.api_key = self._config.get('deepseek_api_key')
+        self._config = config or Config()
+        self.api_key = self._config.get("deepseek_api_key")
         if not self.api_key:
-            raise ValueError("配置文件中未设置 deepseek_api_key")
+            raise ValueError("deepseek_api_key is not configured")
+        self.client = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com")
 
-        self.client = OpenAI(
-            api_key=self.api_key,
-            base_url="https://api.deepseek.com"
-        )
-
-    def generate(self, prompt, model="deepseek-v4-pro", temperature=0.3, max_tokens=4096, response_format=None):
-        """调用 DeepSeek Chat Completions，处理空回复和异常后返回字符串结果。"""
+    def generate_with_usage(
+        self,
+        prompt,
+        model="deepseek-v4-pro",
+        temperature=0.3,
+        max_tokens=4096,
+        response_format=None,
+    ):
         try:
             kwargs = {}
             if response_format is not None:
                 kwargs["response_format"] = response_format
-
             completion = self.client.chat.completions.create(
                 model=model,
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=temperature,
                 max_tokens=max_tokens,
@@ -39,15 +37,38 @@ class DeepSeekService:
                 extra_body={"thinking": {"type": "disabled"}},
                 **kwargs,
             )
-
-            content = completion.choices[0].message.content or ''
+            content = completion.choices[0].message.content or ""
             if not content.strip():
-                finish_reason = completion.choices[0].finish_reason or ''
-                if finish_reason == 'length':
-                    return "[DeepSeek] 回复被截断，请增加 max_tokens 后重试"
-                return "[DeepSeek] 模型未返回有效内容"
+                reason = completion.choices[0].finish_reason or ""
+                message = (
+                    "[DeepSeek] Response was truncated; increase max_tokens and retry"
+                    if reason == "length"
+                    else "[DeepSeek] Model returned no content"
+                )
+                return message, None
+            usage = completion.usage
+            return content, {
+                "input_tokens": usage.prompt_tokens,
+                "output_tokens": usage.completion_tokens,
+                "total_tokens": usage.total_tokens,
+                "cache_hit_tokens": getattr(usage, "prompt_cache_hit_tokens", 0) or 0,
+                "cache_miss_tokens": getattr(
+                    usage, "prompt_cache_miss_tokens", usage.prompt_tokens
+                )
+                or 0,
+            }
+        except Exception as exc:
+            return f"[DeepSeek] Request failed: {exc}", None
 
-            return content
-
-        except Exception as e:
-            return f"[DeepSeek] 请求发生错误: {str(e)}"
+    def generate(
+        self,
+        prompt,
+        model="deepseek-v4-pro",
+        temperature=0.3,
+        max_tokens=4096,
+        response_format=None,
+    ):
+        content, _ = self.generate_with_usage(
+            prompt, model, temperature, max_tokens, response_format
+        )
+        return content

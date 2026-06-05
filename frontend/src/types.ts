@@ -154,3 +154,58 @@ export interface ModelInfoResponse {
   current_provider: string
   available_providers: string[]
 }
+
+export interface ApiProviderUsage {
+  call_limit: number | null
+  token_limit: number | null
+  cost_limit: number | null
+  calls: number
+  input_tokens: number
+  output_tokens: number
+  total_tokens: number
+  estimated_cost: number
+  currency: string
+  total_duration_ms: number
+  average_duration_ms: number
+  failed_calls: number
+  blocked_calls: number
+  actual_token_calls: number
+  estimated_token_calls: number
+  last_called_at: string | null
+}
+
+export interface ApiCallRecord {
+  provider: string
+  model?: string | null
+  retry_count: number
+  token_source: 'actual' | 'estimated'
+  success: boolean
+  input_tokens: number
+  output_tokens: number
+  duration_ms: number
+  estimated_cost: number
+  currency: string
+  error?: string | null
+  called_at: string
+}
+
+export interface ApiUsageSummary {
+  providers: Record<string, ApiProviderUsage>
+  recent_calls: ApiCallRecord[]
+  daily_usage: Record<string, Record<string, ApiDailyUsage>>
+}
+
+export interface ApiDailyUsage {
+  calls: number
+  input_tokens: number
+  output_tokens: number
+  total_tokens: number
+  estimated_cost: number
+  currency: string
+}
+
+export interface ApiLimitUpdate {
+  call_limit: number | null
+  token_limit: number | null
+  cost_limit: number | null
+}

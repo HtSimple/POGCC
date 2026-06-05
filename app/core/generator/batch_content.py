@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from app.core.generator.content_expander import ContentExpander
+from app.services.api_cost_service import ApiQuotaExceeded
 from app.services.llm_service import LLMService
 from app.utils.config import config
 
@@ -75,6 +76,16 @@ def _expand_one(
                     wait,
                 )
                 time.sleep(wait)
+        except ApiQuotaExceeded as exc:
+            return {
+                "index": index,
+                "id": item_id,
+                "success": False,
+                "content": "",
+                "page_content": None,
+                "message": str(exc),
+                "quota_exceeded": True,
+            }
         except Exception as exc:
             last_result = {
                 "index": index,
@@ -165,7 +176,11 @@ def expand_content_batch(
     results = _run_batch(items, context, workers, llm_service)
     results.sort(key=lambda row: row["index"])
 
-    failed_indices = {row["index"] for row in results if not row["success"]}
+    failed_indices = {
+        row["index"]
+        for row in results
+        if not row["success"] and not row.get("quota_exceeded")
+    }
     if failed_indices and workers > 1:
         failed_items = [
             item

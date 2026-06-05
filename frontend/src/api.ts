@@ -1,5 +1,12 @@
 import axios from 'axios'
-import type { HealthResponse, ModelInfoResponse, OutlineResponse, PageContentProtocol } from './types'
+import type {
+  ApiLimitUpdate,
+  ApiUsageSummary,
+  HealthResponse,
+  ModelInfoResponse,
+  OutlineResponse,
+  PageContentProtocol
+} from './types'
 import {
   mockExpandContent,
   mockExpandContentBatch,
@@ -53,6 +60,21 @@ export async function switchModel(provider: string) {
   }
   const { data } = await api.post('/api/model/switch', { provider })
   return data as { success: boolean; current_provider: string; message?: string }
+}
+
+export async function getApiUsage() {
+  const { data } = await api.get<ApiUsageSummary>('/api/cost/usage')
+  return data
+}
+
+export async function updateApiLimits(provider: string, limits: ApiLimitUpdate) {
+  const { data } = await api.put(`/api/cost/limits/${provider}`, limits)
+  return data as { success: boolean; message?: string }
+}
+
+export async function resetApiUsage(provider?: string) {
+  const { data } = await api.post('/api/cost/reset', { provider: provider || null })
+  return data as { success: boolean; message?: string }
 }
 
 export async function uploadDocument(filePath: string) {

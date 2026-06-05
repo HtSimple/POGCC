@@ -126,6 +126,17 @@ class SchemaCapturingLLM(FakeLLM):
         return super().generate(prompt, **kwargs)
 
 
+class ProviderAwareStructuredLLM(SchemaCapturingLLM):
+    def __init__(self, provider, responses):
+        super().__init__(responses)
+        self.provider = provider
+        self.json_object_calls = []
+
+    def generate_json_object(self, prompt, **kwargs):
+        self.json_object_calls.append({"prompt": prompt, "kwargs": kwargs})
+        return super().generate(prompt, **kwargs)
+
+
 class FakeRetrievalResult:
     source_file = "input_test.txt"
     score = 0.9
@@ -193,6 +204,51 @@ def test_outline_generation_uses_json_schema_response_format():
     assert llm.schema_calls
     assert llm.schema_calls[0]["schema_name"] == "ppt_narrative_outline"
     assert llm.schema_calls[0]["schema"]["properties"]["protocolVersion"]["const"] == "ppt-narrative-outline.v1"
+
+
+def test_deepseek_outline_uses_json_object_without_trying_json_schema():
+    llm = ProviderAwareStructuredLLM("deepseek", [json.dumps(VALID_OUTLINE, ensure_ascii=False)])
+    maker = OutlineMaker(llm_service=llm)
+
+    outline = maker.generate_outline("AI presentation")
+
+    assert outline["protocolVersion"] == "ppt-narrative-outline.v1"
+    assert llm.schema_calls == []
+    assert len(llm.json_object_calls) == 1
+
+
+def test_qwen_outline_still_prefers_json_schema():
+    llm = ProviderAwareStructuredLLM("qwen", [json.dumps(VALID_OUTLINE, ensure_ascii=False)])
+    maker = OutlineMaker(llm_service=llm)
+
+    outline = maker.generate_outline("AI presentation")
+
+    assert outline["protocolVersion"] == "ppt-narrative-outline.v1"
+    assert len(llm.schema_calls) == 1
+    assert llm.json_object_calls == []
+
+
+def test_deepseek_page_content_uses_json_object_without_trying_json_schema():
+    llm = ProviderAwareStructuredLLM("deepseek", [json.dumps(VALID_PAGE_CONTENT, ensure_ascii=False)])
+    expander = ContentExpander(llm_service=llm)
+
+    result = expander.expand_page_content({"id": "slide-001", "number": 1, "title": "Test"})
+
+    assert result["page_content"]["protocolVersion"] == "ppt-page-content.v1"
+    assert llm.schema_calls == []
+    assert len(llm.json_object_calls) == 1
+
+
+def test_qwen_page_content_still_prefers_json_schema():
+    llm = ProviderAwareStructuredLLM("qwen", [json.dumps(VALID_PAGE_CONTENT, ensure_ascii=False)])
+    expander = ContentExpander(llm_service=llm)
+
+    result = expander.expand_page_content({"id": "slide-001", "number": 1, "title": "Test"})
+
+    assert result["page_content"]["protocolVersion"] == "ppt-page-content.v1"
+    assert len(llm.schema_calls) == 1
+    assert llm.schema_calls[0]["schema_name"] == "ppt_page_content"
+    assert llm.json_object_calls == []
 
 
 def test_generator_content_api_returns_legacy_and_protocol_fields():

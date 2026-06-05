@@ -14,6 +14,10 @@
           <History :size="18" />
           查看历史记录
         </button>
+        <button type="button" :class="{ active: activeMode === 'cost' }" @click="openCostControl">
+          <Gauge :size="18" />
+          API 成本控制
+        </button>
       </div>
       <div class="topbar-actions">
         <span class="status-pill" :class="healthOk ? 'status-ok' : 'status-warn'">
@@ -432,7 +436,7 @@
         </div>
       </section>
 
-      <section v-else class="panel">
+      <section v-else-if="activeMode === 'history'" class="panel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">History Workflow</p>
@@ -577,6 +581,138 @@
           </section>
         </div>
       </section>
+
+      <section v-if="activeMode === 'cost'" class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">API Usage & Quotas</p>
+            <h2>API 成本控制</h2>
+          </div>
+          <button class="secondary-button" type="button" :disabled="costLoading" @click="loadApiUsage">
+            <RefreshCw :size="18" />
+            刷新用量
+          </button>
+        </div>
+
+        <div v-if="costLoading && !apiUsage" class="empty-state">正在读取 API 用量...</div>
+        <div v-else-if="apiUsage && selectedApiUsage" class="cost-layout">
+          <nav class="cost-api-list" aria-label="API 列表">
+            <button
+              v-for="(usage, provider) in apiUsage.providers"
+              :key="provider"
+              type="button"
+              :class="{ active: selectedCostProvider === provider }"
+              @click="selectedCostProvider = provider"
+            >
+              <span>
+                <strong>{{ providerLabel(provider) }}</strong>
+                <small>{{ usage.calls }} 次调用 · {{ formatNumber(usage.total_tokens) }} Token</small>
+              </span>
+              <span class="status-dot" :class="{ warning: usage.blocked_calls > 0 }" aria-hidden="true"></span>
+            </button>
+          </nav>
+
+          <div class="cost-api-detail">
+          <section class="cost-provider">
+            <div class="cost-provider-head">
+              <div>
+                <p class="eyebrow">{{ selectedCostProvider }}</p>
+                <h3>{{ providerLabel(selectedCostProvider) }}</h3>
+              </div>
+              <span class="status-pill small" :class="selectedApiUsage.blocked_calls ? 'status-warn' : 'status-ok'">
+                {{ selectedApiUsage.blocked_calls ? `已拦截 ${selectedApiUsage.blocked_calls} 次` : '额度正常' }}
+              </span>
+            </div>
+            <div class="cost-metrics">
+              <div><span>调用次数</span><strong>{{ selectedApiUsage.calls }}</strong><small>/ {{ limitText(selectedApiUsage.call_limit) }}</small></div>
+              <div><span>累计 Token</span><strong>{{ formatNumber(selectedApiUsage.total_tokens) }}</strong><small>/ {{ limitText(selectedApiUsage.token_limit) }}</small></div>
+              <div><span>预估成本</span><strong>{{ formatCost(selectedApiUsage.estimated_cost, selectedApiUsage.currency) }}</strong><small>/ {{ costLimitText(selectedApiUsage.cost_limit, selectedApiUsage.currency) }}</small></div>
+              <div><span>平均耗时</span><strong>{{ selectedApiUsage.average_duration_ms }} ms</strong><small>失败 {{ selectedApiUsage.failed_calls }} 次</small></div>
+            </div>
+            <div class="quota-form">
+              <label><span>调用次数上限</span><input v-model.number="quotaDrafts[selectedCostProvider].call_limit" min="1" type="number" placeholder="不限" /></label>
+              <label><span>Token 上限</span><input v-model.number="quotaDrafts[selectedCostProvider].token_limit" min="1" type="number" placeholder="不限" /></label>
+              <label><span>成本上限（{{ selectedApiUsage.currency }}）</span><input v-model.number="quotaDrafts[selectedCostProvider].cost_limit" min="0.000001" step="0.000001" type="number" placeholder="不限" /></label>
+            </div>
+            <div class="button-row cost-action-row">
+              <button class="primary-button" type="button" :disabled="costLoading" @click="saveProviderLimits(selectedCostProvider)">
+                <Save :size="18" />保存限额
+              </button>
+              <button class="secondary-button" type="button" :disabled="costLoading" @click="clearProviderLimits(selectedCostProvider)">
+                清除限额
+              </button>
+              <button class="ghost-button danger" type="button" :disabled="costLoading" @click="resetProviderUsage(selectedCostProvider)">
+                <RotateCcw :size="18" />清零用量
+              </button>
+            </div>
+          </section>
+
+          <section class="recent-api-calls">
+            <div class="recent-api-head">
+              <h3>最近调用</h3>
+              <span>共 {{ allSelectedApiCalls.length }} 条</span>
+            </div>
+            <div v-if="selectedApiCalls.length === 0" class="sub-empty">暂无 API 调用记录</div>
+            <div v-else class="api-call-table-wrap">
+              <table class="api-call-table">
+                <thead><tr><th>API / 模型</th><th>状态</th><th>Token</th><th>Token 来源</th><th>耗时</th><th>重试</th><th>预估成本</th><th>时间</th></tr></thead>
+                <tbody>
+                  <tr v-for="(call, index) in selectedApiCalls" :key="`${call.called_at}-${index}`">
+                    <td>{{ providerLabel(call.provider) }}<small v-if="call.model"><br />{{ call.model }}</small></td>
+                    <td>{{ call.success ? '成功' : '失败' }}</td>
+                    <td>{{ formatNumber(call.input_tokens + call.output_tokens) }}</td>
+                    <td>{{ call.token_source === 'actual' ? 'API 实际值' : '估算值' }}</td>
+                    <td>{{ call.duration_ms }} ms</td>
+                    <td>{{ call.retry_count }}</td>
+                    <td>{{ formatCost(call.estimated_cost, call.currency) }}</td>
+                    <td>{{ formatCallTime(call.called_at) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="apiCallPageCount > 1" class="api-pagination">
+              <button class="secondary-button" type="button" :disabled="apiCallPage <= 1" @click="apiCallPage -= 1">
+                <ArrowLeft :size="17" />上一页
+              </button>
+              <span>第 {{ apiCallPage }} / {{ apiCallPageCount }} 页</span>
+              <button class="secondary-button" type="button" :disabled="apiCallPage >= apiCallPageCount" @click="apiCallPage += 1">
+                下一页<ArrowRight :size="17" />
+              </button>
+            </div>
+          </section>
+
+          <section class="usage-charts">
+            <div class="usage-charts-head">
+              <div>
+                <p class="eyebrow">Last 15 Days</p>
+                <h3>近十五日用量</h3>
+              </div>
+              <span>{{ providerLabel(selectedCostProvider) }}</span>
+            </div>
+            <div class="usage-chart-grid">
+              <article v-for="chart in usageCharts" :key="chart.key" class="usage-chart">
+                <div class="usage-chart-title">
+                  <span>{{ chart.label }}</span>
+                  <strong>{{ chart.totalLabel }}</strong>
+                </div>
+                <div class="bar-chart" :aria-label="chart.label">
+                  <div v-for="item in chart.items" :key="item.date" class="bar-column">
+                    <div class="bar-track">
+                      <div class="bar-value" :style="{ height: `${item.height}%` }"></div>
+                    </div>
+                    <small>{{ item.shortDate }}</small>
+                    <span class="bar-tooltip">
+                      <strong>{{ item.date }}</strong>
+                      <span>{{ item.label }}</span>
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div v-if="isGenerating" class="generating-overlay" role="status" aria-live="polite" aria-busy="true">
@@ -670,7 +806,9 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import {
   Activity,
+  ArrowLeft,
   ArrowDown,
+  ArrowRight,
   ArrowUp,
   CheckCircle2,
   Copy,
@@ -678,6 +816,7 @@ import {
   Eye,
   Files,
   FileText,
+  Gauge,
   History,
   NotebookPen,
   PencilLine,
@@ -696,6 +835,7 @@ import {
   formatApiError,
   generateNotes,
   generateOutline,
+  getApiUsage,
   getApiBaseUrl,
   getHealth,
   getModelInfo,
@@ -705,6 +845,8 @@ import {
   searchKnowledge,
   searchKnowledgeBatch,
   switchModel,
+  resetApiUsage,
+  updateApiLimits,
   uploadDocumentFile
 } from './api'
 import { deleteRecord, loadHistory, upsertRecord } from './storage'
@@ -717,10 +859,12 @@ import type {
   ProjectRecord,
   ReferenceDoc,
   ReferenceStatus,
-  SlidePage
+  SlidePage,
+  ApiLimitUpdate,
+  ApiUsageSummary
 } from './types'
 
-type AppMode = 'generate' | 'history'
+type AppMode = 'generate' | 'history' | 'cost'
 type GenerationStep = 'task' | 'references' | 'outline' | 'pages' | 'markdown'
 
 type OutlineSectionGroup = {
@@ -786,6 +930,66 @@ const uploadDialogError = ref('')
 const reviseDialogOpen = ref(false)
 const reviseSuggestion = ref('')
 const reviseSubmitting = ref(false)
+const costLoading = ref(false)
+const apiUsage = ref<ApiUsageSummary | null>(null)
+const quotaDrafts = reactive<Record<string, ApiLimitUpdate>>({})
+const selectedCostProvider = ref('deepseek')
+const apiCallPage = ref(1)
+const API_CALL_PAGE_SIZE = 10
+const selectedApiUsage = computed(() => apiUsage.value?.providers[selectedCostProvider.value] ?? null)
+const allSelectedApiCalls = computed(() =>
+  (apiUsage.value?.recent_calls ?? [])
+    .filter((call) => call.provider === selectedCostProvider.value)
+    .slice()
+    .reverse()
+)
+const apiCallPageCount = computed(() => Math.max(1, Math.ceil(allSelectedApiCalls.value.length / API_CALL_PAGE_SIZE)))
+const selectedApiCalls = computed(() => {
+  const start = (apiCallPage.value - 1) * API_CALL_PAGE_SIZE
+  return allSelectedApiCalls.value.slice(start, start + API_CALL_PAGE_SIZE)
+})
+const usageCharts = computed(() => {
+  const daily = apiUsage.value?.daily_usage?.[selectedCostProvider.value] ?? {}
+  const currency = selectedApiUsage.value?.currency ?? 'CNY'
+  const days = Array.from({ length: 15 }, (_, offset) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (14 - offset))
+    const key = date.toLocaleDateString('sv-SE')
+    return {
+      date: key,
+      shortDate: `${date.getMonth() + 1}-${date.getDate()}`,
+      usage: daily[key]
+    }
+  })
+  const makeChart = (key: string, label: string, getValue: (item: typeof days[number]) => number, format: (value: number) => string) => {
+    const values = days.map(getValue)
+    const max = Math.max(...values, 1)
+    return {
+      key,
+      label,
+      totalLabel: format(values.reduce((sum, value) => sum + value, 0)),
+      items: days.map((item, index) => ({
+        date: item.date,
+        shortDate: item.shortDate,
+        label: format(values[index]),
+        height: values[index] === 0 ? 0 : Math.max(4, (values[index] / max) * 100)
+      }))
+    }
+  }
+  return [
+    makeChart('tokens', 'Token 用量', (item) => item.usage?.total_tokens ?? 0, formatNumber),
+    makeChart('calls', 'API 调用次数', (item) => item.usage?.calls ?? 0, formatNumber),
+    makeChart('cost', '消费金额', (item) => item.usage?.estimated_cost ?? 0, (value) => formatCost(value, currency))
+  ]
+})
+
+watch(selectedCostProvider, () => {
+  apiCallPage.value = 1
+})
+
+watch(apiCallPageCount, (count) => {
+  apiCallPage.value = Math.min(apiCallPage.value, count)
+})
 
 const isGenerating = computed(
   () =>
@@ -907,6 +1111,7 @@ const currentStepHint = computed(() => {
   }
   const hints: Record<GenerationStep, string> = {
     task: '填写主题后才能进入资料环节。',
+    references: '资料正在处理时请稍候，处理完成后可继续。',
     outline: '必须先生成或新增至少一页大纲，才能进入逐页内容补充。',
     pages: '每一页至少需要有正文内容，才能进入最终文本。',
     markdown: '最终文本已根据当前任务自动组装。'
@@ -964,6 +1169,85 @@ function openHistoryFlow() {
   if (selectedHistoryId.value && !historyRecords.value.some((record) => record.id === selectedHistoryId.value)) {
     selectedHistoryId.value = null
   }
+}
+
+async function openCostControl() {
+  activeMode.value = 'cost'
+  await loadApiUsage()
+}
+
+async function loadApiUsage() {
+  costLoading.value = true
+  try {
+    apiUsage.value = await getApiUsage()
+    for (const [provider, usage] of Object.entries(apiUsage.value.providers)) {
+      quotaDrafts[provider] = {
+        call_limit: usage.call_limit,
+        token_limit: usage.token_limit,
+        cost_limit: usage.cost_limit
+      }
+    }
+    if (!apiUsage.value.providers[selectedCostProvider.value]) {
+      selectedCostProvider.value = Object.keys(apiUsage.value.providers)[0] || ''
+    }
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+  } finally {
+    costLoading.value = false
+  }
+}
+
+async function saveProviderLimits(provider: string) {
+  costLoading.value = true
+  try {
+    const result = await updateApiLimits(provider, quotaDrafts[provider])
+    showToast(result.message || `${providerLabel(provider)} 限额已保存`, result.success ? 'success' : 'warning')
+    await loadApiUsage()
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+    costLoading.value = false
+  }
+}
+
+async function clearProviderLimits(provider: string) {
+  quotaDrafts[provider] = { call_limit: null, token_limit: null, cost_limit: null }
+  await saveProviderLimits(provider)
+}
+
+async function resetProviderUsage(provider: string) {
+  costLoading.value = true
+  try {
+    await resetApiUsage(provider)
+    showToast(`${providerLabel(provider)} 用量已清零`, 'success')
+    await loadApiUsage()
+  } catch (error) {
+    showToast(getErrorMessage(error), 'error')
+    costLoading.value = false
+  }
+}
+
+function providerLabel(provider: string) {
+  return ({ deepseek: 'DeepSeek 大模型', qwen: '千问大模型' } as Record<string, string>)[provider] || provider
+}
+
+function limitText(value: number | null) {
+  return value === null ? '不限' : formatNumber(value)
+}
+
+function costLimitText(value: number | null, currency: string) {
+  return value === null ? '不限' : formatCost(value, currency)
+}
+
+function formatCost(value: number, currency: string) {
+  return `${currency === 'CNY' ? '¥' : '$'}${value.toFixed(6)}`
+}
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('zh-CN').format(value)
+}
+
+function formatCallTime(value: string) {
+  return new Date(value).toLocaleString('zh-CN')
 }
 
 function goPreviousStep() {
@@ -1072,23 +1356,26 @@ function removeReference(docId: string) {
   references.value = references.value.filter((doc) => doc.id !== docId)
 }
 
-async function executeGenerateOutline(): Promise<boolean> {
+async function executeGenerateOutline(): Promise<{ ok: boolean; message?: string }> {
   const result = await generateOutline(form.topic, requirementsText.value)
   if (!result.success) {
-    return false
+    return { ok: false, message: result.message }
   }
   slides.value = normalizeOutline(result.outline)
   normalizeOutlineSlides()
   activeSlideId.value = slides.value[0]?.id ?? ''
-  return slides.value.length > 0 && slides.value.every((slide) => Boolean(slide.title.trim()))
+  return {
+    ok: slides.value.length > 0 && slides.value.every((slide) => Boolean(slide.title.trim())),
+    message: result.message
+  }
 }
 
 async function handleGenerateOutline() {
   outlineLoading.value = true
   try {
-    const ok = await executeGenerateOutline()
-    if (!ok) {
-      showToast('大纲生成失败', 'error')
+    const outcome = await executeGenerateOutline()
+    if (!outcome.ok) {
+      showToast(outcome.message || '大纲生成失败', 'error')
       return
     }
     showToast('大纲生成成功，可以检查并修改页面结构', 'success')
@@ -1459,6 +1746,7 @@ async function executeAllContent() {
   const result = await expandContentBatch(items, requirementsText.value)
   let okCount = 0
   const failedTitles: string[] = []
+  const failureMessages: string[] = []
   for (const row of result.results) {
     const slide = slides.value.find((s) => s.id === row.id)
     if (!slide) {
@@ -1470,12 +1758,16 @@ async function executeAllContent() {
       okCount += 1
     } else {
       failedTitles.push(slide.title || `第 ${row.index + 1} 页`)
+      if (row.message && !failureMessages.includes(row.message)) {
+        failureMessages.push(row.message)
+      }
     }
   }
   return {
     okCount,
     failCount: slides.value.length - okCount,
     failedTitles,
+    failureMessages,
     elapsedHint: result.elapsed_sec ? `，耗时 ${result.elapsed_sec}s` : ''
   }
 }
@@ -1512,10 +1804,10 @@ async function handleOneClickPipelineFromOutline() {
   pipelineLoading.value = true
   try {
     outlineLoading.value = true
-    const outlineOk = await executeGenerateOutline()
+    const outlineOutcome = await executeGenerateOutline()
     outlineLoading.value = false
-    if (!outlineOk) {
-      showToast('大纲生成失败，流程已中止', 'error')
+    if (!outlineOutcome.ok) {
+      showToast(outlineOutcome.message || '大纲生成失败，流程已中止', 'error')
       return
     }
 
@@ -1529,6 +1821,12 @@ async function handleOneClickPipelineFromOutline() {
 
     saveCurrentRecord(false)
     generationStepIndex.value = generationSteps.length - 1
+
+    const quotaMessage = contentStats.failureMessages.find((message) => message.includes('限额拦截'))
+    if (quotaMessage) {
+      showToast(quotaMessage, 'error')
+      return
+    }
 
     const totalFail = knowledgeStats.failCount + contentStats.failCount
     const summary = `大纲已生成，检索 ${knowledgeStats.okCount}/${slides.value.length} 页，正文 ${contentStats.okCount}/${slides.value.length} 页`
@@ -1650,10 +1948,15 @@ async function fillAllContent() {
   }
   allContentLoading.value = true
   try {
-    const { okCount, failCount, failedTitles, elapsedHint } = await executeAllContent()
+    const { okCount, failCount, failedTitles, failureMessages, elapsedHint } = await executeAllContent()
     if (failCount === 0) {
       showToast(`一键生成完成（${okCount} 页${elapsedHint}）`, 'success')
     } else {
+      const quotaMessage = failureMessages.find((message) => message.includes('限额拦截'))
+      if (quotaMessage) {
+        showToast(quotaMessage, 'error')
+        return
+      }
       const failedHint = failedTitles.length > 0 ? `：${failedTitles.join('、')}` : ''
       showToast(
         `正文生成完成 ${okCount} 页，失败 ${failCount} 页${failedHint}${elapsedHint}`,

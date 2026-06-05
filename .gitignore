@@ -29,4 +29,8 @@ app/rag/uploads/
 # 本地 embedding 模型（体积大，勿提交）
 app/rag/bge-small-en-v1.5/
 
+# Runtime API usage and quota counters
+app/data/api_usage.json
+app/data/api_usage.tmp
+
 docs/

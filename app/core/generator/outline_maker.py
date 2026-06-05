@@ -77,7 +77,14 @@ class OutlineMaker:
         return prompt
 
     def _generate_protocol_json(self, prompt: str, max_tokens: int) -> str:
-        if hasattr(self.llm_service, "generate_json_schema"):
+        provider = getattr(
+            self.llm_service,
+            "provider_name",
+            getattr(self.llm_service, "provider", None),
+        )
+        supports_outline_json_schema = provider != "deepseek"
+
+        if supports_outline_json_schema and hasattr(self.llm_service, "generate_json_schema"):
             raw = self.llm_service.generate_json_schema(
                 prompt,
                 schema_name="ppt_narrative_outline",

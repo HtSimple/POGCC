@@ -23,6 +23,7 @@ from app.schema.models import (
     ReviseContentTextRequest,
     ReviseContentTextResponse,
 )
+from app.services.api_cost_service import ApiQuotaExceeded
 
 router = APIRouter(prefix="/api/generator", tags=["generator"])
 OUTPUT_JSON_PATH = Path(__file__).resolve().parents[3] / "output.json"
@@ -38,6 +39,12 @@ def _get_content_expander(request: Request) -> ContentExpander:
 
 def _get_notes_generator(request: Request) -> NotesGenerator:
     return NotesGenerator(llm_service=request.app.state.llm_service)
+
+
+def _generation_error(prefix: str, exc: Exception) -> str:
+    if isinstance(exc, ApiQuotaExceeded):
+        return str(exc)
+    return f"{prefix}: {exc}"
 
 
 @router.post("/outline", response_model=GenerateOutlineResponse)
@@ -68,7 +75,7 @@ async def generate_outline(request: Request, body: GenerateOutlineRequest):
         response = GenerateOutlineResponse(
             success=False,
             outline=_fallback_outline(body.topic),
-            message=f"outline generation failed: {exc}",
+            message=_generation_error("outline generation failed", exc),
         )
         await asyncio.to_thread(_save_output_json, response.model_dump())
         return response
@@ -183,7 +190,7 @@ async def expand_content(request: Request, body: ExpandContentRequest):
             success=False,
             content="",
             page_content=None,
-            message=f"content generation failed: {exc}",
+            message=_generation_error("content generation failed", exc),
         )
 
 
@@ -227,7 +234,7 @@ async def revise_content(request: Request, body: ReviseContentRequest):
             success=False,
             content="",
             page_content=None,
-            message=f"content revision failed: {exc}",
+            message=_generation_error("content revision failed", exc),
         )
 
 
@@ -263,7 +270,7 @@ async def revise_content_text(request: Request, body: ReviseContentTextRequest):
         return ReviseContentTextResponse(
             success=False,
             content="",
-            message=f"content revision failed: {exc}",
+            message=_generation_error("content revision failed", exc),
         )
 
 
@@ -290,7 +297,7 @@ async def expand_content_batch_route(request: Request, body: ExpandContentBatchR
         return ExpandContentBatchResponse(
             success=False,
             results=[],
-            message=f"batch content generation failed: {exc}",
+            message=_generation_error("batch content generation failed", exc),
             elapsed_sec=None,
         )
 
@@ -317,7 +324,7 @@ async def generate_notes(request: Request, body: GenerateNotesRequest):
         return GenerateNotesResponse(
             success=False,
             notes="",
-            message=f"speaker notes generation failed: {exc}",
+            message=_generation_error("speaker notes generation failed", exc),
         )
 
 
