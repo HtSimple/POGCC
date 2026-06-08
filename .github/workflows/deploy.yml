@@ -1,0 +1,74 @@
+name: Deploy POGCC to Huawei Cloud ECS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: pogcc-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Prepare SSH key
+        env:
+          ECS_HOST: ${{ secrets.ECS_HOST }}
+          ECS_PORT: ${{ secrets.ECS_PORT }}
+          ECS_SSH_KEY: ${{ secrets.ECS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$ECS_SSH_KEY" > ~/.ssh/ecs_key
+          chmod 600 ~/.ssh/ecs_key
+          ssh-keyscan -p "$ECS_PORT" -H "$ECS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy on ECS
+        env:
+          ECS_HOST: ${{ secrets.ECS_HOST }}
+          ECS_USER: ${{ secrets.ECS_USER }}
+          ECS_PORT: ${{ secrets.ECS_PORT }}
+          APP_DIR: ${{ secrets.APP_DIR }}
+          APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
+        run: |
+          ssh -i ~/.ssh/ecs_key \
+            -p "$ECS_PORT" \
+            "$ECS_USER@$ECS_HOST" \
+            "APP_DIR='$APP_DIR' APP_DOMAIN='$APP_DOMAIN' bash -s" <<'REMOTE'
+          set -euo pipefail
+
+          cd "$APP_DIR"
+
+          git fetch origin main
+          git reset --hard origin/main
+
+          if [ ! -f docker-compose.yml ]; then
+            echo "docker-compose.yml not found in $APP_DIR"
+            exit 1
+          fi
+
+          if [ ! -f config.json ]; then
+            echo "config.json not found. Create it on the server before deploying."
+            exit 1
+          fi
+
+          if [ ! -f .env ]; then
+            echo ".env not found. Create it on the server before deploying."
+            exit 1
+          fi
+
+          mkdir -p app/data app/rag/data_index app/rag/uploads app/rag/bge-small-en-v1.5
+
+          docker compose config
+          docker compose up -d --build --remove-orphans
+          docker compose ps
+
+          sleep 8
+          curl -fsS --max-time 20 http://127.0.0.1:8000/health
+          curl -fsS --max-time 20 "https://${APP_DOMAIN}/health"
+          REMOTE
