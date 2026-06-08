@@ -23,6 +23,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --timeout 600 --retries 20 --progress-bar off
 
 RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install "numpy<2" \
+    -i https://mirrors.aliyun.com/pypi/simple \
+    --trusted-host mirrors.aliyun.com \
+    --timeout 600 --retries 20 --progress-bar off
+
+RUN --mount=type=cache,target=/root/.cache/pip \
     pip install "torch==2.3.1+cpu" \
     --index-url https://download.pytorch.org/whl/cpu \
     --extra-index-url https://repo.huaweicloud.com/repository/pypi/simple \
