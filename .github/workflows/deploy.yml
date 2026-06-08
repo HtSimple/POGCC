@@ -34,12 +34,11 @@ jobs:
           ECS_USER: ${{ secrets.ECS_USER }}
           ECS_PORT: ${{ secrets.ECS_PORT }}
           APP_DIR: ${{ secrets.APP_DIR }}
-          APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
         run: |
           ssh -i ~/.ssh/ecs_key \
             -p "$ECS_PORT" \
             "$ECS_USER@$ECS_HOST" \
-            "APP_DIR='$APP_DIR' APP_DOMAIN='$APP_DOMAIN' bash -s" <<'REMOTE'
+            "APP_DIR='$APP_DIR' ECS_HOST='$ECS_HOST' bash -s" <<'REMOTE'
           set -euo pipefail
 
           cd "$APP_DIR"
@@ -69,6 +68,11 @@ jobs:
           docker compose ps
 
           sleep 8
-          curl -fsS --max-time 20 http://127.0.0.1:8000/health
-          curl -fsS --max-time 20 "https://${APP_DOMAIN}/health"
+          curl -fsS --max-time 20 http://127.0.0.1/health
           REMOTE
+
+      - name: Verify public endpoint
+        env:
+          ECS_HOST: ${{ secrets.ECS_HOST }}
+        run: |
+          curl -fsS --max-time 20 "http://${ECS_HOST}/health"

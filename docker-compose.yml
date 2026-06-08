@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile
     container_name: pogcc-backend
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./config.json:/app/config.json
       - ./app/data:/app/app/data
@@ -26,10 +26,10 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_USE_MOCK: ${VITE_USE_MOCK:-false}
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://1.94.146.105}
     container_name: pogcc-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "127.0.0.1:8080:80"
+      - "80:80"
