@@ -1,8 +1,10 @@
+# syntax=docker/dockerfile:1.7
 FROM python:3.10-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PIP_NO_CACHE_DIR=1
+ENV PIP_DEFAULT_TIMEOUT=600
+ENV PIP_RETRIES=20
 ENV CUDA_VISIBLE_DEVICES=""
 
 WORKDIR /app
@@ -14,15 +16,27 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip setuptools wheel \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple \
-    --trusted-host pypi.tuna.tsinghua.edu.cn \
-    --timeout 120 --retries 10 \
-    && pip install -r requirements.txt \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple \
-    --trusted-host pypi.tuna.tsinghua.edu.cn \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install --upgrade pip setuptools wheel \
+    -i https://repo.huaweicloud.com/repository/pypi/simple \
+    --trusted-host repo.huaweicloud.com \
+    --timeout 600 --retries 20 --progress-bar off
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install "torch==2.3.1+cpu" \
+    --index-url https://download.pytorch.org/whl/cpu \
+    --extra-index-url https://repo.huaweicloud.com/repository/pypi/simple \
     --trusted-host download.pytorch.org \
-    --timeout 120 --retries 10
+    --trusted-host repo.huaweicloud.com \
+    --timeout 600 --retries 20 --progress-bar off
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt \
+    -i https://repo.huaweicloud.com/repository/pypi/simple \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    --trusted-host repo.huaweicloud.com \
+    --trusted-host download.pytorch.org \
+    --timeout 600 --retries 20 --progress-bar off
 
 COPY app ./app
 COPY main.py ./main.py

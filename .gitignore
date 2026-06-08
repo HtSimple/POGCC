@@ -34,3 +34,6 @@ app/data/api_usage.json
 app/data/api_usage.tmp
 
 docs/
+
+# Local deployment notes, not committed
+部署流程说明.md
